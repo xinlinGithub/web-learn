@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>最小生成成本树</title>
+</head>
+<body>
+    <script>
+        // 声明边的类 用来构造树的链表
+        function Edge(val) {
+            this.val = val;
+            this.find = 0;
+            this.next = null;
+            this.start = 0;
+            this.to = 0;
+        }
+        // 树的数据 起点 重点 权值
+        var data = [[1,2,6],[1,6,12],[1,5,10],[2,3,4],[2,4,5],[2,6,8],[3,4,7],[4,6,11],[4,5,9],[5,6,16]]
+        var VERTS = 6;
+        var v = new Array(VERTS + 1).fill(0);
+        //建立链表数据 用一个长链表连住所有数据；
+        function buildLinkTree() {
+            var head;
+            var ptr;
+            for(var j = 1; j <= VERTS; j++) {
+                for(var i = 0; i < data.length; i++) {
+                    if(data[i][0] == j) {
+                        var temp = new Edge(data[i][2]);
+                        temp.start = data[i][0];
+                        temp.to = data[i][1];
+                        if(head == null) {
+                            head = temp;
+                            ptr = head;
+                        }else {
+                            ptr.next = temp;
+                            ptr = temp;
+                        }
+                    }
+                }
+            }
+            console.log(head);
+            return head;
+        }
+        // 寻找每个路径间的最短路径 并做标记
+        function findMinCost(head) {
+            var minval = Infinity;
+            var ptr = head;
+            var retval;
+            while(ptr) {
+                if(ptr.val < minval && ptr.find == 0) {
+                    minval = ptr.val;
+                    retval = ptr;
+                }
+                ptr = ptr.next;
+            }
+            retval.find = 1;//找到后做标记 下次不再重复找
+            return retval;
+        }
+        function minTree(head){
+            var ptr = head;
+            var result = 0;
+            while(ptr) {
+                var minptr = findMinCost(head);
+                // 防止两次检索到相同的链路 
+                v[minptr.to] = v[minptr.to] + 1;
+                v[minptr.start] = v[minptr.start] + 1;
+                if(v[minptr.to] > 1 && v[minptr.start] > 1) {
+                    result = 1;
+                }else {
+                    result = 0;
+                }
+                if(result == 0) {
+                    console.log(`起始点${minptr.start} -> 终止点${minptr.to} -> 路径长${minptr.val}`)
+                }
+                ptr = ptr.next;
+            }
+        }
+        minTree(buildLinkTree(data));
+    </script>
+</body>
+</html>

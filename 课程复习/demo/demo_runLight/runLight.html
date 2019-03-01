@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>runLight</title>
+    <style>
+        .runLight{
+            position: relative;
+            background: #ccc;
+            /* border: 1px solid black; */
+            margin: 10px auto;
+        }
+        .runLight div{
+            background: #aaa;
+        }
+        .runLight div.active{
+            background: yellowgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="runLight">
+
+    </div>
+    <script>
+    // 思路：可扩展性 数据不写死
+    // initLight(初始化灯板 createLight() beforeLight())
+    // beforeLight();
+    // runLight(初始化后让灯跑起来 跑之前先把流程缓存一下 beforeLight())
+    var runLight = document.getElementsByClassName('runLight')[0];
+    var lightBox = [];
+    var inLightBox = [];
+    var outLightBox = [];
+    var inTimer, outTimer;
+    var flag = false;
+    initLight();
+    // 初始化
+    function initLight(width = 30,col = 10,row = 10,space = 5) {
+        // 初始化操作
+        createLight(width,col,row,space);
+        beforeLight(col,row);
+        toRunLight(col,row)  
+        setTimeout(() => {
+            flag = true;
+        },60000)     
+    }
+// 创建灯板
+    function createLight(width,col,row,space) {
+        // 创建灯以及灯的底板；
+        runLight.style.width = col * width + (col + 1) * space + 'px';
+        runLight.style.height = row * width + (row + 1) * space + 'px';
+        for(var i = 0; i < row; i ++){
+            lightBox.push([]);
+            for(var j = 0; j < col; j++){
+                var div = document.createElement('div');
+                div.x = i;
+                div.y = j;
+                div.style.width = width + 'px';
+                div.style.height = width + 'px';
+                div.style.position = 'absolute';
+                div.style.left = j * width + (j+1) * space + 'px';
+                div.style.top = i * width + (i+1) * space + 'px';
+                lightBox[i][j] = div;
+                runLight.appendChild(div);
+            }
+        }
+    }
+// 缓存流水灯
+    function beforeLight(col,row) {
+        // 灯创建完后，进行一些准备操作，将要跑的流程缓存一下，以后可以直接用
+        var r = 0;
+        var c = col - 1;
+        var n = 0;
+        var lastr, lastc;
+        var min = col > row ? row : col;
+        for(var i = 0; i < min; i++) {
+            //每次对同级别的行和列遍历 按顺序加入流水灯；每次就可以处理一行一列；所以取行和列的最小值处理
+            // 先是上右 后是下左 依次往复循环
+            n++;
+            if(n % 2 === 0){
+                createReverseRunLight(r,false,col,row)
+                createReverseRunLight(false,c,col,row)
+                r = lastr + 1;
+                c = lastc - 1;
+            }else{
+                createRunLight(r,false,col,row);
+                createRunLight(false,c,col,row);
+                lastr = r;
+                lastc = c;
+                r = row - r - 1;
+                c = col - c - 1;
+            }
+        }
+    } 
+// 正序缓存
+    function createRunLight(r,c,col,row) {
+        // 用于beforeLight递归调用
+        if(c === false){
+            console.log(r)
+            for(var i = 0; i < col; i++){
+                if(!inLightBox.includes(lightBox[r][i])){
+                    addLight(r,i)
+                }
+            }
+        }else{
+            for(var j = 0; j < row; j++){
+                if(!inLightBox.includes(lightBox[j][c])){
+                    addLight(j,c)
+                }
+            }
+        }
+    }
+// 逆序缓存
+    function createReverseRunLight(r,c,col,row) {
+        // 用于beforeLight递归调用 逆序存入指定行或指定列的元素
+        if(c === false){
+            console.log(r)
+            for(var i = col - 1; i >= 0; i--){
+                if(!inLightBox.includes(lightBox[r][i])){
+                    addLight(r,i)
+                }
+            }
+        }else{
+            for(var j = row - 1; j >= 0; j--){
+                if(!inLightBox.includes(lightBox[j][c])){
+                    addLight(j,c)   
+                }
+            }
+        }
+    }
+// 缓存时的添加助手
+    function addLight(cr,x){
+        // 专门用于添加流水灯
+        inLightBox.push(lightBox[cr][x]);
+        outLightBox.unshift(lightBox[cr][x]);
+    }
+// 正式启动
+    function toRunLight(col,row) {
+        if(flag){
+            return;
+        }
+        // 正式启动
+        var n = 0;
+        inTimer = setInterval(() => {
+            inLightBox[n].classList.add('active');
+            n++;
+            if(n >= col * row){
+                clearInterval(inTimer)
+                n--;
+                outTimer = setInterval(() => {
+                    if(n < 0){
+                        clearInterval(outTimer);
+                        toRunLight(col,row)
+                        n = 0
+                    }
+                    inLightBox[n].classList.remove('active');
+                    n--;
+                },10);
+            }
+        },50)
+    }
+
+    </script>
+</body>
+</html>

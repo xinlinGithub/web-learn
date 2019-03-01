@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>哈希查找</title>
+</head>
+<body>
+    
+    <script>
+        // 哈希算法是一个非常重要的算法，不仅用在查找中，还常用在数据的插入分配，
+        // 服务器的分配，数据的建立 更新 删除等
+        //哈希法使用得数学函数就是“哈希函数” 
+        // 哈希法就是将本身的键值通过特定的数学函数运算或其他方法 转化成特定的数据存储地址的方法
+        // bucket(桶):哈希表中存储数据的位置（一般为邻接链表） 每一个位置对应唯一一个地址 桶就好比一个记录
+        // slot(槽): slot就好比桶中的字段 一个桶中可以有多个字段（链表中的若干数据）
+        // collision(碰撞): 两个不同的数据经过哈希运算后 进入到同一个地址 就会发生碰撞
+        // 溢出： 数据所对应的桶中的数据已经满了就会发生溢出
+        // 哈希表： n个桶 每个桶中又有多个数据
+        // 加载密度：直译就是桶的负载程度 越大越容易溢出或碰撞
+        // 完美哈希：指既没有碰撞 也没有溢出
+
+        // 注意事项：尽量降低溢出和碰撞的产生
+        //          哈希函数越容易计算效果越好
+        //          尽量吧文字的键值转化成数字的键值 以便于计算
+        //          数据尽量均匀的分配到每个桶中 以便于减少溢出
+
+        // 建立哈希表：
+            // 除留取余法：比如一共12个桶 就除以12余数为多杀就分配到那个桶中 再在桶中按这种方法分配
+            // 平方取中法： 先平方 在取中间的值进行分配
+        // 数据碰撞的处理方法： 当发生数据碰撞时可以往后继续去找 知道找打空位为止
+        // 线性探测法 依次往后找
+        // 平方探测法 防止数据堆叠
+        // 再哈希法 多种哈希函数 一个不行就用另一个
+        // 链表法: 常用 如果哈希值想同 就放到表头后面
+        var  arr1 = [];
+        function ceate_table(num, arr,INDEXBOX) {
+            var temp = num % INDEXBOX;
+            while(true && arr.length <= INDEXBOX) {
+                if(arr[temp] == null) {
+                    arr[temp] = num;
+                    break;
+                }else{
+                    temp = (temp * temp + 1) % INDEXBOX;
+                    // 防止相同的值聚集在一起
+                }
+            }
+            console.log(arr);
+        }
+        ceate_table(1,arr1,10)
+        function Hash(val) {
+            this.val = val;
+            this.next = null;
+        }
+        function initMyhash(len) {
+            var myhash = [];
+            for(var i = 0; i < len; i++){
+                myhash.push(new Hash("hash" + i));
+            }
+            return myhash;
+        }
+        var myhash = initMyhash(5);
+
+        function create_table1(hash, num) {
+            var ind = num % hash.length;
+            var current = hash[ind];
+            while(current.next){
+                current = current.next;
+            }
+            current.next = new Hash(num);
+            console.log(hash);
+
+        }
+        create_table1(myhash, 3);
+        create_table1(myhash, 8);
+        function find_num(hash, num) {
+            var ind = num % hash.length;
+            var current = hash[ind];//直接锁定目查找 查找速度快
+            while(current.next) {
+                if(current.next.val == num) {
+                    console.log(current.next);
+                    return current.next;
+                }else {
+                    current = current.next;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

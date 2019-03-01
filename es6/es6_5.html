@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>迭代器-生成器</title>
+  </head>
+  <body>
+    <img src="../img/f1.jpg" alt="" />
+    <script>
+      // 迭代器：Iterator; 提供一套统一的迭代不同数据结构的迭代方法
+      // 只要数据结构内部 含有Symbol.iterator方法就可以被迭代
+      // 实质就是迭代时 调用内部的Symbol.iterator方法
+      // 可迭代的数据：Array Map(映射) Set(集合) String arguments(类数组) nodeList
+      // 并非所有的对象都可迭代 普通对象就不能迭代 n内部有迭代器的对象可以被迭代
+
+      // 一般迭代方法: 数组的map filter forEach
+      // var arr = [[1,2,3],[4,5,6,7]];
+      // let len = arr.length;
+      // for(let i = 0; i < len; i++){
+      //     console.log(arr[i]);
+      //     let len = arr[i].length;
+      //     for(let j = 0; j < len; j++){
+      //         console.log(arr[i][j]);
+      //     }
+      // }
+      // console.log('------------------')
+      // arr.forEach((item ,index,argArr) => {
+      //     console.log(item,arr === argArr);
+      //     argArr.push([index * 8]);// 可在内部对arr操作
+      //     item.forEach(i => console.log(i))
+      // })
+      // forEach 相当于一个加强的for循环 比较方便 一次循环到位 但没有返回值 map 有
+      // 而for循环 可以在适当的位置停止循环；
+
+      // 迭代器的使用： 可以统一迭代多种数据结构
+      // 返回一个对象 对象里有一个next方法 每次next()都返回一个对象 {value:, done: true/false}
+      var arr = [1, 2, 3];
+      // 外部迭代器
+      let myIterator = function(o) {
+        let curIndex = 0;
+        let next = () => {
+          if (o.length === curIndex) {
+            return {
+              value: undefined,
+              done: true
+            }
+          }
+          return {
+            value: o[curIndex],
+            done: o.length === ++curIndex
+          };
+        };
+        return {
+          next
+        };
+      };
+      let oArr = myIterator(arr);
+      // 每次迭代时都会调用内部的Symbol.iterator函数 内部没有iterator函数则无法迭代
+      console.log([...arr]);
+      let map = new Map([["name", "sss"], ["age", 10]]);
+      console.log([...map]);
+      console.log([...new Set([1, 2, 3])]);
+      console.log(map["keys"]());
+      // 这都会调用迭代器
+      // 普通对象内部是没有迭代器的 声明对象时可以自己手动添加Symbol.iterator内部方法 让他迭代时调用
+      // 但自己声明迭代函数时一定严格按照他的规范来
+      // 就是返回一个 对象内部有next方法 此方法又返回一个对象{value: , done: }
+
+      // 添加之前先看es6新增的第7种原始数据结构Symbol 有一些静态的属性可以去使用
+      // 它具有唯一性 就是返回一个唯一值 可以作为对象的属性名 内部可以传一个标志字符串
+      // Symbol.for() 此方法会检索在当前Symbol注册表中有没有symbol实例 有就取出for中的值对应的symbol数据
+      // 没有就在全局中创建一个Symbol() 然后将标志数添加进去 并返回此symbol数据
+      // 不能进行new 操作 Symbol.keyFor() 内部必须传一个Symbol类型数据 就是拿到Symbol的标志值
+      // 如果Symbol内部传非字符串的数据 就会隐式转换成字符串 如果是对象会调用他的toSting方法
+      let s1 = Symbol("s1");
+      let s11 = Symbol("s1");
+      let sObj = {
+        [s1]: "symbol",
+        s1: "false symbol",
+        [s11]: "symbol2"
+      };
+
+      let s2 = Symbol.for("s2");
+      let s22 = Symbol.for("s2");
+      console.log(sObj, s2, s2 === s22);
+      let s3 = Symbol.for([1, 2]);
+      console.log(s3, Symbol.keyFor(s2), Symbol.keyFor(s3));
+      let s4 = Symbol({ name: "sss" });
+      let s5 = Symbol(undefined);
+      console.log(s4, s5);
+      // 数组可以被扩展运算符运算 对象也可以被...对象中   即...运算 普通对象可以被解构
+      let age = 18,
+        name = "sss";
+      let objO = { age, name };
+      let objO1 = { ...objO };
+      console.log(objO, objO1, objO == objO1);
+
+      let iterator = Symbol.iterator;
+      let iterator1 = Symbol("Symbol.iterator");
+      console.log(iterator, iterator1);
+      //  为不可迭代的对象添加迭代器
+      var arr1 = [1, 2, 3];
+      for (let prop of arr1) {
+        console.log(prop);
+      }
+
+      // 对象中的Symbol类型的属性名不可以被for in 循环到
+      // Symbol.match 用来表示对象是否具有正则表达式的行为 默认为true 改为false后则不把他当做正则表达式
+      var foo = /foo/;
+      var str = "/foo/";
+      // str.startsWith(foo);//startsWith默认不能是正则表达式
+
+      foo[Symbol.match] = false;
+      console.log(str.startsWith(foo));
+      console.log(str.endsWith(foo));
+
+      // foo[Symbol.replace] = true;
+      // 返回搜索内容在源字符串中的索引
+      console.log(str.search(foo))
+      // 只有可迭代的数据结构才可被for of迭代 即内部有iterator属性的；
+      var objc = {
+          0: 'a',
+          1: 'b',
+          2: 'c',
+          length: 3,
+          [Symbol.iterator]: function () {
+              let curIndex = 0;
+              let next = () => {
+                  return {
+                      value: this[curIndex],
+                      done: this.length === curIndex++
+                  }
+              }
+              return {
+                  next
+              }
+          }
+      }
+      for(let p of objc) {
+          console.log(p)
+      }
+      // 只要内部有iterator并符合规则 就可以被迭代
+      console.log([...objc])
+      // console.log({...objc})
+
+      // generate生成器 生成一个迭代器函数 可以利用它去改写上面的objc
+      // 因为它本身就可以生成迭代函数 就不需要自己写了
+
+      // function *test() {
+      //     console.log(1111)
+      //     yield "a";
+      //     console.log(2222);
+      //     yield "b";
+      //     console.log(3333);
+      //     yield "c";
+      //     console.log(4444);
+      // }
+      // var oTest = test();
+      // 返回一个迭代器对象
+      // 通过oTest.next()方法可以将yield值依次产出{value:"a",done: false}
+      // 当产出所有值时done为true；
+      // for(let p of oTest){//迭代器可以被for of遍历 也可以被...操作
+      //     console.log(p);
+      //     // 在这里面就相当于进行若干次oTest.next()操作
+      // }
+      // 生成器内部执行时 遇到yield即停止一下执行 再next时才执行下一段 知道遇到下一个yield
+
+      // 生成器每次yield后的 返回值不是产出值 而是下一次next()传入的值
+      // 而next() 之后的返回值是一个对象
+      function* test1() {
+        let a = yield "a";
+        console.log(a);
+        let b = yield "b";
+        console.log(b);
+        let c = yield "c";
+        console.log(c);
+      }
+
+      var oTest1 = test1(); //生成一个oTest1迭代器
+      console.log(oTest1.next("aaaaa")); //undefined
+      console.log(oTest1.next("bbbbb")); //a === "bbbbb"
+      console.log(oTest1.next("ccccc")); // b === "cccc"
+      console.log(oTest1.next("ddddd")); //c === "ddddd"
+
+      // 重新改写对象的迭代器 直接让生成器生成
+      var objV = {
+        0: "a",
+        1: "b",
+        2: "c",
+        length: 3,
+        [Symbol.iterator]: function*() {
+          let curIndex = 0;
+          while (curIndex < this.length) {
+            yield this[curIndex++];
+          }
+        }
+      };
+      for (let v of objV) {
+        //内部有迭代器后就可以被迭代了
+        console.log(v);
+      }
+
+      // 使用生成器解决回调地域问题 就是一层套一层不停的回调的问题
+      function speak(words) {
+        return new Promise((resolve, reject) => {
+          if (words !== "" && words !== null) {
+            resolve(words);
+          } else {
+            reject(words);
+          }
+        });
+      }
+      // 吃饭 --> 上学--> 写作业 --> 完成
+      // speak("吃饭").then((word) => {
+      //     console.log(word);//吃完饭 上学
+      //     return speak("上学")
+      // }).then((word) => {
+      //     console.log(word);//上完学做作业
+      //     return speak("做作业")
+      // }).then(word => {// 作业完成
+      //     console.log(word);
+      // })
+
+      // 用generate一步一步去改写
+      function* say() {
+        let toSchool = yield speak("吃饭");
+        // 期待第一步的返回值为接下来将要做的事；
+        let doHomework = yield speak(toSchool);
+        let finish = yield speak(doHomework);
+      }
+
+    //   let oSay = say(); //
+    //   let { value, done } = oSay.next(); //会返回第一次yield的产出值
+    //   value.then(val => {
+    //     console.log(val); //吃饭
+    //     let { value, done } = oSay.next("上学");
+    //     value.then(val => {
+    //       console.log(val); //上学
+    //       let { value, done } = oSay.next("做作业");
+    //       value.then(val => {
+    //         console.log(val); //做作业
+    //       });
+    //     });
+    //   });
+      // 这样写还不是太好  还需再改进一下
+      // 上面的代码层层调用 每一层长得还差不多 所以可以用递归去运算
+      // co是让yeild具有一个等待功能 他可以拿到后面promise对象resolve之后传入的值
+      // 这样就与await的工能相似
+      function Co(iterator) {
+        return new Promise((resolve, reject) => {
+          let curIndex = 0;
+          let tds = ["吃饭", "上学", "做作业", "finish"];
+          let next = td => {
+            const { value, done } = iterator.next(td);
+            if (done) {
+              resolve(tds[curIndex]);
+            } else {
+              value.then(val => {//当完成上一步后拿到值 继续执行自己写的next 知道done为true时为止
+                console.log(val); //按理说应该next这个val
+                next(tds[++curIndex]);
+              });
+            }
+          };
+          next();
+        });
+      }
+    // 这个例子不太恰当 但主要说明 当下一步的结果需要在上一步的回调中时拿取时 比较常用
+    // 这个例子可以用一个库来完成 叫co 可以用npm install co 安装上；
+      Co(say()).then(
+        val => {
+          console.log(val);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    </script>
+  </body>
+</html>

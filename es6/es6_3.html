@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新型数据结构</title>
+</head>
+<body>
+    
+    <script>
+        // 数据结构
+        // 数据结构： 重在结构 计算机中组织数据方式
+        // js中的数据结构：
+        // let arr = [1,2,3] //连用内存的分配 存储地址连续的词条片段 js与其他语言有点不同 他是不定长的；
+        // 栈数据 先进后出 类似一个容器 队列 先进先出 类似排队
+        // 数组就是 支持栈，队列的操作 push() pop()  push() shift() 数组还具有 有序的特点；
+
+        // 对象是一种 key-value k-v 结构 无序  存储片段可以不连续  查找极快
+        // 数组去重: 利用对象的key值来做
+        // 但有点弊端 1 '1' 区分不开 key值为对象会怎样
+
+        // map 相对于object的优点：他是一个更干净的对象 他没有原型 他的属性名可以是任意类型的数据类型
+        // 而object属性名只能是字符串 Symbol map每个映射的顺序与你插入时的顺序一样 object则会重新排序
+        //  map可以通过size属性轻易获取长度 object则不可以 map.entries() map.keys()都是返回迭代器 与Object.keys() 类似
+
+
+        // es6新的数据结构能解决吗？
+        // Map Set 结构
+        // Map 是字典 加强的对象 只能这样理解 不能这样说
+        let map = new Map();
+        let obj = {};
+            map.set(1,1);//键值对 与下面等同
+            obj['1'] = 1;
+            map.set('1',1);
+            console.log(map,obj)            
+            console.log(map.get('1'));
+            console.log(map.has('1'));
+            map.delete(1);
+            console.log(map)
+            map.clear();
+            console.log(map)
+        // 数组去重升级版
+        Array.prototype.unique = function () {
+            let map = new Map();
+            let unique_arr = [];
+            this.forEach(item => {
+                if(!map.has(item)){
+                    unique_arr.push(item);
+                    map.set(item,'item');
+                }
+            })
+            return unique_arr;
+        };
+        // 仿写Map 理解原理
+        // 邻接链表 哈希算法 有若干个bucket 一般八个 初始时只有next 存值时使next指向所存的数值(对象)
+        // 此对象再有一个 next 值 用于查找下一个数  所以如果一个bucket邻接链表太多的话查找起来会很慢
+        // 所以分8个bucket 如果某一条太多 就会增加若干个bucket 再重新分配各个对象 
+        // 每个对象有 value key next 三个属性 根据hash算法 将每个要存的key值转化成数字 再%3对应到bucket进行存储
+        // 若字符串过长就取后3位（其他位数也行）利用charCodeAt 累加 算出总的值 再%8存储
+        // 构写代码：
+        // 只是对核心思想封装 返回迭代器的功能并没有封装
+        function myMap(map_arr) {
+            // this.len = 8;
+            this.bucket = [];
+            this.init();
+        }
+        myMap.prototype.len = 11;//前8位存储字符串 后3位分别存储对像 函数 数组
+        myMap.prototype.init = function () {
+            for(let i = 0; i < this.len; i++){
+                this.bucket[i] = {
+                    next: null
+                }
+            }
+        }
+        myMap.prototype.makeHash = function (key) {
+            let len = 0, codes = 0;
+            let nodeCode = key;
+            if(typeof nodeCode === 'string'){
+                len = nodeCode.length > 3 ? nodeCode.length : 3;
+                // 大于3就取后三位 小于3就正常操作
+                for(let i = len - 3; i < nodeCode.length; i++){
+                    codes += nodeCode.charCodeAt(i);
+                }
+                return codes % this.len - 3;
+            }else if(nodeCode.toString() === "[object Object]"){
+                return this.len - 3;
+            }else if(typeof nodeCode === 'function'){
+                return this.len - 2;
+            }else if(Object.prototype.toString.call(key) === "[object Array]" && key.length > 0){
+                return this.len - 1;
+            }else{
+                codes = +nodeCode;
+                return codes % (this.len - 3);                
+            }
+        }
+        myMap.prototype.set = function (key,value) {
+            var codes = this.makeHash(key)
+            var hashCode = this.bucket[codes];
+            while(hashCode.next){
+                if(hashCode.next.key === key){
+                    // 如果已经有这个key值了就直接替代
+                    hashCode.next.value = value;
+                    return this;
+                }else{
+                    // 没有就继续往下找 知道找到链表的顶部
+                    hashCode = hashCode.next;
+                }
+            }
+            hashCode.next = {
+                key,
+                value,
+                next: null
+            }
+            return this;
+        }
+        myMap.prototype.has = function (key) {
+            var codes = this.makeHash(key)
+            var hashCode = this.bucket[codes];
+            while(hashCode.next){
+                if(hashCode.next.key === key){
+                    return true;
+                }else{
+                    hashCode = hashCode.next;
+                }
+            }
+            return false;
+        }
+        myMap.prototype.get = function (key) {
+            var codes = this.makeHash(key)
+            var hashCode = this.bucket[codes];
+            while(hashCode.next){
+                if(hashCode.next.key === key){
+                    return hashCode.next.value;
+                }else{
+                    hashCode = hashCode.next;
+                }
+            }
+            return undefined;
+        }
+        myMap.prototype.delete = function (key) {
+            var codes = this.makeHash(key)
+            var hashCode = this.bucket[codes];
+            while(hashCode.next){
+                if(hashCode.next.key === key){
+                    // 看删除的是最后一个还是 中间的
+                    if(hashCode.next.next){
+                        hashCode.next = hashCode.next.next;
+                    }else{
+                        hashCode.next = null;
+                    }
+                    return true;
+                }else{
+                    hashCode = hashCode.next;
+                }
+            }
+            return false;
+        }
+        myMap.prototype.clear = function () {
+            this.init();
+        }
+        var myMap = new myMap();
+        var weakMap = new WeakMap()
+        // 弱引用map 当在js执行环境中不存在引用时  就会自动释放
+        var map1 = new Map([['name','ddd'],[2,33]])
+        // map 相当于是个映射 而set就是一个集合 值不可以相同
+        var set = new Set([1,2,1,'1',function(){},null,false,true,{},[1,2],[1,2]])
+    </script>
+</body>
+</html>

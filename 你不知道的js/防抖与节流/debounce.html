@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖</title>
+    <style>
+       
+    </style>
+</head>
+<body>
+    <!-- 
+        防抖：防止没有必要的频繁的事件触发带来的性能浪费 
+            在函数需要频繁触发时 需要等待一定时间后 才进行一次触发
+            大多数用在时时搜索上
+     -->
+    <input type="text">
+    <script>
+        var oInp = document.getElementsByTagName("input")[0];
+        function ajax(e) {
+            if(e.target.value !== ""){
+                console.log(e.target.value)
+            }
+        }
+        function debounce(handler, wait) {
+            var timer = null;
+            // 返回一个中间函数
+             return function (e) {
+                var _this = this;
+                var args = arguments;
+                // 每次触发时都清除一下定时器 只有清楚后1s不在清除 才会触发
+                // 也就是说在等待时间内 连续触发事件 不会有效果
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    handler.apply(_this, args);
+                }, wait)
+            }
+        }
+        oInp.oninput = debounce(ajax, 1000);
+    </script>
+</body>
+</html>

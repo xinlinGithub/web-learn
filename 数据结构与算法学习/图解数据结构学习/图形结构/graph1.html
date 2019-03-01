@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>开篇</title>
+</head>
+<body>
+    
+    <script>
+        //输出一个无向图图的邻接矩阵 相邻为1 不相邻为0; 无向图也用二维矩阵表示
+        var graphArr = [
+            [1,2],[2,1],[1,5],[5,1],[2,3],[3,2],[2,4],[4,2],[3,4],[4,3],[3,5],[5,3],[4,5],[5,4]
+        ];
+        function getGraphMax(gArr) {
+            var max = 0;
+            for(var i = 0; i < gArr.length; i++) {
+                for(var j = 0; j < gArr[i].length; j++) {
+                    gArr[i][j] > max ? max = gArr[i][j] : max = max;
+                }
+            }
+            return max;
+        }
+        function outputGraph(tGraph) {
+            var max = getGraphMax(tGraph);
+            var outArr = [];
+            for(var i = 0; i < max + 1; i++) {
+                outArr.push(new Array(max + 1).fill(0));
+            }
+            // var outArr = new Array(max + 1);
+            // outArr.fill(new Array(max + 1).fill(0));
+            // 填充的每一个数组都是一样的 这样会出现复用现象 用fill时最好不要fill引用值 最好fill原始值
+            for(var i = 0; i < tGraph.length; i++) {
+                outArr[tGraph[i][0]][tGraph[i][1]] = 1;
+            }
+            console.log(outArr);
+        }
+        outputGraph(graphArr);
+        
+        // 用邻接链表输出图各个点的相邻内容
+        function Node(val) {
+            this.val = val;
+            this.next = null;
+        }
+
+        function outputLinkGraph(gArr) {
+            var max = getGraphMax(gArr);
+            var nodeLinkArr = [];
+            for(var i = 0; i <= max; i++) {
+                nodeLinkArr[i] = new Node(i);
+                var ptr = nodeLinkArr[i];
+                for(var j = 0; j < gArr.length; j++) {
+                    if(gArr[j][0] == i) {
+                        var temp = new Node(gArr[j][1]);
+                        ptr.next = temp;
+                        ptr = temp;
+                    }
+                }
+            }
+            console.log(nodeLinkArr);
+            return nodeLinkArr;
+        }
+        var nodeLArr = outputLinkGraph(graphArr)
+
+        // 图的遍历
+        // 1.深度优先遍历法
+        // 对图的链表进行遍历 每遍历一次就标记一次 直到所有的被标记
+        var run = ["node"];
+        for(var i = 1; i <= getGraphMax(graphArr); i++) {
+            run[i] = 0;
+        }
+        var dfsArr = [];
+        // 深度优先遍历deep
+        function dfs(current) {
+            run[current] = 1;
+            dfsArr.push(nodeLArr[current].val);
+            var ptr = nodeLArr[current].next;
+            while(ptr) {
+                if(run[ptr.val] == 0) {//保证不重复遍历
+                    dfs(ptr.val);
+                }
+                ptr = ptr.next;
+            }
+        }
+        dfs(1);
+        console.log(dfsArr);
+
+        //广度优先遍历法
+        var run1 = ["bfs"];
+        for(var i = 1; i <= getGraphMax(graphArr); i++){
+            run1[i] = 0;
+        }
+        var queue = [];
+        var bfsArr = [];
+        function bfs(current) {
+            bfsArr.push(nodeLArr[current].val);
+            run1[current] = 1;
+            queue.push(nodeLArr[current].val);
+            while(queue.length > 0) {//用两层while循环 就不用递归了 两次检验
+                current = queue.shift();
+                var temp = nodeLArr[current].next;
+                while(temp){
+                    if(run1[temp.val] == 0) {
+                        queue.push(temp.val);
+                        bfsArr.push(temp.val);
+                        run1[temp.val] = 1;
+                    }
+                    temp = temp.next;
+                }
+            }
+        }
+        bfs(1);
+        console.log(bfsArr);
+
+        
+    </script>
+</body>
+</html>

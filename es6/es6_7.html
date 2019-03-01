@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象新增方法</title>
+</head>
+<body>
+    <script>
+        Text.prototype.sex = "man";
+        var proto = {
+            sex: "weman"
+        }
+        function Text(name, age,sym) {
+            this.name = name;
+            this.age = age;
+            this.sym = sym;
+            this[1] = 1;
+            this[0] = 0;
+            this["v"] = "v";
+            this["a"] = "a"
+            this["-"] = "-"
+            console.log(this)
+        }
+        var text = new Text("ssss", 18, Symbol("symbol"))
+        text[Symbol("text")] = "symbol";
+        // 获得对象自己本身的属性的详细信息 可读可写可配置等 不能获得原型上的
+        console.log(Object.getOwnPropertyDescriptor(text, "name"))
+        // 原型上的获取不到
+        console.log(Object.getOwnPropertyDescriptor(text, "sex"));
+        // 获得该对象自己的所有的属性名 不包括原型 与Object.keys()功能相同
+        // 但枚举之后的顺序有别 数字类型按升序 其余按添加顺序
+        // Object.keys()也一样
+        console.log(Object.getOwnPropertyNames(text));
+        console.log(Object.keys(text))
+        //获取Symbol类型的数据名
+        console.log(Object.getOwnPropertySymbols(text))
+        // 获取该对象的原型
+        console.log(Object.getPrototypeOf(text))
+        // 为某个对象设置原型
+        // 与Object.create()功能类似
+        // 继承完以后得手动改变constructor属性指向本身
+        proto.constructor = Text;
+        Object.setPrototypeOf(text, proto);
+        // 只有被构造函数构造出来的实例对象才有constructor属性
+        console.log(Object.getPrototypeOf(text))
+
+        var  obj1 = {
+            name: "xiaoxiao",
+            age: 18
+        }
+        var obj2 = {
+            name: "dada",
+        }
+
+        // Object.assign() 传递的参数是若干对象 会把后面的参数合并到第一个参数上 覆盖第一个参数的值
+        // 再返回第一个参数 所以返回的对象就是第一个参数
+        // 这样会返回一个新的对象 可以用于对象的克隆
+        var newObj = Object.assign({}, obj1, obj2);
+        // newObj1 === obj1
+        var newObj1 = Object.assign(obj1, obj2);
+
+        // 虽然有一样的属性名 但不会报错 只会覆盖 可以用此方法进行数组去重
+        var repeatObj = {
+            name: "df",
+            name: "dddd"
+        }
+        // 数组去重
+        var test = function(){};
+        var arr = [1,1,2,2,3,4,Symbol("ss"), Symbol("ss"),test,test];
+        function noArrRepeat(arr) {
+            // var tempObj = {};
+            // var tempArr = [];
+            // arr.forEach(item => {
+            //     if(!tempObj[item]){
+            //         tempObj[item] = item;
+            //         tempArr.push(item);
+            //     }
+            // })
+            // return tempArr;
+
+            // 也可以用set进行数组去重
+            return [...new Set(arr)];
+        }
+        console.log(noArrRepeat(arr));
+        var set = new Set(arr);
+
+
+        // 在简写中可以用super访问原型上的属性和方法
+        var fff = {
+            getName() {
+                return this.name;
+            },
+            name: "fffff"
+        }
+        var dd = {
+            name: 'name',
+            myName() {
+                // console.log(super) 不能直接打印super 只能操作里面的属性和方法
+                return super.name
+            }
+        }
+        Object.setPrototypeOf(dd, fff);
+        console.log(dd.getName())
+        console.log(dd.myName())
+        
+    </script>
+
+</body>
+</html>

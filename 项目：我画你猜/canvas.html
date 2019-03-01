@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我画你猜，模仿画板</title>
+    <style>
+        canvas{
+            border: 1px solid red;
+        }
+        #clear{
+            display: block;
+            color: blue;
+            font-size: 25px;
+            margin-left: 221px;            
+        }
+        #clear:hover{
+            color: yellow;
+            box-shadow: 2px 2px 5px orange;
+        }
+    </style>
+</head>
+<body>
+    <!-- 介绍：canvas
+        08 09 年 网页三剑客 Adobe Flash :做页游 做视频播放器 做广告 一些3D的东西；
+        actionScript AS3.0 flash player; 内存有问题 会卡顿 还得装插件
+
+        移动端出现：不再用flash  而是用canvas 进一步成为主流  ie9 一下不支持；
+        游戏 图表 动画 绘画 都可以做；
+    -->
+    <canvas id="cavs" width="500" height="500"></canvas>
+    <input type="button" value="擦除" id="clear">
+    <script>
+        var cavs = document.getElementById('cavs');
+        var ctx = cavs.getContext('2d');// 获得画布；3d 也有 ；上下文对象；
+        // ctx 有很多的功能；可先当成画笔使用；
+        ctx.moveTo(100,100);//落笔点；
+        ctx.lineTo(200,100);
+        ctx.lineTo(200,200);
+        ctx.strokeStyle = 'orange';
+        ctx.lineWidth = 10;
+        // ctx.lineTo(100,100) 正常闭合；
+        ctx.closePath();//无缝闭合；
+        ctx.fillStyle = 'black';//填充颜色
+        ctx.fill();//填充；
+        ctx.stroke();//连线描边 一般放到结尾
+
+        var img = ctx.getImageData(70,70,160,160)//获得图片像素值 起点终点 得到后可放到画布上；
+        ctx.putImageData(img,300,300)// 左上角放到这个点上 进行复制；
+
+        ctx.clearRect(0,0,500,500);// 擦除这个范围的画面； 起点 width height；
+        ctx.beginPath();//重启下一个路径 相互不影响 可以再画；随便改样式；
+        ctx.moveTo(200,200);
+        ctx.lineTo(300,200);
+        ctx.lineWidth = 30;
+        ctx.strokeStyle = 'red';
+        ctx.lineTo(300,300);
+        ctx.lineTo(200,300);
+        ctx.closePath();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+        var clear = document.getElementById('clear');
+        var flag = false;        
+        clear.addEventListener('click',function(){
+            flag = true;           
+            cavs.addEventListener('mousedown',function(e){
+                var L = cavs.offsetLeft;
+                var T = cavs.offsetTop;
+                var width = cavs.offsetWidth;
+                var height = cavs.offsetHeight;
+                cavs.addEventListener('mousemove',function(e){
+                    if(flag == false){
+                        return false;
+                    }
+                    var X = e.pageX - L;
+                    var Y = e.pageY - T;
+                    var x1 = X - 5 > 0 ? X - 5 : 0;
+                    var y1 = Y - 5 > 0 ? Y -5 : 0;
+                    ctx.clearRect(x1,y1,10,10);
+                })
+                cavs.addEventListener('mouseleave',function () {
+                    flag = false;
+                })
+            })
+        })
+    </script>
+</body>
+</html>

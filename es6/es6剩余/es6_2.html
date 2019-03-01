@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>proxy-reflect</title>
+</head>
+<body>
+    
+
+    <script>
+        // 用proxy和reflect来实现对数组和对象的数据劫持
+        // 但兼容性不太好  而且用bable无法将他编译成es5
+        // reflect是一个内置的全局的对象 里面有若干方法可共使用
+        // 里面所有的属性和方法都是静态的 不可new操作 类似Math对象
+        // 内部this会指向Proxy代理之后返回的对象
+        let obj = {
+            name: "sfs",
+            child: {//内部嵌套的需要再次操作一下才会出发set函数
+                name:'child'
+            },
+            _val: "_val"
+        }
+        // 还可以操作数组
+        let arr = [1,2];
+        // 为事件触发之后的一个响应函数
+        function update(val) {
+            console.log(val)
+        }
+        //  写着一步就可以对所有的属性进行检测
+        // 必须对oProxyObj操作时才能进行有效拦截
+        let oProxyObj = new Proxy(obj, {
+            // 这个对象是为代理添加的一系列拦截数据的方法 当操作数据时会进行相应的拦截
+            // 只要是这里面代理的方法 reflect上面全都有 可以搭配使用 更合理更规范
+            // 他有一些方法会等同Object上面的一些方法 如defineProperty等等
+            // 四个参数 操作对象 属性名 更改属性值 代理之后的对象
+            set (target, key, value, receiver) {
+                // console.log(target, key, value, receiver);
+                Reflect.set(target, key, value);
+                update("set");
+            },
+            get (target, key, receiver) {
+                // console.log(target, key, receiver)\
+                update("get")
+                return Reflect.get(target, key);
+            },
+            has (target, key) {
+                // Reflect.has()
+                return !key.startsWith("_");
+                // return true;
+            },
+            // 当删除代理对象的属性时 会进行拦截
+            deleteProperty(target, key) {
+                Reflect.deleteProperty(target,key);
+                update('deleteProperty');
+            },
+            // 当进行Object.defineProperty()操作时会进行拦截
+            defineProperty(target, key, value) {
+                update('defineProperty')
+                return Reflect.defineProperty(target, key, value)
+            }
+        })
+        // 回头操作的时候要操作哦oProxyObj 然后会直接作用到obj
+
+        // has 看对象中有没有这个属性 return true则代表有这个属性
+        // return false 则代表没有 
+        console.log("_val" in oProxyObj);
+
+        // 代理数组
+        let proxyArr = new Proxy(arr, {
+            set (target, key, value, receiver){
+                Reflect.set(target, key, value);
+                update();
+            },
+            get (target, key, receiver) {
+                Reflect.get(target, key);
+            }
+        })
+
+        arr.push(12,34);//在下面更改数组的值 代理会自动更改
+        // console.log(proxyArr);
+        
+
+
+
+    </script>
+</body>
+</html>

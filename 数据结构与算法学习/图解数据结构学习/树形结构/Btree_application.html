@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>二叉运算数/应用</title>
+    <style>
+        body{
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 此运算的缺点 必须先将一个运算时手动转化成 二叉运算数组；
+        // 再将二叉运算数组转化成二叉运算树 在进行递归运算
+        var inf1 = ["inf1","+","*","%","6","3","9","5"];
+        function TreeNode(val) {
+            this.val = val;
+            this.left = null;
+            this.right = null;
+        }
+
+        // 将二叉数组运算表达式 转化成二叉树；对递归的应用
+        function expressionTree(inf = [], ind = 1) {
+            if(!inf || !inf.length || ind >= inf.length){
+                return null;
+            }else {
+                //建立主树根
+                var tempNode = new TreeNode(inf[ind]);
+                // 建立左子树
+                tempNode.left = expressionTree(inf, 2*ind);
+                //建立右子树
+                tempNode.right = expressionTree(inf, 2*ind + 1);
+                return tempNode;
+            }
+        }
+
+        var root = expressionTree(inf1, 1);
+        var expression = "";
+        // 中序遍历此二叉树
+        function inOrder(rootTree) {
+            if(rootTree) {
+                inOrder(rootTree.left);
+                expression += rootTree.val;
+                inOrder(rootTree.right);
+            }
+        }
+        inOrder(root);
+        console.log(expression);
+        // 计算二叉树表达式的值 也是利用递归运算
+        function answer(rootTree) {
+            var firstnum = 0;
+            var lastnum = 0;
+            if(rootTree.left == null && rootTree.right == null) {
+                return Number(rootTree.val);
+            }else {
+                //计算左子树表达式的值
+                firstnum = answer(rootTree.left);
+                // 计算右子树表达式的值
+                lastnum = answer(rootTree.right);
+                // 左右数值进行运算
+                return condition(rootTree.val, firstnum, lastnum);
+            }
+        }
+        // 判断采用什么运算
+        function condition(oprator, num1, num2) {
+            switch (oprator) {
+                case "+": return num1 + num2;
+                case "-": return num1 - num2;
+                case "*": return num1 * num2;
+                case "/": return num1 / num2;
+                case "%": return num1 % num2;
+                default : return -1;
+            }
+        }
+    </script>
+</body>
+</html>

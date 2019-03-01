@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>字符串与数组的扩展</title>
+  </head>
+  <body>
+    <div>
+      <!-- 转文本操作 就想显示这个内容 -->
+      <p>&amp;</p>
+      <p>&lt;</p>
+      <p>&gt;</p>
+    </div>
+    <script>
+      function con() {
+        console.log(...arguments);
+      }
+      // 字符串的扩展
+      // var str = 'aaa';
+      // str.charAt(0);
+      // str.charCodeAt(0);
+      // str.length;
+      // str.slice();// 截取字符串 常使用返回截取的值
+      // str.indexOf('a',2);// 检查有没有‘a' 有返回第一个的索引 没有返回-1,可指定从第几位开始检查
+      // str.lastIndexOf('a',2);// 倒着检查
+      // str.split('');// 转化成数组
+      // str.toUpperCase();// 首字母大写 中文不起作用
+      // str.toLowerCase();// 首字母小写 中文不起作用
+
+      // es6新增属性；
+      // str.includes('a',1);//返回true or false 更方便; 可指定从哪开始找；
+      // var str = 'sheng hong yue!'
+      // con(str.includes('sheng',0))
+
+      // str.endsWith('a',2);//前后缀匹配 返回 true or false
+      // str.startsWith('a',0);
+      // var arr1 = [
+      //     'us-apple',
+      //     'us-goole',
+      //     'duyi-china',
+      //     'huawei-china'
+      // ]
+      // var usArr = [];
+      // var chinaArr = [];
+      // arr1.forEach(item => {
+      //     if (item.startsWith('us')) {
+      //         usArr.push(item)
+      //     }
+      //     if (item.endsWith('china')) {
+      //         chinaArr.push(item);
+      //     }
+      // })
+      var str1 = '$%'
+      con(str1.repeat(10),str1) 
+        //   重复字符串并返回 原字符串不变；
+
+      // 模板字符串
+      var age = 18, name = 'aaaa',a = 2,b = 4;
+
+      // var str1 = `saf
+      //     sfs${name}${age}
+      //     ${a}*${b}=${a*b}
+      // `
+
+    //   function print() {
+    //       con(arguments)
+    //       // Array.from(arguments);
+    //       con(...arguments)
+    //   }
+    //   print`a${name}22${age}`;//把夹到模板中的单独拿出来放到数组中 当成第一个参数
+      // 被$选中的一次为下一个参数 被${}分成了几个部分
+      // 还可以防止ssr注入 更标准的字符串 更好的处理了字符串的拼接问题 语义化更好
+
+    //   // alert`hello`//支持函数调用；
+    //   con(parseInt`12${3}`);//将3进制的12转化成10进制数
+    //   con(parseInt([12],3));
+
+      // 防止ssr注入
+    //   function safeHTML(arr, name) {
+    //       return `${arr[0]}${name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}${arr[1]}`;
+    //   }
+    //   var name = '<script>while(true){alert`你中招了！`}<\/script>'
+    //   document.write(safeHTML`<p>${name}</p>`);
+
+      // 数组方法；
+      // arr.fill(value,start=0,end=length);
+        //   var arr1 = new Array(9);
+        //   arr1.fill(0) 
+        //   填充数组 常用于初始化一个数组；
+        //   var arr2 = new Array(9);
+        //   arr2.fill(arr1); 
+        //   这样arr2中的每一个数组都是同一个 所以这样初始化不太好 改一个就会改全部 会出现错误的
+        //   con(arr1,arr2, arr2[1] === arr2[3])
+
+      // var arr = Array.of(4);// 创建数组 与 new Array 不同 创建时添加啥就是啥；
+      // arr = Array.of(1,2,3,4);
+      // arr = Array.of({},[],null)
+      // con(arr)
+
+      // arr = Array.from('类数组'); 将类数组转换成数组
+    //   function transformArr() {
+    //       console.log(arguments)
+    //       var arr = Array.from(arguments);
+    //       console.log(arr.toString()) //将数组转化成字符串
+    //       console.log(+arr);
+    //       return arr;
+    //   }
+    //   con(transformArr(1,2,3,4))
+
+    //   var arr = [1,2,3,4,5,6,NaN]
+      // con(arr.indexOf(NaN,0));//找到的话就返回索引 找不到返回-1 但不能找NaN 不能条件查找
+      // es6提供的方法 弥补了上述的不足 但只找到符合条件的第一个数
+    //   con(arr.find((item ,index) => item === 3));// 将符合条件的值返回；
+      // con(arr.findIndex((item) => item % 2 === 0)); //s返回第一个符合条件的索引
+
+      // var key = arr.keys();
+      // con(key[Symbol.iterator]().next())
+      // var value = arr.values();
+      // var entry = arr.entries();
+      // Array.isArray(arr)
+      //
+      // 上面都返回一个迭代器 iterator 请听下回分解
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>炫酷轮播图</title>
+    <link rel="stylesheet" href="./lb.css">
+</head>
+<body>
+    <div class="wrapper" id="wrap">
+        <img src="./img/1.png" alt="">
+        <img src="./img/2.png" alt="">
+        <img src="./img/3.png" alt="">
+        <img src="./img/4.png" alt="">
+        <img src="./img/5.png" alt="">
+        <!-- 因为有 inline-block属性 所以中间有默认的缝隙 -->
+    </div>
+
+    <script src="../jquery-3.2.1.js"></script>
+    <script src="./lb.js"></script>
+    <script>
+        // 注重思想  要想实现一个东西 应该先做什么 再做什么；
+        // 封装插件 可扩展的功能
+        $(function () {
+            $('#wrap').slider({
+                curDisplay: 0,//初始图片
+                autoPlay: true,// 是否自动轮播
+                interval: 2000//间隔时间
+            })// $选中的是谁 this 就指向谁；
+        })
+        
+    </script>
+</body>
+</html>

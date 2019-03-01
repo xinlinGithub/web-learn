@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        // 详解extend
+        var a = {tom: {sex: 'man'}}
+        var b = {tom: {age: 22}}
+        $.extend(true,a,b) // 将不同属性合并 继承 a 继承b 深拷贝 浅拷贝
+        // 也可以合并到一个新的空对象上面  再用一个返回值接受一下；
+        console.log(a);
+        // extend 对象的拷贝；
+        // 浅拷贝 
+        var a1 = {as: 2};
+        var b1 = {as: 4};
+        var a = {};
+        var b = {name: {age: 18}};
+        $.extend(a1,b1)
+        // $.extend(a,b);//改引用值原拷贝的值会受影响；
+        $.extend(true,a,b);// 深拷贝 原拷贝的值不会受影响；
+        console.log(a) //下面改引用值 在哪儿用都会变；
+        a.name.age = 33;
+        console.log(b);
+        console.log(a1);
+        a1.as = 5;
+        console.log(b1,a1) //改原始值原拷贝的值不会受影响；
+
+        // 扩展方法原型；
+        // var newSrc = $.extend({},src1,src2,src3) //合并；
+
+        // 省略第一个参数
+        $.extend({
+            net: {}
+        })// 合并到jq原型上；可用$.net直接引用；相当于工具方法；
+        $.extend($.net,{
+            nihao: function (){
+                alert('nihao')
+            }
+        })
+        console.log($.net)
+
+        // 第二种方法
+        $.fn.extend({
+            net1: {}
+        })// 合并到jq实例上，相当于实例上的方法；
+        $.fn.extend($().net1,{
+            nihao: function () {
+                alert('ni zhen hao')
+            }
+        })
+        console.log($().net1)
+
+        $.extend({
+            speak: function () {
+                console.log('speak')
+            }
+        })
+        $.speak()
+        // 重载原型
+        // extend(boolean,dest,src1,src2);
+        //     布尔值   主拷贝 参数
+        // var result = $.extend(true,{},{
+        //     name: 'sss',family: 2,location: {city: 'bj',country: 'cy',school: 'shanj'}
+        // },{ name: 'ddd',location: {home: 'hz',country: 'jc'}});
+        // 返回的为继承后的第二个参数 ；
+        // true 为深拷贝 可以合并多个属性 包括深层次的原始值
+        // false 为浅拷贝 简单合并第一层的属性
+        // console.log(result)
+    </script>
+</body>
+</html>

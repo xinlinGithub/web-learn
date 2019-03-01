@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>24点游戏</title>
+    <style lang="">
+        html,
+        body {
+            background: orange;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <input id='iCards' style='width:80px' />
+    <input id='iCards' style='width:80px' />
+    <input id='iCards' style='width:80px' />
+    <input id='iCards' style='width:80px' />
+    <input type='button' value='计算' onclick="Play();" />
+    <br/>
+    <br/>  计算结果:
+    <br/>
+    <textarea id='Result' style='width:440px;height:200px'></textarea>
+    <script>
+
+       
+        var minNum = 1, //最小值
+            maxNum = 10,//最大值
+            opt = ['+', '-', '*', '/'];//运算
+        function permutate(str) {
+            // 用递归的方法来实现 找规律找出口 
+            // 用插入法实现全排列
+            // 先从一个开始 一个一个的往里插入，每次插入都存起来，最后在此基础上依次循环
+            var result = [];
+            if (str.length === 1) {
+                return [str];//出口
+            } else {
+                var preResult = permutate(str.slice(1));
+                for (var i = 0; i < preResult.length; i++) {
+                    for (var j = 0; j < preResult[i].length + 1; j++) {
+                        // j 必须得小于preResult[i].length + 1 因为末尾还需再次插入数据
+                        // str的长度始终比preResult中每一个字符串长一，这样才可以拿出第一个插入
+                        var temp = preResult[i].slice(0, j) + str[0] + preResult[i].slice(j, preResult[i].length);
+                        if (!result.includes(temp)) {
+                            result.push(temp);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        function operate(f, m, n) {
+            //简单的计算函数，正常情况返回计算结果，异常情况返回 NaN
+            if (isNaN(m) || isNaN(n)) return NaN;
+            if (f == '*') return (m * n);
+            else if (f == '/') return n ? (m / n) : NaN;//如果除数为0，则返回 NaN
+            else if (f == '-') return (m - n);
+            else return (parseFloat(m) + parseFloat(n));
+        }
+
+        function compute(a, b, c, d, opt1, opt2, opt3) {
+            ///获取一组数字的计算结果
+            ///abcd为4个计算数
+            ///opt1,opt2,opt3为这四个数依次的运算符号
+            var result = []; //定义数组保存计算结果
+            try {
+                //开始根据5种结合方式进行计算
+
+                //第一种：{[(A,B)C]D}
+                var r1 = operate(opt1, a, b);
+                var r2 = operate(opt2, r1, c);
+                var r3 = operate(opt3, r2, d);
+                if (!isNaN(r3) && Math.abs((r3 - 24)) < 1e-5) { //由于计算结果可能出现浮点数，这里的比较必须使用浮点数比较方式
+                    result.push('[(' + a + opt1 + b + ')' + opt2 + c + ']' + opt3 + d + '=24');
+                }
+
+                //第二种 {[A(B,C)]D}
+                r1 = operate(opt1, b, c);
+                r2 = operate(opt2, a, r1);
+                r3 = operate(opt3, r2, d);
+                if (!isNaN(r3) && Math.abs((r3 - 24)) < 1e-5) {
+                    result.push('[' + a + opt2 + '(' + b + opt1 + c + ')]' + opt3 + d + '=24');
+                }
+
+                //第三种 {A[(B,C)D]}
+                r1 = operate(opt1, b, c);
+                r2 = operate(opt2, r1, d);
+                r3 = operate(opt3, a, r2);
+                if (!isNaN(r3) && Math.abs((r3 - 24)) < 1e-5) {
+                    result.push(a + opt3 + '[(' + b + opt1 + c + ')' + opt2 + d + '=24');
+                }
+
+                //第四种 {A[B(C,D)]}
+                r1 = operate(opt1, c, d);
+                r2 = operate(opt2, b, r1);
+                r3 = operate(opt3, a, r2);
+                if (!isNaN(r3) && Math.abs((r3 - 24)) < 1e-5) {
+                    result.push(a + opt3 + '[' + b + opt2 + '(' + c + opt1 + d + ')]=24');
+                }
+
+                //第五种 [(A,B),(C,D)]
+                r1 = operate(opt1, a, b);
+                r2 = operate(opt2, c, d);
+                r3 = operate(opt3, r1, r2);
+                if (!isNaN(r3) && Math.abs((r3 - 24)) < 1e-5) {
+                    result.push('(' + a + opt1 + b + ')' + opt3 + '(' + c + opt2 + d + ')=24');
+                }
+
+            } catch (e) { }
+            return result;
+        }
+
+        function getResult(group) {
+            var result = [],
+                repeat = '';
+            for (var g = 0; g < group.length; g++) {
+                for (var i = 0; i < 4; i++) {
+                    for (var j = 0; j < 4; j++) {
+                        for (var k = 0; k < 4; k++) {
+                            var a1 = group[g][0],
+                                a2 = group[g][1],
+                                a3 = group[g][2],
+                                a4 = group[g][3];
+
+                            var tmp = compute(a1, a2, a3, a4, opt[i], opt[j], opt[k]);
+                            for (var t = 0; t < tmp.length; t++) {
+                                //最基本最简单的去重
+                                if (repeat.indexOf(tmp[t]) > -1) {
+                                    continue;
+                                }
+                                result.push(tmp[t]);
+                                repeat += tmp[t] + ',';
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+        function getGroup(str) {
+            var result = permutate(str);
+            for (var i = 0; i < result.length; i++) {
+                result[i] = result[i].split("");
+            }
+            return result;
+        }
+        console.log(getResult(getGroup("3388")))
+        // 一.首先想到的是用穷举表达式的方法，然后求值。
+        // 然而，由于括号的存在，使穷举表达式并非易事。
+        // 实际上，括号的作用仅仅是提高运算的优先级而已，
+        // 如果我们规定符号的优先级，一样可以达到要求。
+        // 具体来说，设四个数为a、b、c、d，运算符为①、②、③，
+        // 表达式为a ① b ② c ③ 。
+        // 如果强制规定①、②、③的优先顺序，就不必考虑括号问题了。
+        // 而这3个运算符的运算顺序有3！=6种，分别是：
+        // 1.①②③    2.①③②    3.②①③
+        // 4.②③①    5.③①②    6.③②①
+        // 等价的表达式分别是：
+        // 1.((a＠b) ＠c) ＠d    2.(a＠b) ＠(c＠d) 3.(a＠(b＠c)) ＠d
+        // 4.a＠((b＠c) ＠d) 5.(a＠b) ＠(c＠d) 6. a＠(b＠(c＠d))
+        // 显然，2和5是相同的，因此只考虑5种情况。这样，括号的问题就解决了。
+
+        // 二.接下来，就是生成a、b、c、d的全排列，注意去掉其中的相同排列
+
+        // 三.对这组排列进行以上方法的运算，就可以得到所有的结果了。
+        // 　　　　　　　注意在运算过程中除法的特殊性--除数不能为零。因为可能会用到除法，
+        // 　　　　　　　所以要考虑精度问题，这里通过结果减去24取绝对值与一个接近0（zero）
+        // 的小数比较，如小于它，即可判定结果是24。
+
+        // 四.有待解决的问题：
+        // 1、形式不同而实质相同的解的问题。有些解虽然形式不同，但其实质是完全相同的。
+        // 　　　　　　　　如3 * ((11 + 4) - 7)和3 * (11 + (4 - 7)) ，实际上只是一种解。去掉这些相同解的问题情况较多，
+        // 　　　　　　　　其较为繁琐，有待解决。
+        // 2、多余括号问题。有些解的括号是多余的，应在输出前去掉。
+
+        // 五.优化改进方案：
+        // 经过对上面的5个算式的深入分析，重新优化为下面的5个算式：
+        // 1.(A + -B)X / (C + -X / D)
+        // 其中②为X，③为X / 时，则这种情况和第2算式重复，忽略
+        // 2.(A + -X / B)X / C + -X / D
+        // 3.(A + -X / B + -X / C) + -X / D
+        // 其中①为X, ②为X / 时，则这种情况和第2算式重复，忽略
+        // 4.A - /(B+-X/C + -X / D)
+        // 5.AX / B + -CX / D
+        // 以此较好的解决了上面提出的两个待解决的问题。
+        // 程序中称前面的5个算式为原始方案，后面5个算式为优化改进方案。 
+        var debug = false;
+        var steps = new Array();
+        var ResultSet = new Array();
+        ResultSet.Add = function (newResult) {
+            for (var i = 0; i < ResultSet.length; i++) {
+                if (ResultSet[i] == newResult) {
+                    return;
+                }
+            }
+            ResultSet.push(newResult);
+        }
+        ResultSet.toString = function () {
+            var msg = "";
+            for (var i = 0; i < ResultSet.length; i++) {
+                msg += ResultSet[i] + "=24\n";
+            }
+            msg += "计算结束，共得到" + ResultSet.length + "个不同结果";
+            return msg;
+        }
+        function Assert(flag) {
+            if (!flag) {
+                throw new Error('Assertion failed!');
+            }
+        }
+        Array.prototype.clone = function () {
+            return this.slice(0);
+        }
+        function calcul(stack, oper) {
+            Assert(oper == '+' || oper == '-' || oper == '*' || oper == '/');
+            var lift = new Array();
+            lift[0] = stack.pop() - 0;
+            lift[1] = stack.pop() - 0;
+            switch (oper) {
+                case '+': stack.push(lift[1] + lift[0]);
+                    break;
+                case '-': stack.push(lift[1] - lift[0]);
+                    break;
+                case '*': stack.push(lift[1] * lift[0]);
+                    break;
+                case '/': stack.push(lift[1] / lift[0]);
+                    break;
+            }
+            return lift;
+        }
+        function parseExp()   //由逆波兰式构造出表达式
+        {
+            var stack = new Array();
+            var exprs = new Array();
+
+            for (var i = 0; i < steps.length; i++) {
+                if (!isNaN(steps[i])) {
+                    stack.push(steps[i]);
+                    exprs.push(steps[i].toString());
+                }
+                else {
+                    var oper1 = exprs.pop();
+                    var oper2 = exprs.pop();
+                    var lift = calcul(stack, steps[i]);
+                    if (steps[i] == '*' || steps[i] == '+')    //规定较大的数出现在*和+的左边，以避免出现过多重复的结果
+                    {
+                        if (lift[0] > lift[1]) {
+                            var tmp = oper1;
+                            oper1 = oper2;
+                            oper2 = tmp;
+                        }
+                    }
+                    var subexpr = "(" + oper2 + ")" + steps[i] + "(" + oper1 + ")";  //判断是否要添加括号
+                    var subexpr1 = oper2 + steps[i] + oper1;
+                    var subexpr2 = "(" + oper2 + ")" + steps[i] + oper1;
+                    var subexpr3 = oper2 + steps[i] + "(" + oper1 + ")";
+                    if (Math.abs(eval(subexpr) - eval(subexpr1)) < 0.0001) subexpr = subexpr1;
+                    else if (Math.abs(eval(subexpr) - eval(subexpr2)) < 0.0001) subexpr = subexpr2;
+                    else if (Math.abs(eval(subexpr) - eval(subexpr3)) < 0.0001) subexpr = subexpr3;
+
+                    exprs.push(subexpr);
+                }
+            }
+            return exprs[0];
+        }
+
+        function playCards(stack, cards) {
+            if (debug) alert(stack + ":" + cards);
+            if (stack.length == 1 && cards.length == 0) {
+                if (Math.abs(stack[0] - 24) < 0.0001) {
+                    ResultSet.Add(parseExp());
+                }
+                return; //计算结束，输出计算结果
+            }
+            var newCards = null;
+            var newStack = null;
+
+            for (var i = 0; i < cards.length; i++) {
+                var distinctCard = true;
+                for (var j = 0; j < i; j++) {
+                    if (cards[j] == cards[i]) {
+                        distinctCard = false;
+                        break;
+                    }
+                }
+                if (distinctCard) {
+                    newCards = cards.clone();
+                    newStack = stack.clone();
+                    newCards.splice(i, 1);
+                    newStack.push(cards[i]);
+                    steps.push(cards[i]);
+                    playCards(newStack, newCards);
+                    steps.pop(cards[i]);
+                }
+            }
+
+            calCard(stack.clone(), cards.clone(), '+');
+            calCard(stack.clone(), cards.clone(), '-');
+            calCard(stack.clone(), cards.clone(), '*');
+            calCard(stack.clone(), cards.clone(), '/');
+        }
+
+        function calCard(stack, cards, oper) {
+            if (stack.length < 2) {
+                return;
+            }
+            steps.push(oper);
+            calcul(stack, oper);
+            playCards(stack, cards);
+            steps.pop(oper);
+        }
+
+    </script>
+</body>
+
+</html>

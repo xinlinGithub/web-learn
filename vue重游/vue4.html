@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{ articleText | upperCase }}</p>
+        <custom-input v-model="articleText"></custom-input>
+        <blog-post>
+            <h1 slot="header">
+                About Me
+            </h1>
+            
+            <p>Here's some page content, which will be included in vm.$slots.default, because it's not inside a named slot.</p>
+            
+            <p slot="footer">
+                Copyright 2016 Evan You
+            </p>
+            
+            <p>If I have some content down here, it will also be included in vm.$slots.default.</p>.
+        </blog-post>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        // 组建中使用v-model;
+        // Vue.filter('upperCase', function(val){
+        //     var upper = val.charAt(0).toUpperCase();
+        //     if(upper){
+        //         return upper + val.slice(1)
+        //     }
+        // })
+        Vue.component('custom-input',{
+            props: ['value'],
+            template: `
+                <div class = "cusInput">
+                    <input :value="value" @input="$emit('input',$event.target.value)">
+                </div>
+            `
+        })
+        // 相当于原生渲染一个组件 会自动调用内部的render方法 转换成vNode对象 再渲染到视图 有点类似react
+        Vue.component('blog-post', {
+            render: function (createElement) {
+                var header = this.$slots.header
+                // default 是除了已经命名的以外的dom插槽
+                var body   = this.$slots.default
+                var footer = this.$slots.footer
+                return createElement('div', [
+                    createElement('header', header),
+                    createElement('main', body),
+                    createElement('footer', footer)
+                ])
+            }
+            // 渲染组件  先提取html模板 再重新渲染
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                articleText: 'I am articleText'
+            },
+            // 这是vue自带的一个过滤器 用|隔开 可以对|左边的数据按照相关规则进行过滤 返回一个新的
+            filters: {
+                upperCase: function(val){
+                    var upper = val.charAt(0).toUpperCase();
+                    if(upper){
+                        return upper + val.slice(1)
+                    }
+                }
+            }
+        }) 
+    </script>
+</body>
+</html>

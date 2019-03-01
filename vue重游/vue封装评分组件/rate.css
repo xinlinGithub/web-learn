@@ -1,0 +1,12 @@
+[v-cloak] {
+    display: none;
+}
+.star-value.star-data[star-data]:hover::after{
+    content: attr(star-data);
+    position: absolute;
+    top: 100%;
+    right : 20px;
+    background-color : #eee;
+    padding : 4px 8px;
+    border-radius: 5px;
+}

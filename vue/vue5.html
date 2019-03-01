@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div class="app">
+        <ul>
+            <li v-for="(item,index,key) in obj">{{ item }} | {{ index }} | (key){{ key }}</li>
+        </ul>
+        <ul v-for="(people,i) in person" @click="changename(i)">
+            <li v-for="(index,item,key) in people">
+                {{ item }}: {{ index }} : {{ i }}
+            </li>
+        </ul>
+        <!-- <ul v-for="(item,index) in 'adsfs'">
+            <li>{{ item }} | {{ index }}</li>
+        </ul> -->
+        <input type="text" placeholder="请输入用户名" v-if="flag" key="flag">
+        <button @click="submit" style="display:block">submit</button>
+        <input type="text" placeholder="请输入密码" v-if="!flag" key="!flag">
+        <!-- 加Key值防止代码复用 -->
+        <div v-for="(item, index) in arr">
+            {{ item }} <input type="text">            
+        </div>
+        <!-- 加个key值防止代码复用 -->
+        <button @click="reverse">reverse</button>
+    </div>
+    
+    <script>
+        var vm1 = new Vue({
+            el: ".app",
+            data: {
+                arr: [1,2,3,4,5],
+                obj: {
+                    name: 'chen',
+                    age: "23"
+                },
+                person: [{name: "小王",age: 22},{name: "小张",age: 24},{name: "小李",age: 19}],
+                flag: true
+            },
+            methods: {
+                changename(i){
+                    var newarr = [];
+                    this.person[i] = {name:"凤姐",age: 18};
+                    // 直接改引用值不行，不能立即渲染
+                    // 若this.person[i].name = "凤姐"，则可以，因为这相当于直接改原始值；
+                    newarr.push(...this.person)
+                    this.person = newarr;
+                    // 在创个新的数组就可以了；
+                    // let len = this.person.len;
+                    // this.person[len] = {name: "chen"}
+                    // this.person.push({name: "chen",age: 18})
+                    // Vue 中的push方法自带更新功能；
+                },
+                submit(){
+                    this.flag = !this.flag;
+                },
+                reverse(){
+                    this.arr.reverse()
+                    console.log(this.arr)
+                }
+            }
+        })
+
+
+        // es5中向对象中添加属性
+        var obj = {age: 18};
+        Object.defineProperty(obj,"name",{
+            // value: "cxl",
+            // writable: true,
+            // enumerable: true,
+            // configurable: true,
+            get(){
+                // 写着两个函数时不能写上面的每一行，且要操作的是define的属性不能是原有的属性
+                console.log("get");
+            },
+            set(){
+                console.log("set");
+            }
+        })
+
+    </script>
+</body>
+</html>

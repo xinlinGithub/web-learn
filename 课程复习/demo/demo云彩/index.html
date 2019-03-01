@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>云彩</title>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .sky{
+            position: relative;
+            background: #007fd5;
+            height: 100%;
+            overflow: hidden;
+            animation: sky_background 50s ease-out infinite;
+            /* 与transition的区别 */
+            /* 宽度默认充满整个屏幕 */
+        }
+        .clouds_one{
+            width: 300%;
+            height: 100%;
+            background: url("../img/yuncai.jpg") no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: cloud_one 50s linear infinite;
+        }
+        .clouds_two{
+            width: 300%;
+            height: 100%;
+            background: url("../img/yuncai1.jpg") no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0px;
+            animation: cloud_two 50s linear infinite;            
+        }
+        .clouds_three{
+            width: 300%;
+            height: 100%;
+            background: url("../img/yuncai2.jpg") no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0px;
+            animation: cloud_three 50s linear infinite;            
+        }
+        @keyframes sky_background{
+            0%{
+                background: #007fd5;
+            }
+            50%{
+                background: #000;
+            }
+            100%{
+                background: #007fd5;
+            }
+        }
+        @keyframes cloud_one{
+            from{
+                left: 0;
+            }to{
+                left: -200%;
+            }
+        }
+        @keyframes cloud_two{
+            from{
+                left: 0;
+            }to{
+                left: -200%;
+            }
+        }
+        @keyframes cloud_three{
+            from{
+                left: 0;
+            }to{
+                left: -200%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sky">
+        <div class="clouds_one"></div>
+        <div class="clouds_two"></div>
+        <div class="clouds_three"></div>
+    </div>
+</body>
+</html>

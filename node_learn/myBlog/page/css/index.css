@@ -1,0 +1,72 @@
+
+.every_day{
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px #000000;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.every_day::before{
+    font-family: MyIcon;
+    font-size: 12px;
+    content: "\e122";
+    position: relative;
+    height: 0px;
+    left: 66px;
+}
+.every_day > span{
+    font-size: 12px;
+    margin-top: 5px;
+    color: slateblue;
+}
+.every_day > p{
+    text-align: center;
+    word-break: break-all;
+    padding: 0px 50px;
+}
+
+.article_list{
+    width: 100%;
+}
+.article{
+    width: 100%;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 5px 20px;
+    border-radius: 5px;
+    margin-top: 15px;
+    box-shadow: 2px 2px 2px #000000;
+    text-align: left;
+}
+.article .article_title{
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 0px 5px 0px;
+    color: #13102b;
+}
+.article .article_title:hover{
+    color: #123abc;
+}
+.article .article_content{
+    font-size: 14px;
+    line-height: 20px;
+    height: 100px;
+    overflow: hidden;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: hidden;
+    color: #13102b;
+}
+.article .article_footer{
+    color: #eeeeee;
+    background-color: #1f1f1f;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 5px 10px;
+}

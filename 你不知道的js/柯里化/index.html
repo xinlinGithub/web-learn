@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>柯里化</title>
+</head>
+<body>
+    
+    <script>
+        // 为什么使用柯里化： 简化代码 提高可维护性 一个函数传一个参数 比较好维护 提高内聚度 降低耦合性
+        // 什么是柯里化：需要返回一个新的固定函数  此函数需要上层函数和本层函数的参数集合
+        // fixed params 需要固定参数的函数
+        function add(a,b,c,d) {
+            return a + b + c + d;
+        }
+        function FixedParamsCurry() {
+            var fn = arguments[0];
+            if(typeof fn !== "function") {
+                throw new Error(`${fn}必须是一个函数`);
+            }
+            var args = [].slice.call(arguments,1);
+            // 用闭包返回 将两个参数最后要拼接起来
+            return function () {
+                // apply可以传一个数组 比较方便
+                return fn.apply(this,args.concat( Array.prototype.slice.call(arguments) ));
+            }
+        }
+        // var newAdd = FixedParamsCurry(add, 1,2);
+        // console.log(newAdd(1,2,3,4));
+        // 扩展
+        function Curry(fn, length) {
+            var length = fn.length || length;
+            // 以闭包的形式返回 然后一步一步的去执行
+            return function () {
+                var arg_len = arguments.length;
+                if(arg_len < length) {
+                    // FixedParamsCurry 会返回一个函数 这个函数的参数会和FixedP...的参数合起来 作为传入函数的参数执行；
+                    var fixed = FixedParamsCurry.apply(this,[fn].concat([].slice.call(arguments)));
+                    // 然后将柯里化之后返回的函数再返回出去 只要传的参数不够就继续返回一个参数增加后的函数位置
+                    // 知道参数达到标准 结束；
+                    return Curry(fixed, length - arg_len);
+                }else {
+                    // 会自动和上一步的参数合并 作为原来传入的原函数的参数一起执行
+                    return fn.apply(this, [].slice.call(arguments));
+                }
+            }
+        }
+        var newAdd1 = Curry(add);
+        console.log(newAdd1(1,2,3,4));
+        console.log(newAdd1(1)(2,3)(4));
+        // 什么时候用柯里化；
+        // 当参数过多时 有一部分重合的参数 而那一部分不重合的参数又依赖这些重复的函数
+        // 就可以柯里化一下 让他先把相同的参数传入进去 返回一个可以重复使用得函数
+        // 比如ajax发送数据 使用柯里化可以降低代码重复性 提高代码适用性；
+        // 还可以应用到高级框架的编写中；
+        // 但也有缺点，一定要应用到适合的场景中；
+
+        // 模拟一下
+        // function ajax(method, url, data){
+        //     var xhr = new XMLHttpRequest();
+        //     console.log(url);
+        //     console.log(data);
+        // }
+        // var curryAjax = Curry(ajax);
+        // var send = curryAjax("get");
+        // var send1 = send("www.baidu.com", "你好");
+        // var send2 = send("www.youtobe.com","nihao");
+    </script>
+</body>
+</html>

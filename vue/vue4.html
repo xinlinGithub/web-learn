@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+    <style>
+       
+        #app div{
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            float: left;
+            margin-left: 20px;
+        }
+        #app .red{
+            background-color: red;
+        }
+        #app .blue{
+            background-color: blue;
+        }
+        #app .orange{
+            background-color: orange;
+        }
+        #app .yellow{
+            background-color: yellow;
+        }
+        #app::after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div :class="{red: flag}" :style="{width: w + 'px'}" v-if="flag"></div>
+        <div :class="{blue: !flag}" :style="style()" v-else="flag == false"></div>
+        <!-- v-show:是display：none v-if:是直接删除 -->
+        <div :class="color" :style="style()" v-show="show()"></div>
+        <button @click="changeClass" ref = "mybtn">changeClass</button>
+        <input type="text" v-model="w">
+        <input type="text" v-model="h">
+        <template v-if="attach">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+        </template>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                flag: true,
+                color: "orange",
+                w: 200,
+                h: 100,
+                attach: true
+            },
+            methods: {
+                changeClass(){
+                    this.flag = !this.flag;
+                    this.attach = !this.attach;
+                },
+                style(){
+                    return {
+                        width: this.w + 'px',
+                        height: this.h + 'px'
+                    }
+                },
+                show(){
+                    return this.flag;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

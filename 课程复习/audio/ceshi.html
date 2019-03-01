@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        .music{
+            display: block;
+            margin: 50px auto;
+            border: 1px solid blue;
+        }
+        .wrapper{
+            position: relative;
+            width: 500px
+            height: 50px;
+            border: 1px solid orange;
+            border-radius: 20px;
+            margin: 10px auto;
+            list-style: none;
+        }
+        .wrapper li{
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            background: rgba(209, 115, 115, 0.8);
+            cursor: pointer;
+        }
+        .box{
+            width: 200px;
+            height: 400px;
+            background: #ccc;
+            font-size: 40px;
+            font-weight: 300;
+            line-height: 40px;
+            padding: 5px;
+            position: fixed;
+            top: 200px;
+            left: 200px;
+            display: none;
+            border-radius: 30px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- 在vidio上通用 -->
+    <!-- <audio src="C:\KwDownload\song\薛之谦&毛不易-消愁.mp3" autoplay controls preload='auto' loop></audio> -->
+    <!-- <video src="./f5537458212a0afaed76e0d6a8b89422.mp4" width="200px" height="300px" controls poster='./518bcb28e833f8aca165d18e7543acbc.jpg'></video> -->
+    <!-- <audio id="music" controls>
+        <source src='C:\KwDownload\song\薛之谦&毛不易-消愁.mp3' type="audio/ogg" > 
+    </audio> -->
+    <ul class="wrapper">
+        <li>play</li>
+        <li>pause</li>
+        <li>play/pause</li>
+        <li>+</li>
+        <li>-</li>
+        <li>&lt</li>
+        <li>&gt</li>
+        <li>fast</li>
+        <li>slow</li>
+        <li>restore</li>
+    </ul>
+    <div class="box">
+        停下来休息一下吧亲！！！
+    </div>
+    <script>
+        var audio = new Audio();
+        audio.src = './薛之谦-渡.mp3';
+        audio.className = 'music';
+        audio.controls = 'controls';
+        audio.loop = 'loop';
+        audio.autoplay = 'autoplay';
+        document.body.appendChild(audio);
+        // window.onload = function () {
+        //     console.log(audio.currentSrc)
+        // }
+        var li = document.getElementsByTagName('li');
+        var div = document.getElementsByTagName('div')[0];
+        
+        li[0].onclick = function () {
+            audio.play();
+            div.style.display = 'none';
+
+        }
+        li[1].onclick = function () {
+            audio.pause();
+            div.style.display = 'block';
+        }
+        li[2].onclick = function () {
+            if(audio.paused){
+                audio.play();
+                div.style.display = 'none';
+            }else{
+                audio.pause();
+                div.style.display = 'block';
+            }
+        }
+        li[3].onclick = function () {
+            if(audio.volume > 0.99){
+                audio.volume = 1;
+            }else{
+                audio.volume +=0.1;
+            }
+            
+ 
+        }
+        li[4].onclick = function () {
+            if(audio.volume <= 0.1){
+                audio.volume = 0;
+            }else{
+                audio.volume -=0.1;
+            }
+        }
+        li[6].onclick = function () {
+            audio.currentTime +=10;
+            console.log(audio.currentTime);
+        }
+        li[5].onclick = function () {
+            audio.currentTime -=10;
+            console.log(audio.currentTime);
+        }
+        li[7].onclick = function () {
+            if(audio.playbackRate >=4){
+                audio.playbackRate = 4;
+            }else{
+                audio.playbackRate +=0.4;
+            }
+        }
+        li[8].onclick = function () {
+            if(audio.playbackRate <=0 ){
+                audio.playbackRate = 0;
+            }else{
+                audio.playbackRate -= 0.1;
+            }
+
+        }
+        li[9].onclick = function () {
+            audio.playbackRate = 1;
+
+        }
+        
+
+
+    </script>
+</body>
+</html> 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态规划1</title>
+</head>
+<body>
+    <script>
+        //寻找最大正方形问题
+        // 在二维数组中 0代表有污点 1代表干净 找到干净的最大正方形
+        var squareArr = [
+            [0, 0, 1, 0, 0],
+            [1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0]
+        ]
+        function findLargestSquare(arr) {
+            var pbArr = new Array(arr.length);
+            for(var i = 0; i < arr.length; i++) {
+                pbArr[i] = new Array(arr[i].length).fill(1);
+                for(var j = 0; j < arr[i].length; j++) {
+                    if(arr[i][j] == 1) {
+                        pbArr[i][j] = 0;
+                    }
+                }
+            }
+            console.log(pbArr, getMaxWidth(pbArr));
+        }
+        function getMaxWidth(arr){
+            var maxWidth = 1;
+            for(var i = 1; i < arr.length; i++) {
+                for(var j = 1; j < arr[i].length; j++){
+                    if(arr[i][j] != 0){
+                        arr[i][j] = Math.min(arr[i][j-1], arr[i-1][j], arr[i-1][j-1]) + 1;
+                        maxWidth = Math.max(maxWidth, arr[i][j])
+                    }
+                }
+            }
+            return maxWidth;
+        }
+        findLargestSquare(squareArr);
+
+        // 寻找最大长方形问题
+        //  虽然看似与上面那个差不多 但思路完全不同
+        // 先把每一列从上到下连续的话就递增 形成数据条 再对每一行分析数据条
+        // 利用堆栈 把每一行的数依次压如堆栈 若比栈顶的数大则压如即可 
+        // 若等于则不进行操作 若小于就弹出堆栈 直到最后一个数出现 乘以列差 再跟新最大值
+        var squareArr1 = [
+            [0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0]
+        ]
+        var maxSquare = 1;
+        var tgArr;
+        var stack = [];
+        function Stack(val, x) {
+            this.val = val;
+            this.x = x;
+        }
+        function renderSquareArr() {
+            tgArr = new Array(squareArr1.length);
+            for(var i = 0; i < squareArr1.length; i++) {
+                tgArr[i] = new Array(squareArr1[i].length).fill(1);
+                for(var j = 0; j < squareArr1[i].length; j++) {
+                    if(squareArr1[i][j] == 1) {
+                        tgArr[i][j] = 0;
+                    }
+                }
+            }
+            console.log(squareArr1);
+        }
+        renderSquareArr() 
+        function getMaxSq() {
+            for(var j = 0; j < tgArr[0].length; j++) {
+                for(var i = 1; i < tgArr.length; i++) {
+                    if(tgArr[i][j] == 0) {
+                        continue;
+                    }
+                    tgArr[i][j] = tgArr[i-1][j] + 1;
+                }
+            }
+            for(var i = 0; i < tgArr.length; i++) {
+                for(var j = 0; j < tgArr[i].length; j++) {
+                    // 分三种情况去操作 > = < 把整体分成每个局部的小块去做
+                    if(stack.length == 0 || stack[stack.length - 1].val < tgArr[i][j]) {
+                        if(tgArr[i][j] != 0) {
+                            stack.push(new Stack(tgArr[i][j], j));
+                        }
+                    }else if(stack[stack.length - 1].val == tgArr[i][j] && j == tgArr[i].length - 1){
+                        stack[stack.length - 1].x += 1;
+                    }else if(stack[stack.length - 1].val > tgArr[i][j]){
+                        var first;
+                        while(stack.length > 0 && stack[stack.length - 1].val >= tgArr[i][j]) {
+                            first = stack.pop();
+                        }
+                        maxSquare = Math.max(maxSquare, (j - first.x) * first.val )
+                        if(tgArr[i][j] != 0) {
+                            stack.push(new Stack(tgArr[i][j], first.x));
+                        }
+                    }
+                }
+                if(stack.length > 0) {
+                    maxSquare = Math.max(maxSquare, (stack[stack.length - 1].x - stack[0].x + 1) * stack[0].val);
+                    stack = [];
+                }
+            }
+            console.log(tgArr, maxSquare);
+        }
+        getMaxSq();
+    </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .passward{
+            border: 5px solid orange;
+        }
+        p{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li id="1">
+           1 <p></p>
+        </li>
+        <li>2</li>
+        <div>
+            <li>33</li>
+        </div>
+        <li>3</li>
+        <li>4</li>
+    </ul>
+    <ul>
+        <li id="2">1</li>
+        <li>2</li>
+        <li>
+            3<p>
+                <span>
+                </span>
+            </p>
+            <li>4</li>                
+        </li>
+        <div>
+            <!-- 内联元素却不能包含块元素，它只能包含其他的内联元素
+            那哪些块元素里面不能放哪些块元素呢？
+                块级元素可以包含任何元素，p 标签除外 他只能包含行级元素 li不能包含他本身；
+                包不住就会自动跳出  因为渲染不出来
+                行级元素只能包含行及元素 行及元素又叫内联元素又叫行内元素
+                可以先把所有的块元素再次划分成几个级别的，我们
+                已经知道<html>是在最外层，<html>下一级里面只会有<head>、
+                body>、<frameset>、<noframes>，而我们已经知道了可视的
+                元素只会出现在<body>里，所以我们把<body>划在第一个级里面，
+                接着，把不可以自由嵌套的元素划在第三个级，其他的就归进第二个级。
+                所谓的不可自由嵌套的元素就是里面只能放内联元素的，它们包括有：
+                标题标记的<h1>、<h2>、<h3>、<h4>、<h5>、<h6>、<caption>；
+                段落标记的<p>；分隔线<hr>和一个特别的元素<dt>(它只存在于列
+                表元素<dl>的子一级)。 -->
+                <!-- p标签里面不能嵌套块级元素 -->
+            <li>5</li>
+        </div>
+           
+        
+    </ul>
+    <form>
+        <input type="button" value="Input Button"/><br>
+        <input type="checkbox" checked = "checked"/><br>
+        <input type="file" /><br>
+        <input type="hidden" /><br>
+        <input type="image" src="../bj.jpg"/><br>
+        <input type="password" /><br>
+        <input type="radio" /><br>
+        <input type="reset" /><br>
+        <input type="submit" /><br>
+        <input type="text" name="222" id="nb">
+        <input type="text" id="text"/><br>
+        <select>
+            <option>Option</option>
+            <option value="1">option1</option>
+            <option value="2">option2</option>
+            <option value="3">option3</option>
+        </select><br>
+        <textarea></textarea><br>
+        <button>Button</button>
+
+        <form>
+            <label>Name:</label>
+            <input name="name" />
+            <fieldset>
+                <label>Newsletter:</label>
+                <input name="newsletter" />
+            </fieldset>
+            </form>
+            <input name="none" />
+        </form> 
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        var input = $('input');
+        var radio = $('input[type="radio"]').attr('checked',true);
+        var submit = $('input[type^="s"]').attr('value','ssbbb');
+        var passward = $('input[type$="d"]').attr('class','passward');
+        var option = $('select>option[value!="1"]').css({'color':'red','fontSize': '20px','backgroundColor':'#666'})
+        var text = $('input:text').hover(function(){
+            console.log('缓上')
+        },function(){
+            console.log('压死')});
+        var hidden = $('input:hidden')
+        var texT = $('input[type="text"][id="text"]')
+        var pli1 = $('div + p').css('backgroundColor','red');//必须是紧接着的才行                
+        var pli = $('li[id="2"] ~ li').css('backgroundColor','yellow'); //   
+        var inp = $("label + input")
+    </script>
+</body>
+</html>

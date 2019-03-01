@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // 老版本jqeury解析
+        // 今日目标：
+        // 1.介绍jquery
+        // 2.jquery中的选择器
+        // jquery版本
+        // jquery1 兼容老IE
+        // jquery2 功能丰富 不兼容老IE
+        // jquery3 功能丰富 不兼容老IE
+        // 共100多个操作函数，分为四类
+        // (1) DOM操作
+        // (2) 事件处理 jquery提供的函数基本上就不存在兼容性问题了 简化了DM操作 
+        // (3)动画
+        // (4)ajax
+
+        // 复习： 常见的DOM操作 原生操作
+        // 查找元素：
+            // document.getElementById()
+            // document.getElementsByClassName();
+            // document.getElementsByTagName();
+            // document.getElementsByName();
+            // document.querySelector();
+            // document.querySelectorAll();
+        // 操作元素的属性:
+        //     Element.setAttribute(); 设置属性元素；
+        //     Element.getAttribute(); 得到一个属性； 
+        // 操作元素的内容:
+        //     Element.innerHTMl = ;
+        //     Element.innerText = ;
+        //     Element.textContent = ie 支持
+        // 操作元素的值：
+        //     Element.value = ; 
+        // 操作元素的样式: 
+        //     Element.style.background = ;
+        //     Element.className = ; 
+        // 遍历元素（查找孩子 查找兄弟);
+        //     Element.parentNode(节点数)；
+        //     Element.childNodes
+        //     Element.nextSibling
+        //     Element.previousSibling
+        // 添加元素:
+        //     var c = document.createElement();
+        //     body.appendChild(c)
+        // 删除元素:
+        //     parent.removeChild();
+        //     parent.innerHTML = ;
+        // 替换元素:
+        //     parent.replaceChild(new,old);
+        // 克隆元素：
+        //     Element.cloneNode();
+        // 2.html使用jquery
+        // (1)jQuery.js 放在head 或body后 推荐body
+        // (2)jquery.js 两个全局变量 $/jQuery;
+        // (3)jQuery和DOM 的区别；
+        //     jquery对象：由$/jquery 返回对象函数 --类数组对象
+        //     注意：jQuery 方法不能使用Dom方法 反之亦然！
+        // jQuery对象如何转化成dom对象：
+        //     var jQuery = $('button');
+        //     var domobj = jQuery[0] 转化成dom对象
+        //     var domobj = get(0) 转化成dom 对象；
+        // dom 转化成jquery 对象：
+        //     var domobj = document.getElementsByClassName('btn');
+        //     var jq = $(domobj) 转化成jquery对象；变量绝对不能加引号；
+        // jQuery对象的特点：
+            // 提供的所有方法都自带循环功能
+            // 提供大部分方法，返回值仍然是当前jQuery对象
+            // jQuery函数第一组：dom操作查找元素相关方法
+            // 提示：jquery查找元素直接使用选择器，语法上几乎兼容css选择器，又有一定的扩展，
+            //     作用类似querySelector All()但是兼容性更好；
+        // 使用语法：
+        //     基本选择器：#id .class div * s1,s2,s3
+        //     层级选择器: $('p c') $('p>c') $('prev+next')找兄弟元素 $('prev~sibling')
+        //     属性选择器:$('[attr]') $('div[attr]') $('a[href='#']') $('[attr^ = 'value']')开头 $('[attr$ = 'value']')结尾 $('[attr* = 'value']') 无论在哪儿 $('[attr! = 'value']')不论在某个值
+        //     form表单元素选择器: :text :passward :radio :checkbox :file :hidden :submit :reset :button :image :input :checked :selected :disabled :enabled
+        //     基本过滤选择器：li:first li:last li:eq :lt :gt :odd :even 就是多了一个条件
+                        // 特点: 把所有的元素都放到一个集合中 从0开始 无论是不是同一个父级中的元素
+        //     子代过滤选择器：:fast-child :last-child :nth-child(i/odd/even/2n/2n+1) :only-child(从每组里面取第几个)
+        //    内容过滤选择器: :contains(text/txt) :empty :has(selector) :parent 
+        
+        //    visibility filter可见性过滤选择器: :hidden head meta script title display:none :visible
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <my-app :msg="msg" v-bind="text"></my-app>
+        <input type="text" v-model="msg.say">
+        <div>{{ msg }}</div>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        const myApp = {
+             // 对象可以直接对Props的值改变 且不会报错 且父级改子集也跟着变 
+                    // 双向数据传递 间接改也一样 除非处理一下 让对象的指向发生改变
+                    // 比如数组用map处理一下就可以对生成的新的数组改变了 且不会影响父级
+                    // 但引用值是单向  子集也不能直接去改 一般拿个值接收一下再改
+                    // 无论如何 一般别直接改 重新接一下再改
+            template: `
+                <div>{{ msg }} | {{ myMsg }}
+                    <input type='text' v-model='msg.say'>
+                    
+                    <div>{{ title }} | {{ name }} | {{ word }}</div>
+                </div>
+            `,
+            data(){
+                return {
+                    myMsg: this.msg
+                }
+            },
+            props: {
+                msg: {
+                    type: Object,
+                    required: true
+                },
+                title: {
+                    type: String,
+                    required: true
+                },
+                name:{
+                    type: String,
+                    required: true
+                },
+                word: {
+                    type: String,
+                    required: true
+                }
+                // sex: {
+                //     type: String,
+                //     required: true
+                // }
+            }
+        }
+        var app = new Vue({
+            el: '#app',
+            components: {
+                myApp
+            },
+            data: {
+                msg: { say: 'ni hao!'},
+                text: {
+                    title: 'this is vue',
+                    name: 'chenxiulin',
+                    word: 'hahahahaha'
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        svg{
+            border: 1px solid blue;
+        }
+        rect,circle,polyline,line,ellipse{
+            fill: transparent;
+            stroke: brown;
+            stroke-width: 3px;
+        }
+        .c1{
+            fill: red;
+        }
+        path{
+            fill: transparent;
+            stroke: red;
+            stroke-width: 2px;
+        }
+        text{
+            font-size: 20px;
+            fill: transparent;
+            stroke: blue;
+        }
+
+
+
+
+
+
+        @-webkit-keyframes stright1{
+           0%{
+               stroke-dashoffset: 0px;
+           }
+           100%{
+               stroke-dashoffset: 594.6849975585938px;
+           }
+        }
+        @-webkit-keyframes stright2{
+           0%{
+               stroke-dashoffset: 0px;
+           }
+           100%{
+               stroke-dashoffset: 564.398681640625px;
+           }
+        }
+        .path1{
+           stroke-dasharray: 594.6849975585938px;
+           stroke-dashoffset: 0px;
+           -webkit-animation: stright1 2s ease-out alternate infinite;
+        }
+        .path2{
+           stroke-dasharray: 564.398681640625px;
+           stroke-dashoffset: 0px;
+           -webkit-animation: stright2 2s ease-out alternate infinite;
+
+        }
+
+
+
+
+        .che1{
+            stroke-width: 10px;
+            stroke: #ccc;
+        }
+        .che2{
+            stroke-width: 10px;
+            stroke: orange;
+            stroke-dasharray: 882.1548461914062px;
+            stroke-dashoffset: 882.1548461914062px;
+            transition: all 2s linear;
+            
+        }
+        /* @-webkit-keyframes turn{
+            0%{
+               stroke-dashoffset: 0px;
+            }
+            100%{
+               stroke-dashoffset: 882.1548461914062px;
+            }
+        } */
+    </style>
+</head>
+<body>
+    <svg width = 500 height = 500 viewBox="0,0,800,800">
+        <!-- 第一部分 -->
+        <polygon points="100 100,150 50,200 100,250 50,300 100,350 50,400 100"></polygon>
+        <rect x=90 y=100 width=320 height=300 rx=10 ry=10></rect>
+        <circle r=20 cx=180 cy=180></circle>
+        <circle r=20 cx=330 cy=180></circle>
+        <circle r=5 cx=190 cy=190 class="c1"></circle>
+        <circle r=5 cx=320 cy=190 class="c1"></circle>
+        <polyline points="230 280,250 230,270 280,230 280"></polyline>
+        <ellipse rx=40 ry=20 cx=250 cy=330></ellipse>
+        <line x1=270 y1=350 x2=350 y2=450></line>
+        <path d="M 350 450 A 100 30 0 1 0 450 450 Z"></path>
+        <text x=330 y=480>Hollow World!!!</text>
+
+
+
+        <!-- 第二部分 -->
+        <line x1=500 y1=0 x2=500 y2=800></line>
+        <path d="M 635 50 A 30 20 0 1 1 665 50"></path>
+        <line x1=635 y1=50 x2=635 y2=150></line>
+        <line x1=665 y1=50 x2=665 y2=150></line>
+        <polyline points="635 210,635 190, 620 170, 620 150, 680 150, 680 170, 665 190,665 210"></polyline>
+        <path d="M 635 210 Q 655 260 635 310 S 615 360 635 410 S 655 460 635 510 S 615 560 635 610 S 665 660 635 710 S 650 680 650 750" class = "path1"></path>
+        <!-- <path d="M 635 310 Q 615 360 635 410"></path>
+        <path d="M 635 410 Q 655 460 635 510"></path>
+        <path d="M 635 510 Q 615 560 635 610"></path> -->
+        <!-- <path d="M 635 610 Q 655 660 635 710"></path> -->
+
+
+
+        <path d="M 665 210 Q 685 260 665 310 S 645 360 665 410 S 685 460 665 510 S 645 560 665 610 S 685 660 665 710 S 650 750 650 750" class = "path2"></path>
+        <!-- <path d="M 665 310 Q 645 360 665 410"></path>
+        <path d="M 665 410 Q 685 460 665 510"></path>
+        <path d="M 665 510 Q 645 560 665 610"></path> -->
+
+
+        <!-- 第三部分 -->
+        <path d="M 220 780 A 150 150 0 1 1 280 780" class = "che1"></path>
+        <path d="M 220 780 A 150 150 0 1 1 280 780" class = "che2"></path>
+
+    </svg>
+    <input type="text">
+    
+        
+        
+    <script>
+        var path1 = document.getElementsByClassName('path1')[0];
+        var path2 = document.getElementsByClassName('path2')[0];
+        var l1 = path1.getTotalLength();
+        var l2 = path2.getTotalLength();
+        
+
+
+
+        var path3 = document.getElementsByClassName('che2')[0];
+        var L = path3.getTotalLength();
+        console.log(L);
+        var oInput = document.getElementsByTagName('input')[0];
+        oInput.onblur = function () {
+            var val = this.value;
+            path3.style.strokeDashoffset = L - val/100*L + 'px';
+            path3.style.transition = 'all 2s linear';
+        }
+        oInput.onfocus = function () {
+            path3.style.strokeDashoffset = L + 'px';
+            path3.style.transition = 'none';
+        }
+    </script>
+
+</body>
+</html>

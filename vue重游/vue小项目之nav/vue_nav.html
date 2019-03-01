@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue_nav</title>
+    <link rel="stylesheet" href="./vue_nav.css">
+</head>
+<body>
+    <div id="app">
+        <tab v-model="nativeKey" v-cloak>
+            <pane :key="1" name="1" label="标题一">
+                这是标题一
+            </pane>
+            <pane :key="2" name="2" label="标题二">
+                这是标题二
+            </pane>
+            <pane :key="3" name="3" label="标题三">
+                这是标题三
+            </pane>            
+        </tab>
+    </div>
+    
+    <script src="./vue.js"></script>
+    <script src="./vue_nav_pane.js"></script>
+    <script src="./vue_nav_tab.js"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                nativeKey: 1
+            }
+        })    
+    </script>
+</body>
+</html>

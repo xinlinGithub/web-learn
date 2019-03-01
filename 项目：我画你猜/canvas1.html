@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>drawing borad</title>
+    <link rel="stylesheet" href="./canvas.css">
+</head>
+<body>
+    <div class="wrapper">
+        <canvas class="cavs" width="1000" height="500"></canvas>
+        <ul class="btn-list">
+            <li><input id="colorBoard" type="color" value="colorBoard"></li>
+            <li><input id="clear" type="button" value="清屏"></li>
+            <li><input id="eraser" type="button" value="绘画"></li>
+            <li><input id="ret" type="button" value="撤销"></li>
+            <li><input id="line" type="range" value="线条" min="1" max="30"></li>
+            <li><input id="add" type="button" value="+"></li>
+            <li><input id="dic" type="button" value="-"></li>            
+        </ul>
+    </div>
+    <script src="../jquery-3.2.1.js"></script>
+    <script src="./canvas1.js"></script>
+</body>
+</html>

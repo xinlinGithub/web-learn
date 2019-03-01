@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .box{
+            box-sizing: border-box;
+            position: relative;
+            top: 30px;
+            left: 20px;
+            border: 1px solid orange;
+            width: 660px;
+            height: 560px;
+            overflow: hidden;
+        }
+        .food{
+            box-sizing: border-box;
+            background: yellowgreen;
+            border-radius: 50%;
+        }
+        .snake{
+            box-sizing: border-box;
+            background: blueviolet;
+            border-radius: 50%;
+        }
+        .head{
+            box-sizing: border-box;
+            background: red;
+            border-radius: 50%;
+        } 
+        .grade{
+            position: absolute;
+            top: 0;
+        }
+        /* #head{
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        }
+        .snake{
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        } */
+    </style>
+</head>
+<body>
+    <div class="box">
+    </div>
+    <div class = 'grade'>
+        <h2 style="display : inline-block">当前得分为：</h2>
+        <span class = 'score'>0</span>
+        
+    </div>
+    
+
+    </div>
+    <script>
+        var snakeBox = document.getElementsByClassName('box')[0];
+        var score = document.getElementsByClassName('score')[0];
+        function init(math) {
+            this.head = document.getElementsByClassName('head')[0];
+            this.snakeBoxW = parseInt(getComputedStyle(snakeBox).width);
+            this.snakeBoxH = parseInt(getComputedStyle(snakeBox).height);
+            this.snakeW = math;
+            this.snakeH = math;
+            this.snakeBody = [[4,2,'head'],[3,2,'body'],[2,2,'body']];
+            this.randomX = Math.floor(Math.random()*(this.snakeBoxW/this.snakeW));
+            this.randomY = Math.floor(Math.random()*(this.snakeBoxH/this.snakeH));
+            this.direct = 'right';
+            this.right = false;
+            this.left = false;
+            this.Top = true;
+            this.bottom = true;
+            this.snakeScore = 0;
+
+            startGame();
+        }
+        init(20);
+        function startGame() {
+            food();
+            snake();
+            var time = setInterval(function () {
+                move();
+            },200)
+            bindEvent();
+            // move();
+        }
+        function food() {
+            var div = document.createElement('div');
+            div.style.position = 'absolute';
+            div.style.width = this.snakeW + 'px';
+            div.style.height = this.snakeH + 'px';
+            div.style.left = this.randomX*this.snakeW + 'px';
+            div.style.top = this.randomY*this.snakeH + 'px';
+            div.setAttribute('class','food');
+            snakeBox.appendChild(div);
+        }
+        function snake() {
+            for(var i = 0; i < this.snakeBody.length; i++){
+                var div = document.createElement('div');
+                div.style.width = this.snakeW + 'px';
+                div.style.height = this.snakeH + 'px';
+                div.style.position = 'absolute';
+                div.style.left = this.snakeBody[i][0]*this.snakeW + 'px';
+                div.style.top = this.snakeBody[i][1]*this.snakeH + 'px';
+                div.setAttribute('class',this.snakeBody[i][2]);
+                div.classList.add('snake');
+                snakeBox.appendChild(div);    
+            }
+        }
+        function findDirect() {
+            var L = this.head.offsetLeft + this.snakeW/2,
+                T = this.head.offsetTop + this.snakeH/2,
+                a = (this.x-L)/(this.y-T),
+                b = this.y-T,
+                c = this.x-L;
+            if((b>0&&0<a&&a<1&&c>0)||(c<=0&&b>0&&-1<a&&a<=0)){
+                if(this.bottom){
+                    this.direct = 'bottom';
+                    this.Top = false;
+                    this.bottom = false;
+                    this.right = true;
+                    this.left = true;
+                }
+            }else if((b<0&&c<0&&0<a&&a<1)||(c>=0&&b<0&&-1<a&&a<=0)){
+                if(this.Top){
+                    this.direct = 'top';
+                    this.Top = false;
+                    this.bottom = false;
+                    this.right = true;
+                    this.left = true;      
+                }  
+                
+            }else if((b<0&&a<-1&&c>0)||(c>0&&b>=0&&a>=1)){
+                if(this.right){
+                    this.direct = 'right';
+                    this.right = false;
+                    this.left = false;
+                    this.Top = true;
+                    this.bottom = true;
+                }
+            }else if((b>0&&a<-1&&c<0)||(c<0&&b<=0&&a>=1)){
+                if(this.left){
+                    this.direct = 'left';
+                    this.right = false;
+                    this.left = false;
+                    this.Top = true;
+                    this.bottom = true;
+                }
+            }
+        }
+        function bindEvent() {
+            snakeBox.onclick = function (e) {
+                window.y = e.pageY - parseInt(getComputedStyle(snakeBox).top);
+                window.x = e.pageX - parseInt(getComputedStyle(snakeBox).left);
+                window.head = document.getElementsByClassName('head')[0]
+                findDirect()
+            }
+        }
+        function move() {
+            for(var i = snakeBody.length - 1; i>0; i--){
+                this.snakeBody[i][0] = this.snakeBody[i-1][0];
+                this.snakeBody[i][1] = this.snakeBody[i-1][1];
+            }
+            switch(this.direct) {
+                case 'right' : this.snakeBody[0][0] += 1;
+                break;
+                case 'left' : this.snakeBody[0][0] -= 1;
+                break;
+                case 'top' : this.snakeBody[0][1] -= 1;
+                break;
+                case 'bottom' : this.snakeBody[0][1] += 1;
+            }
+            // 去掉上面的class名，重新渲染，再添加；
+            isBox();
+            removeClass('snake');
+            snake();
+            isFood();
+            
+           
+            // console.log(this.snakeBody)
+        }
+        function removeClass(dom) {
+            var snake = document.getElementsByClassName(dom);
+            while(snake.length > 0){
+                snake[0].parentNode.removeChild(snake[0]);
+            }
+        }
+        function isFood() {
+            if(this.snakeBody[0][0] == this.randomX && this.snakeBody[0][1] == this.randomY){
+                var len = snakeBody.length;
+                switch(this.direct) {
+                    case 'right' : this.snakeBody.push([this.snakeBody[len-1][0]-1,this.snakeBody[len-1][1],'body']);
+                    break;
+                    case 'left' : this.snakeBody.push([this.snakeBody[len-1][0]+1,this.snakeBody[len-1][1],'body']);
+                    break;
+                    case 'top' : this.snakeBody.push([this.snakeBody[len-1][0],this.snakeBody[len-1][1]+1,'body']);
+                    break;
+                    case 'bottom' : this.snakeBody.push([this.snakeBody[len-1][0]-1,this.snakeBody[len-1][1]-1,'body']);
+                }
+                this.snakeScore += 1;
+                score.innerText = this.snakeScore;
+                removeClass('food')
+                this.randomX = Math.floor(Math.random()*(this.snakeBoxW/this.snakeW));
+                this.randomY = Math.floor(Math.random()*(this.snakeBoxH/this.snakeH));
+                food();
+            }
+        }
+        function isBox() {
+            switch(this.direct) {
+                case 'right' : if(this.snakeBody[0][0] > this.snakeBoxW/this.snakeW-1){
+                        this.snakeBody[0][0] = 0;
+                    }
+                    break;
+                case 'left' : if(this.snakeBody[0][0] < 0){
+                        this.snakeBody[0][0] = this.snakeBoxW/this.snakeW;
+                    };
+                    break;
+                case 'top' : if(this.snakeBody[0][1] < 0){
+                        this.snakeBody[0][1] = this.snakeBoxH/this.snakeH;
+                    };
+                    break;
+                case 'bottom' : if(this.snakeBody[0][1] >= this.snakeBoxH/this.snakeH){
+                        this.snakeBody[0][1] = 0;
+                    };
+                break;
+            }
+        }
+        
+
+        // var snakeArr = [[4,2,'head'],[3,2,'body']];
+        // var box = document.getElementsByClassName('box')[0];
+        // function init() {
+        //     for(var i = 0; i < snakeArr.length; i++){
+        //         var div = document.createElement('div');
+        //         box.appendChild(div);
+        //         div.id = snakeArr[i][2];
+        //         div.classList.add('snake');
+        //         div.style.left = snakeArr[i][1]*20 + 'px';
+        //         div.style.top = snakeArr[i][2]*20 + 'px';
+                
+                
+        //     }
+        // }
+        // init();
+        
+        // var head = document.getElementById(snakeArr[0][2]);
+        // var w = head.offsetWidth,
+        //     h = head.offsetHeight,
+        //     flag,
+        //     flags = true;
+        // var snakeX = Math.floor(box.offsetWidth/w);
+        // var snakeY = Math.floor(box.offsetHeight/h);
+
+        
+        // var 
+        // function init() {
+        //     this.
+        //     this.
+
+        //     startGame() 
+        // }
+        
+            
+        // function bottomTurn() {
+        //         var timer = setInterval(function () {
+        //             if(flag == 'bottom'){
+        //                 var H = head.offsetTop + h;
+        //                 head.style.top = H + 'px';
+        //             }else{
+        //                 clearInterval(timer);
+        //             } 
+        //         },500)
+           
+        // }
+        // function leftTurn() {
+        //     var timer = setInterval(function () {
+        //         if(flag == 'left'){
+        //             var W = head.offsetLeft - w;
+        //             head.style.left = W + 'px';
+        //         }else{
+        //             clearInterval(timer);
+        //         }
+                
+        //     },500)
+        // }
+        // function rightTurn() {
+        //     var timer = setInterval(function () {
+        //         if(flag == 'right'){
+        //             var W = this.head.offsetLeft + this.snakeW;
+        //             this.head.style.left = W + 'px';
+        //             move();
+        //         }else{
+        //             clearInterval(timer);
+        //         }
+                
+        //     },500)
+        // }
+        // function topTurn() {
+        //     var timer = setInterval(function () {
+        //         if(flag == 'top'){
+        //             var H = head.offsetTop - 20;
+        //             head.style.top = H + 'px';
+        //         }else{
+        //             clearInterval(timer);
+        //         }
+        //     },400)
+        // }
+    
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>regist</title>
+    <script src="./ajax.js"></script>
+</head>
+<body>
+    这是一个登录页面<br>
+    <form action="/register" method="get" id="iFrom" onsubmit="return register()">
+        <label for="stu_num">学号：</label>
+        <input type="text" id="stu_num" name= "stu_num" placeholder="请输入学号"><br>
+        <label for="name">姓名：</label>
+        <input type="text" id="name" name="name" placeholder="请输入姓名"><br>
+        <label for="age">年龄：</label>
+        <input type="text" id="age" name="age" placeholder="请输入年龄"><br>
+        <label for="class">班级：</label>
+        <input type="text" id="class" name="class" placeholder="请输入班级"><br>
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="psd" placeholder="请输入密码"><br>
+        <label for="password1">确认密码：</label>
+        <input type="password" id="password1" placeholder="请确认密码"><br>
+        <input type="submit" id="submit">
+    </form>
+    <script src="./register.js"></script>
+</body>
+</html>

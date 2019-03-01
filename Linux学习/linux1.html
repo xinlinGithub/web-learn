@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代码上线</title>
+</head>
+<body>
+    先传到github上
+        git add .
+        git commit -m "备注"
+        git push origin master
+        在一人开发下 这样就上线了 
+        多人的话要加一个 git stash
+    linux部署：
+        进入home: cd /
+                cd /home
+        先关掉防火墙：
+        Linux关闭开启防火墙命令
+            在外部访问CentOS中部署应用时，需要关闭防火墙。
+            
+            关闭防火墙命令：systemctl stop firewalld.service
+            
+            开启防火墙：systemctl start firewalld.service
+            
+            关闭开机自启动：systemctl disable firewalld.service
+            
+            开启开机启动：systemctl enable firewalld.service
+        在重启：reboot;
+        再在mysql中输入一下命令 就是允许mysql能被任何服务器访问
+        show databases;
+        use mysql;
+        
+        select host , user from user;
+        
+        show create table user;
+        update user set host="%" where host = "localhost" and user="root";
+
+        在Linux中进入home 用 ip addr 查看本机地址
+        在cmd中 ipconfig 来看ip地址  在更改mysql连接中的地址 再关掉防火墙
+        再重启mysql服务  再重新将代码提交到github上 再在Linux上拉取下来
+        npm install 把包都装上
+        node index.js 启动服务 
+        在网页输入服务器地址就可以访问了
+</body>
+</html>https://github.com/xinlinGithub/PersonalBlog.git

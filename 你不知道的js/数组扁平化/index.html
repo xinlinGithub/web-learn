@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>数组扁平化</title>
+  </head>
+  <body>
+    <script>
+      // 说白了 就是数组的降维 就是我们请求回来数据后只关心里面的数据 而不在意他的格式
+      // 将层级高的数组转化成层级低的数组 一层一层往外拆
+
+      var arr = [1, 2, [3, 4], [5, [6, [7, [8, [9, 10, {}]]]]]];
+
+      //   运用递归思想 普通形式
+      function flatter(arr) {
+        var originArr = arr || [];
+        var flArr = [];
+        originArr.forEach(item =>
+          Object.prototype.toString.call(item) === "[object Array]"
+            ? (flArr = flArr.concat(flatter(item)))
+            : flArr.push(item)
+        );
+        return flArr;
+      }
+      //   console.log(flatter(arr));
+
+      //   写在原型链上
+      Array.prototype.flatter = function() {
+        var flArr = [];
+        this.forEach(item =>
+          Object.prototype.toString.call(item) === "[object Array]"
+            ? (flArr = flArr.concat(item.flatter()))
+            : flArr.push(item)
+        );
+        return flArr;
+      };
+      //   console.log(arr.flatter());
+
+      // 用reduce实现 reduce是字符串原型上的一个方法 他有两个参数 fn(prevVal, curVal, curInd, originArr) , initArr:prevVal 也就是前一个值 不传则忽略第一次执行
+
+      var a = [1, 2, 3, 4];
+      var initArr = [];
+      var num = 0;
+      //   a.reduce(function (prev, cur, curInd, arr) {
+      //       num += cur;
+      //       console.log(prev, cur);
+      //       return num;//return 的值回作为下一次执行的prev
+      //   },num)
+    //   var rea = a.reduce(function(prev, cur, curInd, arr) {
+    //     prev.push(cur);
+    //     console.log(prev, cur);
+    //     return prev; //return 的值回作为下一次执行的prev 最终会把initArr返回
+    //   }, initArr);
+
+      function flatterTwo(arr) {
+        return arr.reduce(
+          (prev, cur) =>
+            Object.prototype.toString.call(cur) === "[object Array]"
+              ? prev.concat(flatterTwo(cur))
+              : prev.concat(cur),
+          []//最终会把操作后的数组返回
+        );
+      }
+      console.log(flatterTwo(arr));
+    </script>
+  </body>
+</html>

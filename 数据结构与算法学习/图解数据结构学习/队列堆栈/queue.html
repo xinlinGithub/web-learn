@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>队列</title>
+</head>
+
+<body>
+    <script>
+        // 特点：first in first out FIFO 先进先出 好比排队
+        // 用数组实现队列： 优点：算法简单 
+        // 缺点： 不能根据队列的大小动态分配数组的长度 但js可以
+        // var queue = new Array(5);
+        // var front = -1;
+        // var rear = -1;
+        // var MAX = queue.length;
+
+        // 入栈
+        // function enqueue(item) {
+        //     if(rear === MAX -1) {
+        //         return "queue is filled"
+        //     } else {
+        //         rear += 1;
+        //         queue[rear] = item;
+        //         return rear;
+        //     }
+        // }
+
+        // 出栈
+        // function dequeue() {
+        //     if(rear === front) {
+        //         return "queue is emptyed"
+        //     } else {
+        //         front += 1;
+        //         item = queue[front];
+        //         queue[front] = null;
+        //         return item;
+        //     }
+        // }
+
+        // 返回队列前面的值
+        // function retFrontVal() {
+        //     if (front === rear) {
+        //         return "队列为空"
+        //     } else {
+        //         return queue[front];
+        //     }
+        // }
+
+        // 用链表实现队列： 优点：可根据队列的大小动态分配空间 缺点：算法稍微复杂
+        var front = null;
+        var rear = null;
+        // class Queue {
+        //     constructor(val) {
+        //         this.val = val;
+        //         this.next = null;
+        //     }
+        // }
+        // 入栈 不用考虑是否已满
+        function enqueue(val) {
+            var queue = new Queue(val);
+            if (rear === null) {
+                front = queue;
+            } else {
+                rear.next = queue;
+            }
+            rear = queue;
+            return front;
+        }
+        // 出栈 考虑是否为空 即front是否为null;
+        function dequeue() {
+            if (front === null) {
+                return "queue is emptyed"
+            } else {
+                front = front.next;
+            }
+            return front
+        }
+        // 遍历队列
+        function show() {
+            var ptr = front;
+            while (ptr) {
+                console.log(ptr.val)
+                ptr = ptr.next;
+            }
+        }
+
+        // 队列的应用 广度优先查找算法 计算机的模拟 CPU的作业调度 等等
+        // 环形队列 充分利用空间资源 当rear+1%n === front时表示已满
+        // var queue = new Array(5);
+        // var front = -1;
+        // var rear = -1;
+        // var MAX = queue.length;
+
+        // 入栈 留一个空间作为判断rear和front指向相同的依据
+        // 如果不留出来一个额外的空间，则空队列和满队列时都会有rear === front
+        // 这样就无法判断了
+        // 所以留出一个 让空队列时rear === front 满队列时 rear + 1 === front(当然还有其他情况)
+        // 这也是在前面留而不在后面留的原因 这样比较方便
+        // 一般涉及到环的东西 都需要%运算去转变
+        function enqueue(item) {
+            if (rear + 1 === front || (rear === MAX - 1 && front <= 0)) {
+                return "queue is filled";
+            } else {
+                rear = (rear + 1) % MAX;
+                queue[rear] = item;
+                return queue;
+            }
+        }
+        // 出栈 判断是否为空
+        function dequeue() {
+            if (rear === front) {
+                return "queue is emptyed"
+            } else {
+                front = (front + 1) % MAX;
+                item = queue[front];
+                queue[front] = null;
+                return queue;
+            }
+        }
+
+        // 双向队列 加入和删除可在任意一端进行
+        // 一般有两种应用：一：从一端加入 两端取出 二：从两端加入一端取出
+        // 用链表分别实现两种方法
+        var front = null;
+        var rear = null;
+        class Queue {
+            constructor(val) {
+                this.val = val;
+                this.next = null;
+            }
+        }
+        // 法一：
+        // 从一端入栈
+        // function enqueue(val) {
+        //     var queue = new Queue(val);
+        //     if (front === null) {
+        //         front = queue;
+        //     } else {
+        //         rear.next = queue;
+        //     }
+        //     rear = queue;
+        //     return front;
+        // }
+        // 从前面出栈
+        // function dequeueF() {
+        //     if (front === null) {
+        //         return "queue is emptyed"
+        //     } else {
+        //         console.log(front.val)
+        //         front = front.next;
+        //         return front;
+        //     }
+        // }
+        // 从后面出栈
+        // function dequeueR() {
+        //     if (front === null) {
+        //         return "queue is emptyed";
+        //     } else {
+        //         var ptr = front;
+        //         while (ptr.next != rear && ptr.next != null) {
+        //             ptr = ptr.next;
+        //         }
+        //         if(ptr.next === null) {
+        //             front = null;
+        //             rear = null;
+        //             return front;
+        //         }
+        //         ptr.next = null;
+        //         rear = ptr;
+        //         return front;
+        //     }
+        // }
+
+        // 法二：
+        // 两端进入 一端取出
+        // 出栈
+        // function dequeue() {
+        //     if (front === null) {
+        //         return "queue is emptyed"
+        //     } else {
+        //         console.log(front.val)
+        //         front = front.next;
+        //         return front;
+        //     }
+        // }
+        // 从后面入栈
+        // function enqueueR(val) {
+        //     var queue = new Queue(val);
+        //     if(front === null) {
+        //         front = queue;
+        //     }else {
+        //         rear.next = queue;
+        //     }
+        //     rear = queue;
+        //     return front;
+        // }
+        // 从前面入栈
+        // function enqueueF(val) {
+        //     var queue = new Queue(val);
+        //     if(rear === null) {
+        //         rear = queue;
+        //     } else {
+        //         queue.next = front;                
+        //     }
+        //     front = queue;
+        //     return front;            
+        // }
+    </script>
+</body>
+
+</html>

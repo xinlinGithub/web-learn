@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>老鼠走迷宫</title>
+    <style>
+        div,
+        img {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        img {
+            width: 80Vh;
+            height: 60Vh;
+        }
+        .box{
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            top: 1px;
+            right: 1px;
+        }
+        .box button{
+            display: block;
+            height: 25px;
+            font-size: 20px;
+            font-weight: 500;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 25px;
+            border-radius: 5px;
+        }
+        .rat {
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .rat::after,.rat::before {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img src="./rat.png" alt="">
+    </div>
+    <div class="box">
+        <div class="rat">
+
+        </div>
+        <button>stopRun</button>
+    </div>
+    <script>
+        // 利用堆栈老鼠走迷宫问题
+        // 创建插入的节点路径 每走一下 就把走过的路径作为节点插入进去
+        var oRat = document.getElementsByClassName("rat")[0];
+        var oBtn = document.getElementsByTagName("button")[0];
+        var self;
+        var ratWidth = 50;
+        var ratHeight = 50;
+        var ratColor = { 0: "#666", 1: "#ccc", 2: "orange", "rat": "blue" };
+        var globalRat;
+        var ratFlag = false;
+        var count = 0;
+        var endFlag = false;//控制老鼠的运动 是停止还是运动
+
+        oBtn.onclick = function () {
+            endFlag = !endFlag;
+            if (this.innerText === "stopRun") {
+                this.innerText = "startRun"
+            } else {
+                this.innerText = "stopRun";
+            }
+        }
+        // 创建迷宫路径中的节点
+        class NodeRoute {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.next = null;
+            }
+        }
+
+        // 辅助函数 用于连接迷宫
+        function lineRoute(routeArr, s1, s2, e1, e2) {//所要连接数组，起点 ，终点
+            var flag = false;
+            var exFlag = false;
+            if (count % 2 === 1) {
+                // 横纵交错运动
+                [s1, s2] = [s2, s1];
+                [e2, e1] = [e1, e2];
+                exFlag = true;
+            }
+            count++;
+            if (e1 < s1) {
+                flag = true;
+                [e1, s1] = [s1, e1];
+            }
+            for (var i = s1; i <= e1; i++) {
+                exFlag === true ? routeArr[s2][i] = 0 : routeArr[i][s2] = 0;
+            }
+            if (e2 < s2) {
+                [s2, e2] = [e2, s2];
+            }
+            // console.log(s1,s2,e1,e2)         
+            for (var j = s2; j <= e2; j++) {
+                if (flag === true) {//防止交换大小后 原值使用错误
+                    exFlag === true ? routeArr[j][s1] = 0 : routeArr[s1][j] = 0;
+                } else {
+                    exFlag === true ? routeArr[j][e1] = 0 : routeArr[e1][j] = 0;
+                }
+            }
+            return routeArr;
+        }
+        // 生成迷宫数组
+        function productRoute(row, col) {
+            var ratArr = [];
+            var rowArr = [];
+            var colArr = [];
+            var sPx = 1, ePx = null;
+            var sPy = 1, ePx = null;
+            for (var i = 0; i < row; i++) {
+                ratArr.push([]);
+                for (var j = 0; j < col; j++) {
+                    ratArr[i][j] = 1;
+                }
+            }
+            while (rowArr.length < 5) {
+                var numR = Math.floor(Math.random() * (row - 4) + 2);
+                var numC = Math.floor(Math.random() * (col - 4) + 2);
+                while (rowArr.includes(numR) || colArr.includes(numC)) {
+                    numR = Math.floor(Math.random() * (row - 4) + 2);
+                    numC = Math.floor(Math.random() * (col - 4) + 2);
+                }
+                rowArr.push(numR);
+                colArr.push(numC);
+            }
+            for (var k = 0; k < 5; k++) {
+                var ind = colArr.indexOf(Math.min.apply(null, colArr));
+                ePx = rowArr[ind];
+                ePy = colArr[ind];
+                colArr[ind] = Infinity;
+                // console.log(sPx, sPy, ePx, ePy)
+                ratArr = lineRoute(ratArr, sPx, sPy, ePx, ePy);
+                sPx = ePx;
+                sPy = ePy;
+            }
+            ratArr = lineRoute(ratArr, sPx, sPy, row - 2, col - 2)
+            return ratArr;
+        }
+
+        // 由迷宫数组生成视图层
+        function renderViewRoute(ratArr) {
+            oRat.innerHTML = "";
+            var row = ratArr.length;
+            var col = ratArr[0].length;
+            oRat.style.width = col * ratWidth + "px";
+            oRat.style.height = row * ratHeight + "px";
+            globalRat = ratArr;
+            for (var i = 0; i < row; i++) {
+                for (var j = 0; j < col; j++) {
+                    var ratSquare = document.createElement("div");
+                    ratSquare.style.width = ratWidth + "px";
+                    ratSquare.style.height = ratHeight + "px";
+                    ratSquare.style.background = ratColor[ratArr[i][j]];
+                    ratSquare.style.float = "left";
+                    oRat.appendChild(ratSquare);
+                }
+            }
+            createRat(1, 1, row - 2, col - 2);
+            // 为何不从0,0开始运动, 而从1,1那
+            // 因为这样便于统一的判断老鼠的运动 如果从0，0开始运动 
+            // 则在最边上运动时 还得另写一套规则 比较麻烦
+        }
+
+        // 创建运动的老鼠
+        function createRat(startX, startY, endX, endY) {
+            self = document.createElement("div");
+            self.style.width = ratWidth + "px";
+            self.style.height = ratHeight + "px";
+            self.style.background = ratColor["rat"];
+            self.style.position = "absolute";
+            self.style.left = startY * ratWidth + "px";
+            self.style.top = startX * ratHeight + "px";
+            self.style.transition = "all 0.3s ease-in-out";
+            self.first = new NodeRoute(startX, startY);
+            self.last = self.first;
+            oRat.appendChild(self);
+            moveRat(endX, endY);
+        }
+
+        // 老鼠开始运动
+        function moveRat(endX, endY) {
+            var x = self.last.x;
+            var y = self.last.y;
+            var timer = setInterval(() => {
+                if (endFlag) {
+                    return;
+                }
+                if (x >= endX && y >= endY) {
+                    clearInterval(timer);
+                    console.log("恭喜通关！")
+                    initRat()
+                    return;
+                }
+                globalRat[x][y] = 2;
+                var count = 1;
+                if (globalRat[x + 1][y] === 0) {//向下
+                    x += 1;
+                } else if (globalRat[x - 1][y] === 0) {//向上
+                    x -= 1;
+                } else if (globalRat[x][y + 1] === 0) {//向右
+                    y += 1;
+                } else if (globalRat[x][y - 1] === 0) {//向左
+                    y -= 1;
+                } else {
+                    count = 0;
+                    deleteTopNode(self.last);
+                    if (ratFlag) {
+                        clearInterval(timer)
+                        return;
+                    }
+                    x = self.last.x;
+                    y = self.last.y;
+                }
+                if (count) {//如果没有路线可走就不需要插入节点了
+                    insertNodeRoute(x, y);
+                }//不管插入还是删除 之后 都让老鼠运动
+                self.style.left = y * ratWidth + "px";
+                self.style.top = x * ratHeight + "px";
+            }, 300)
+        }
+
+        // 插入节点后运动 先改变指向 再入栈 链表操作
+        function insertNodeRoute(x, y) {
+            var newNode = new NodeRoute(x, y);
+            self.last.next = newNode;
+            self.last = newNode;
+        }
+
+        // 若走不动了 就往回走 并删除最上面那个节点 防止重复走
+        function deleteTopNode(rNode) {
+            if (self.first === self.last) {
+                alert("迷宫错误！！！")
+                ratFlag = true;
+                return;
+            }
+            var ptr = self.first;
+            while (ptr.next !== rNode) {
+                ptr = ptr.next;
+            }
+            ptr.next = null;
+            self.last = ptr;
+        }
+        // 初始化操作
+        function initRat() {
+            var ratArr = productRoute(9, 9);
+            renderViewRoute(ratArr);
+        }
+        initRat()
+
+    </script>
+</body>
+
+</html>

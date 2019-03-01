@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .right {
+            height: 100px;
+            margin-left: 310px;
+            background: red;
+        }
+
+        .left {
+            position: absolute;
+            left: 0px;
+            width: 300px;
+            height: 100px;
+            background: orange;
+        }    
+        #box{
+            width: 50px;
+            height: 50px;
+            border: 5px solid orange;
+            color: blue;
+            font-size: 25px;
+        }
+        .slide{
+            width: 100px;
+            height: 100px;
+            background: red;
+            transform: translateX(50px);
+            opacity: 1;
+            transition: all 1s ease-in-out;
+        }
+        .nav{
+            position: relative;
+            width: 200px;
+            height: 300px;
+            border: 1px solid rebeccapurple;
+            margin: 1px 0 0 10px;
+        }
+        .nav input{
+            position: absolute;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+        .nav input:nth-of-type(2){
+            left: 50%;
+            transform: translateX(-50%)
+        }
+        .nav input:nth-of-type(1){
+            left: 20px;
+        }
+        .nav input:last-of-type{
+            right: 20px;
+        }
+        .nav div{
+            position: absolute;
+            bottom: 0;
+            border-top: 1px solid blueviolet;
+            width: 100%;
+            height: 90%;
+            display: none;
+            user-select: none;
+        }
+        .nav div:first-of-type{
+            background: blue;
+        }
+        .nav div:nth-of-type(2){
+            background: greenyellow;
+        }
+        .nav div:last-of-type{
+            background: orange;
+            user-select: all;
+        }
+        .nav input:checked + div{
+            display: block;
+        }
+        .nav div::selection{
+            color: blueviolet;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="left"></div>
+    <div class="right"></div>
+    <form action="#">
+        <!-- for 和 id 对应绑定到一起 -->
+        <label for="1">female</label>
+        <input type="radio" name="sex" id="1">
+        <br>
+        <label for="2">male</label>
+        <input type="radio" name="sex" id="2"><br>
+        <label for="3">box</label>
+        <input type="checkbox" name="box" id="box" checked>
+    </form>
+    <div class="slide"></div>
+    <button id="btn">slide</button>
+
+    <div class="nav">
+        <input type="radio" name="nav" id="nav-first">
+        <div class="first">first</div>
+        <input type="radio" name="nav" id="nav-middle">
+        <div class="middle">middle</div>
+        <input type="radio" name="nav" id="radio">
+        <div class="last">last</div>
+    </div>
+    <script>
+        // var date = new Date(); //获取全部日期
+        // var day = date.getDay();
+        // var dates = date.getDate();
+        // var year = date.getFullYear();
+        // var hour = date.getHours();
+        // var min = date.getMinutes();
+        // var second = date.getSeconds();
+        // var minSecond = date.getMilliseconds();
+        // var time = date.getTime();
+        // var newTime = time / (1000 * 60 * 60 * 24 * 366)
+        // var ye = 2018 - 1970;
+        // console.log(date,day,dates,year,hour,min,second,minSecond,time,newTime,ye)
+
+        // var arr = [1, 2, 3, 4, 5, 6]
+        // arr.push("ctrl shift + ' ' 自动提示函数的参数")
+
+        // for(var i = 0; i < 5;i++) {
+        //     var button = document.createElement('button');
+        //     button.appendChild(document.createTextNode('button' + i));
+        //     // 以下有四种解决方案
+        //     // 方法一：立即执行函数
+        //     (function (i){
+        //         button.addEventListener('click',() => {
+        //             console.log(i);
+        //             // return function () {console.log(i)}
+        //         })
+        //     })(i)
+        //     // 方法二：用数组中的forEach代替for [1,2,3,4,5].forEach
+        //     // 方法三：在回调函数里再返回一个函数
+        //     // 方法四：用let声明变量i；
+        //     document.body.appendChild(button)
+        // }
+
+        console.log("1 || 2 =" + (1 || 2));
+        console.log("3 || 4 =" + (3 || 4));
+        console.log(2 && 3);
+        var str = 'join';
+        var arr1 = str.split('');
+        var arr2 = arr1.reverse();
+        var arr3 = 'joins'.split('');
+        arr2.push(arr3);
+        arr2.pop()
+        var arr4 = arr2.map(function(item,index,ar){
+            console.log(index,item,ar===arr2)            
+            return item.charCodeAt(0);
+        })
+        var newArr = [1,2,3,4,5,6]
+        var sum = newArr.reduce(function(pre,cur,index,arr){
+            console.log(pre,cur,index,arr === newArr);
+            return pre + cur;
+        },33)
+        // 改变原数组的方法 push pop uhshift shift reverse sort splice  
+        // 未改变原数组的方法 concat slice indexOf lastIndexOf forEach(无返回值) map(有返回值) 
+        // filter(item,index) every()true or false  some() true or false 
+        // reduce(function(pre,cur,index,arr),base) 
+        // reduceRight(同上)
+
+        // [1,2,3].reduce(
+        // (pre, cur, index,arr) => {
+        //         pre.unshift(cur) ;
+        //         return pre;
+        // }, [])//先是[] 1,[1] 2, [2,1] 3, [3,2,1] 最后返回[3,2,1];
+
+        let box = document.getElementById('box');
+        box.onclick = function(){
+            console.log(this.checked)
+        }
+        var bn = document.getElementById('btn');
+        var div = document.getElementsByClassName('slide')[0];
+        bn.onclick = function () {
+            div.style.transform = 'translateX(200px)';
+            div.style.opacity = 0.2;
+            // div.style.display = 'none'
+        }
+
+        // var nStr = 'ss ss s';
+        // var nArr = nStr.split('');
+        // console.log(nArr)
+        function nTrim(str) {
+            var curArr = str.split('');
+            var nowArr = curArr.filter(function(item,index){
+                return item !== ' ';
+            })      
+            return nowArr.join('');      
+        }
+        console.log(nTrim('fs dfj g   gd '))
+
+        // let preson1 = {
+        //     name: 'aaa',
+        //     age: 22
+        // }
+        // let preson2 = {
+        //     name: 'bbb',
+        //     age: 21
+        // }
+        // let preson3 = {
+        //     name: 'ccc',
+        //     age: 25
+        // }
+        // let preson4 = {
+        //     name: 'ddd',
+        //     age: 20
+        // }
+        // let persons = [preson1,preson2,preson3,preson4];
+        // console.log(persons)
+        // function perSortInc(per,key) {
+        //     let person = per.map(function(item,index){
+        //         item._index = index;
+        //         return item;
+        //     })
+        //     person.sort(function(a,b){
+        //         return a[key] - b[key];
+        //     })
+        //     return person;
+        // }
+        // var p = perSortInc(persons,'age');
+        // console.log(p)
+
+        var jObj = {
+            name: 'ddd',
+            age: 23,
+            love: 'girl'
+        }
+        var localArr = [1,2,3,4,5,5]
+        var json = JSON.stringify(localArr)//变json
+        var jsonObj = JSON.parse(json)
+        console.log(localStorage, json)
+        for(var i = 0; i < 4; i++) {
+            localArr.push(i);
+            localStorage.setItem('one',JSON.stringify(localArr))
+            // 只保存最后一次添加上的东西
+        }
+        var localItem = localStorage.getItem('one')
+        console.log(JSON.parse(localItem),localItem)
+        // localStorage.clear()
+        localStorage.setItem('two',JSON.stringify(jObj))
+        localStorage.removeItem('one')
+        // localStorage.clear()
+
+        if(!Number.isNaN){
+            // es6语法
+            Number.isNaN = function (num) {
+                return Number(num) && isNaN(num)
+            }
+        }
+
+
+
+
+        // String() 只是底层的一个规范 看原始值怎么变成字符串(几乎直接变) 
+        // 若是对象那： 会调用自身的toString()方法 转换成字符串  
+        // []与理想不同 因为他重写了toString方法 把里面的内容变成字符串 [null,undefined] => ','
+
+        //    "" 0 +0 -0 null NaN false undefined Boolean时都会转换成false 
+        //   如果不想用这个规则时就不用考虑这个规则
+
+        // indexOf()有返回索引 没有返回-1    
+
+        // Number() 通过ToPrimitive()来转换 有两个方法如下：
+        //  valueOf(字符串方法 可以重写这两个方法 返回自己想要的值) toString() 数组第二次相当于调用String([..])
+        //  基本都是转字符串再变number
+        //  当前面的不好使时 就调用后面的 toString(原始值) 先变成原始值 (前两个方法 第一个不行就第二个)再变成数字
+
+        // 明确的转换（一眼就可以看出） 不明确的转换
+        // parseInt(str,进制)查找当前的字符 知道不是数字为止 Number()看整体是数字才转换否则NaN
+        // str.toString() String(str) toString(str) Number(str) String(null | undefined | "")
+        // 布尔转换：Boolean(str) !!str
+        // Date.now() new Date().getTime() +new Date() new Date 不会报错 与前一个效果一样
+        // - / * 两边首先都转换成数字 再运算 
+        //   + 字符串优先 都是数字时才运算 如果不是数字先转数字 valueOf toString 再拼接或运算
+        // + 只要有一个字符串就字符串拼接
+        // {} 写在前面相当于代码块执行代码运算 执行完相当于什么都没有  写在后面先隐式转换 再拼接
+        // == 两边都转换成数字 再判断Boolean 
+        // 转数字 转字符串 互转  对象调用toString() 数组[]为 ""
+        // 代码规范
+
+        var obj = {
+            valueOf () {
+                return '435';
+            },
+            toString () {
+                return Object.prototype.toString.call(this);
+            }
+        }
+        // 当像obj这样的引用值值类型转化成number类型时，如+obj,
+        // 他会先调用自身的valueOf方法，看返回的是不是原始值，
+        // 如果是原始值就直接调用Number()，转化成数字类型，否则再继续调用toString()
+        // 将其转化成字符串类型，再转化成数字类型
+        // 除!0是true外，其他的!number都是false
+        // ~number 相当于number变号再减一，~~number还是number本身
+        // 有时用~~value 简单的认为将value隐式类型转化成number
+        // 内部原理：~先试着将数据转换成32位二进制表示，如果可以则转化成32整形数据时，
+        // 若结果大于零则向下取整，若小于零则向上取整，若不能转化成32位二进制，则
+        // 就将数据转化成NaN进而转化成-1，eg: ~{} = -1 ~NaN = -1;
+        // 一般用!~-1 = true,进行一些判断
+
+        var reg = /\d+/g;//全局匹配字符串中的数字
+        var str = '3344rtg4435dfg454dfg'
+        str.match(reg);
+
+        function matchStr(str) {
+            var arr = str.split(''), space = [], mstr = '';
+            var len = arr.length - 1;
+            arr.forEach((item,index) => {
+                if(Number(item)){
+                    mstr += item;
+                    if(index == len){
+                        space.push(mstr)
+                    }
+                }else{
+                    if(mstr){
+                        console.log(mstr)
+                        space.push(mstr)
+                        mstr = ''
+                    }
+                }
+            })
+            return space;
+        }
+        console.log(matchStr(str));
+    </script>
+
+
+</body>
+
+</html>

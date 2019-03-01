@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        span{
+            font-weight: bolder;
+        }
+        html{
+            height: 500%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p>p1</p>
+    </div>
+    <ul class="box">
+        <li>
+            <p>p2</p>
+        </li>
+        <li><strong>1111</strong></li>
+        <li class="special">
+            special
+        </li>
+        <li id="num"><strong>2222</strong><strong>3333</strong></li>
+        <li>sslfksl</li>
+        <p>first p3
+            <span>span</span>
+        </p>
+        <p class="ppp">p4
+            <span></span> erte</p>
+        <p class="ppp">p5 last</p>
+    </ul>
+    <p class="value">
+        <span>Value:</span> 
+    </p>
+    <form action="get">
+        <input type="text" name="name" value="bobe">
+        <input type="text" name="username" value="cobe">
+        <input type="text" name="passward" value="stead">
+        <input type="text" name="url" value="http://www.baidu.com">
+    </form>
+    <p>Hello</p>
+    <p id="selected">Hello Again</p>
+    <ul class="family">
+        father
+        <li>
+            <div>
+                <p class="grandSon"></p>
+            </div>
+            <div id="eee">
+                <p></p>
+            </div>
+        </li>
+        mather
+    </ul>
+    <p id="last">Hello</p>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        var $p = $('p','div').css('background','red');
+        var li1 = $('li','ul').eq(1);
+        var li_first = $('li','ul').first();
+        var li_last = $('li','ul').last();
+        var li_spe = $('li','ul').hasClass('.special')
+
+        var p1 = $('p','ul').filter('.ppp, :first')
+        var p2 = $('p','ul').filter(function(){
+            return $('span',this).length === 0;
+            // 返回true 则保留 否则略过
+        })
+        $('p').on('click',function(){
+            if($(this).parent().is('li')){
+                $(this).css('color','orange')
+            }else{
+                $(this).css('color','red')
+            }
+        })
+        var $lii = $('li','ul');
+        var len = $lii.length;
+            for(var i = 0; i < len; i++){
+                var flag = $lii.eq(i).is(function(index){
+                    return $('strong',this).length === 2;
+                })
+                console.log(flag);
+                if(flag === true){
+                    $lii.eq(i).css('background','red')
+                }else{
+                    $lii.eq(i).css('background','#CCC')
+                }
+            }
+        
+        var $input = $('input','form').map(function(){
+            return this.value
+        }).get().join(',')
+        $('p.value').append($input)
+        $('div').has('p').animate({'fontSize': '30px'},200)
+        $('div').find('p').append('我是p');
+        // $('li','ul.box').not(function(index){
+        //     return index % 3 === 0 && index >0 ;            
+        // })
+        // $('li','ul.box').not($('#num')[0])
+        // $("p").not( $("#selected")[0] ) 有待解决
+        $('li','ul.box').slice(0,2).animate({'width': '400px'},300)
+        $('li','ul.box').eq(3).children().css('color','#CCC')
+
+        $('p','.family').parent('#eee').append('eeeeeee')
+        console.log($('p','.family').first().parents('ul'))
+        console.log($('p','.family').first().parentsUntil('ul'))        
+        console.log($('input','form').next('[name=username]'))
+        console.log($('input','form').nextUntil('[name=url]'))        
+        console.log($('input','form').eq(0).next()) //下一个               
+        console.log($('input','form').eq(0).nextAll()) //下所有的      
+        console.log($('input','form').prev('[name=name]'))
+        console.log($('input','form').prevUntil('[name=name]'))        
+        console.log($('input','form').last().prev())
+        console.log($('input','form').last().prevAll()) 
+        console.log($('li','.box').first().next().siblings('li'))   
+        // $('li','.box').first().add('<span>我是span span</span>')    
+        // $("p.last").add("<span>Again</span>") 有待询问
+        console.log($('.family').contents().not(function(index,ele){
+            console.log(index)
+            return index % 2 !=   0;
+        }).wrap('strong'))
+        $('.value').find('span').end().addClass('values')
+        $('.value').find('span').addClass('va')        
+    </script>
+</body>
+</html>

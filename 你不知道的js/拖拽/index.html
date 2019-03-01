@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background: rgba(0, 0, 0, .5);
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        div{
+            width: 100px;
+            height: 100px;
+        }
+        .top{
+            position: absolute;
+            top: 200px;
+            left: 0;
+            background: orange;
+            cursor: pointer;
+            z-index: 22;
+           
+        }
+        .bottom{
+            background: red;
+            margin: 200px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top"></div>
+    <div class="bottom"></div>
+    <script>
+        var div = document.getElementsByClassName('top')[0];
+        var bottDiv = document.getElementsByClassName('bottom')[0];
+        function bindEvent(Cdom,Rdom,Bdom) {
+            var x,y,l,t,left,top,width,height,_this,flag = false;
+            var bWidth = Bdom.offsetWidth,
+                bHeight = Bdom.offsetHeight,
+                bLeft = Bdom.offsetLeft,
+                bTop = Bdom.offsetTop;
+            Cdom.addEventListener('mousedown',function (e) {
+                flag = true;
+                _this = this;
+                x = e.clientX;
+                y = e.clientY;
+                l = this.offsetLeft;
+                t = this.offsetTop;
+                width = this.offsetWidth;
+                height = this.offsetHeight;
+                left = x - l;
+                // top = y - t;
+            })
+            Rdom.addEventListener('mousemove',function (e) {
+                if(flag){
+                    var curX,curY;
+                    _this.style.left = e.clientX - left + 'px';
+                    // _this.style.top = e.clientY - top + 'px';
+                    _this.style.cursor = 'move';
+                    l = _this.offsetLeft;
+                    t = _this.offsetTop;
+                    width = _this.offsetWidth;
+                    height = _this.offsetHeight;
+                    if(l + width >= bLeft && l <= bLeft){
+                        curX = l + width - bLeft;
+                    }
+                    if(l + width > bLeft + bWidth && l < bLeft + bWidth){
+                        curX = bLeft + bWidth - l;
+                    }
+                    if(t + height >= bTop && bTop >= t){
+                        curY = t + height - bTop;
+                    }
+                    if(bHeight + bTop > t && t + height > bHeight + bTop){
+                        curY = bHeight + bTop - t;
+                    }
+                    if(curX && curY){
+                        console.log(curX*curY /100)
+                    }
+                }
+            })
+            Rdom.addEventListener('mouseup',function () {
+                flag = false;
+                _this.style.cursor = 'pointer';
+            })
+        }
+
+        bindEvent(div,document,bottDiv)
+    </script>
+
+</body>
+
+</html>

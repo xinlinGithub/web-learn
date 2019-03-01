@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div class="wrap">
+        <!-- v-model 是v-bind:value  和v-on:click的集合体 -->
+        <input type="text" v-model="name" >
+        <p>{{ name }}</p>
+        <p v-on:mousemove = "mousemove">
+            x / y: {{ x }} / {{ y }}
+            <span v-on:mousemove = "stop">stoprightnow</span>
+        </p>
+        <input type="text" v-on:keyup.esc = "keyup">
+        <p v-on:click = "demo(2,$event)">{{ num }}</p>
+    </div>
+    <script>
+        new Vue({
+            el : ".wrap",
+            data : {
+                x : 0,
+                y : 0,
+                num : 0,
+                name : "dengge"
+            },
+            methods : {
+                mousemove(e){
+                    this.x = e.clientX;
+                    this.y = e.clientY;
+                },
+                stop(e){
+                    e.stopPropagation();
+                },
+                keyup(e){
+                    console.log(e.target.value)
+                },
+                demo(num,e){
+                    console.log(e)
+                    this.num = num;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

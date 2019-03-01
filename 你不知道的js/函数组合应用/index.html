@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组合函数</title>
+</head>
+<body>
+    <script>
+        // 将柯里化函数 惰性函数 纯函数等组合到一块使用
+        // 一个简单的例子
+        function compose(f, g) {
+            return function (x) {
+                // 自左向右执行 自内向外执行 这是函数组合通用的语法
+                return f(g(x));
+            }
+        }
+        function toUpperCase(str) {
+            return str.toUpperCase();
+        }
+        function add(str) {
+            return str + "!"
+        }
+        function split(str) {
+            return str.split("");
+        }
+        function reverse(arr) {
+            return arr.reverse();
+        }
+        function join(arr) {
+            return arr.join("-");
+        }
+        // var f = compose(add, toUpperCase);
+
+        // 重写compose函数 让他更通用
+        function compose() {
+            // 让传入的函数自右向左执行 把上一次返回的结果传到下一次里面 最后执行的结果返回
+            var args = Array.prototype.slice.call(arguments);
+            var len = args.length - 1;
+            return function(str) {
+                // var result = args[len](str);
+                // while(len--) {
+                //     result = args[len](result);
+                // }
+                // return result;
+
+                // 另一种写法 这一步需要上一步的结果就可以用reduce；
+                // 如果要求函数从左往右执行 就不需要reverse了
+                // var result = args.reverse().reduce(function(prev, cur) {
+                //     return cur(prev);
+                // }, str)
+                // return result;
+                // 可以用reduceRight代替上述函数 相当于倒过来执行
+                var result = args.reduceRight(function(prev, curCb) {
+                    return curCb(prev); //返回的值为下一次执行的prev
+                }, str)
+                return result;
+            }
+        }
+        // es6写法 极为的简洁 所以在学习的过程中要尝试着这种转化练习
+        const composeEs6 = (...args) => str => args.reduceRight((prev, curCb) => curCb(prev), str);
+        // var f = compose(join,reverse, split,add,toUpperCase)
+        var f = composeEs6(join,reverse, split,add,toUpperCase)
+        
+    </script>
+</body>
+</html>

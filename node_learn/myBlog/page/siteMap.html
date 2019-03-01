@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图</title>
+    <link rel="stylesheet" href="./css/siteMap.css">
+    <script src="./bootstrap-wysiwyg-master/jquery-3.2.1.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+    <div class="title">个人博客·siteMap</div>
+    <div class="link"><a href="./index.html">博客首页</a>>> 站点地图</div>
+    <div class="now_article" id="siteMap">
+        <span>最新文章:</span>
+        <ul v-for="(tags,index) in tagsList" :key="index">
+            <span>{{ tags.tag }}:</span>
+            <li v-for="(tag,index1) in tags.content" :key="index1">
+                <p style="padding-left: 25px"><a :href="tag.link">{{ tag.title }}</a></p>
+            </li>
+        </ul>
+    </div>
+
+    <script src="./js/siteMap.js"></script>
+</body>
+</html>

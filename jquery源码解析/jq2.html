@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrap">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        //init 初始化和参数管理方法
+        var $ul = $('ul','.wrap');//自动调用$原型上的方法
+        var $div = $('div');
+        var $div1 = $('.wrap');
+        var ul = $ul.get(0)// 变成原生的dom;
+        var createLi = $('<li>');
+        var createLi1 = $('<li></li>');
+        var a = $(null) 
+        var b = $(undefined) 
+        var c = $(false) 
+        var d = $("")
+        //abcd 返回的都为jquery空对象 但他们不相等 因为两个形式上相同的对象并不相等 数组也是一样
+        var $li = $('.wrap li');
+        var li = $li.get();
+        var nli = $li.toArray();
+        // get()无参 与 toArray() 类似 但toArray不仅仅局限与此
+        var li1 = $li.eq(1)
+        var last = $li.last();
+        var first = $li.first();
+        var next = li1.end();
+        var next1 = $ul.end();
+        var next2 = $('ul').end();
+        //end() 返回调用节点的上一辈节点 没有则返回document
+        var obj = $({});
+        var arr = $([]);
+        //两个均为jq为原型的对象和数组
+        $(function(){
+            // 建立一个封闭的作用域 里面可进行一系列封闭操作
+            var num = 1;
+            console.log('i am $')
+            function speak() {
+                console.log('i am speak')
+            }
+            speak();
+        })
+    </script>
+</body>
+</html>

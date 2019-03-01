@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>纯函数完成数组过滤</title>
+  </head>
+  <body>
+    <input type="text" id="inp" />
+
+    <script>
+      const nameList = [
+        { name: "王一", age: 18 },
+        { name: "王二", age: 19 },
+        { name: "刘三", age: 17 },
+        { name: "赵四", age: 16 },
+        { name: "刘五", age: 15 },
+        { name: "赵六", age: 14 }
+      ];
+      var newNames = [];
+      function showName() {
+        //节流一下
+        var timer = null;
+        return function(e) {
+            var value = e.target.value.trim();
+          if (value === "" || value === null) {
+            return;
+          }
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            newNames = [];
+            nameList.forEach(item => {
+              if (item.name.indexOf(value) !== -1) {
+                //   深度克隆一下 防止修改后引用值的改变
+                newNames.push(deepClone(item));
+              }
+            });
+            console.log(newNames);
+            // 等待300ms载执行 如果连续触发则不执行；
+          }, 300);
+        };
+      }
+
+      inp.oninput = showName(nameList);
+
+      function deepClone(origin) {
+        var target;
+        var toString = Object.prototype.toString;
+        if (toString.call(origin) === "[object Object]") {
+          target = {};
+          for (let prop in origin) {
+            target[prop] = deepClone(origin[prop]);
+          }
+        } else if (toString.call(origin) === "[object Array]") {
+          target = [];
+          origin.forEach((item, index) => {
+            target[index] = deepClone(item);
+          });
+        } else {
+          target = origin;
+        }
+        return target;
+      }
+    </script>
+  </body>
+</html>

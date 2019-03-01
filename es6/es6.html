@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>块级作用域</title>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.5);
+        }
+    </style>
+</head>
+<body>
+    
+    <script>
+        // var [a,b,c,d] = 'love';
+        // 'love' --> ['l','o','v','e'];
+        // var {length} = 'love';
+        // --> var {length} = {'0':'l','1':'o','2':'v','3':'e','length': 4};
+        // var a = 1, b = 2; --> [a,b] = [b,a];
+        // let/var [u,v,w] = [1,2,3]
+
+
+        // var obj = {
+        //     name: 'dfs',
+        //     age: 22,
+        //     getIndex(){
+        //         return this.age;
+        //     }
+        // }
+        // Object.keys(obj)  Object.entries() Object.values()
+        // var arr = ['a','b','c','d']
+        // var entry = arr.entries();
+        // var arr1 = [];
+        // for(item of arr.entries()){
+        //     arr1.push(...item)
+        // }
+        // console.log(arr1)
+        // 发展史：1995 年 出现javascript 主要用于表单验证 一开始没有前端 h后端既做服务器有些网页 
+        // 随着网页的不多多元化 一些复杂的交互等等 导致后端应付不过来 所以前后端相分离 前端就被分离出来了
+        // 一开始交liveScript 因为在那时后java很火 所以就借了人家的名 交JavaScript；
+        // 1996 JavaScript 1.0 1.1 诞生 很好用
+        // 1997 三足鼎立： 网景公司 产生的JavaScript 微软 JScript IE3 nombas scripteEase共三种不同的脚本语言
+        // 共三种脚本语言 同一个页面用三个太麻烦了 开发成本高 兼容行差  至少三个会不同版本的人维护同一个页面 麻烦
+        // 后来经上诉 找来 ECMA协会 欧洲计算机制造商协会 以javascript1.0 1.1 为基础版本 在12月份发布了ECMAScript1.0版本 统一了脚本语言规范
+        // 但windows 微软市场份额太大  他不服 要自己设计API 所以 js兼容性问题基本都有IE出现
+        // 1999 HTML4.0 出现 微软首先提出异步传输的方案 出现ajax传输（activeX) 还有一个别的公司的正经的XMLHttpREquest 异步传输 这标志着web2.0时代的出现
+        // 2008年Chrome 横空出世 急速V8 js引擎  执行速度比IE快的特别多  IE自从输掉了js 占有权 
+        // 浏览器大战Chrome胜利  导致了js火爆了起来 HTML5 css3 结合Chrome 使得页面更加多元化  js也不多推出新的规范
+        // 2008 推出es3版本 2009推出es5版本 但到es4时出现了一点问题 提出了一些新方法 像class类继承等 但理事会看不上 毕竟只是一个在页面上跑的脚本语言
+        // 所以就选出了一点点方法放到 es3.1版本上了 最后生成了es5 剩下的方法和功能放到了es6里面了  15年发布了
+        // 所以es6也叫es2015  es => ECMAScript  没叫JavaScript是因为版权问题  因为js规范是由ECMA制定的 且经过了网景公司注册过 
+        // 所以就叫了个新名=> es  那es js 什么关系那  ECMA 制定规范的 js规范靠浏览器去实现   ECMA告诉浏览器js具体的功能 API靠浏览器自己去实现
+        // es是规范 js是对规范的实现 可以认为基本相同 
+        // 新的语言规范 与旧规范的关系 以及相互影响 es3 es5 es6 新规范如何接受旧规范那  不是推陈出新（摈弃旧的 推出新的） 
+        // 而是向下兼容 只是废弃一些不友好的API 每个规范都有每个规范的特点 他只是越来越规范
+        
+        
+        // ES6 的模块自动采用严格模式，不管你有没有在模块头部加上"use strict";。
+            // 严格模式主要有以下限制：
+
+            // 变量必须声明后再使用
+            // 函数的参数不能有同名属性，否则报错
+            // 不能使用with语句
+            // 不能对只读属性赋值，否则报错
+            // 不能使用前缀0表示八进制数，否则报错
+            // 不能删除不可删除的属性，否则报错
+            // 不能删除变量delete prop，会报错，只能删除属性delete global[prop]
+            // eval不会在它的外层作用域引入变量
+            // eval和arguments不能被重新赋值
+            // arguments不会自动反映函数参数的变化
+            // 不能使用arguments.callee
+            // 不能使用arguments.caller
+            // 禁止this指向全局对象
+            // 不能使用fn.caller和fn.arguments获取函数调用的堆栈
+            // 增加了保留字（比如protected、static和interface）
+            // ES6 模块之中，顶层的this指向undefined，即不应该在顶层代码使用this。
+        // 块级作用域
+            // console.log(a)
+            // var a = 2;
+            // let a = 3;
+            // 即 不存在变量提升
+            // let a = 4;
+            // 即 不能重复被定义
+            // if(false){
+            //     var a = 3
+            //     // 此作用域在window里 相当于在{}外面 先变量声明提升var a; 再在里面 a = 3;
+            //     // 所以不报错
+            // }else{
+            //     console.log(a)
+            // }
+            // 但 let const 具有块级作用域的功能 即被{}包着的 都能形成一个封闭的作用域
+            // if(false){
+            //     let a = 3;
+            // }else{
+            //     console.log(a)
+            //     // 上下为两个封闭的作用域 互相不访问 重点是无变量提升
+            // }
+
+            // 解决闭包问题
+            // let arr = [];
+            // for(var i = 0; i < 10; i++){
+            //     arr[i] = function(){
+            //         console.log(i);
+            //     }
+            // }
+            // console.log(arr)
+            // arr[3]();
+            // 上述结果与理想不一致 是因为产生了闭包 最后i全是10;
+
+            // let arr = [];
+            // for(let i = 0; i < 10; i++){
+            //     // 用let每一次都是不同的块级作用域 就不会产生闭包
+            //     arr[i] = function(){
+            //         console.log(i);
+            //     }
+            // }
+            // console.log(arr)
+            // arr[3]();
+            // let i = 3;
+            // for(let i = 0; i < 4; i++) {
+            //     // let i = 4;
+            //     // console.log(window.i)
+            //     //  let 中没有window var 中才有  上面三个let属于不同的作用域 不报错
+            // }
+            // console.log(b)
+            // {
+            //     let a = 3;
+            // 暂时性死区：即变量在声明时就被放到死区中 当正式执行到他时被拿出来 这时在
+            // 合法作用域内可以被使用 但在没拿出来之前被使用就会报错
+            //     {
+            //         a = 4;
+            //         let b = 5;
+            //     }
+            //     console.log(a);
+            //     console.log(b);
+                // 块级作用域及以下可以访问本级的变量 上一级不能访问下一级的变量；
+            // }
+            // let x = x = 6;
+            // const 一般定义常亮 即在下文不可改变 这是与let的唯一区别 其余性质都一样
+                // const A = 333;
+                // console.log(A);
+                // A = 899; 不能改变
+                // console.log(A)
+
+        var p = new Promise((resolve, reject) => {
+            reject("reject")
+        }).then(() => {},(err) => {
+            return err;
+        })
+
+    </script>
+</body>
+</html>

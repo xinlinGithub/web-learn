@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p>{{ title }}</p>
+        <hee></hee>
+        <!-- <cxl></cxl> -->
+    </div>
+    <br>
+    <div id="app1">
+        <p>{{ title }}</p>
+        <hee></hee>
+        <hee></hee>   
+        <cxl></cxl>     
+    </div>
+    <script>
+        // 模板类问题 全局组件 下面的都可用
+        Vue.component("hee",{
+            template: "<h2>chenxiulin</h2>",
+        })
+
+        var vm = new Vue({
+            el: "#app",
+            // 写el 就不要再写template了 写了就会用他 可外部用component
+            // template: `<h1>hello <h2> world </h2></h1>`,
+            data: {
+                title: "hello world"
+            }
+        })
+        var vm1 = new Vue({
+            el: "#app1",
+            data: {
+                title: "hello world"
+            },
+            components: {"cxl": {template: '<h2>chenxiulin</h2>'} } 
+            // 局部组件 只能在此挂载的dom节点中用 
+        })
+
+
+        // 先不写el直接去挂载
+        // vm.$mount('#app')
+        // 用此方法挂载就会把原有的全部代替 且只能挂载相同名一个称的 且template里只有一个祖先级dom节点
+
+        // 另一种方法 直接空执行 这样就相当于el为祖先级dom节点
+        // vm.$mount()
+        // document.getElementById("app1").appendChild(vm.$el)
+
+
+    
+    </script>
+</body>
+</html>

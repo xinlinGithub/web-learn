@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函数式编程（默认值）-扩展运算符—箭头函数</title>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.5);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 函数式编程 生成与所传位数匹配的随机数
+        // function random8(num) {
+        //     let sum = 1;
+        //     for(let i = 0; i < num; i++){
+        //         sum *= 10;
+        //     }
+        //     return function(){
+        //         let randomStr = "" + parseInt(Math.random() * sum);
+        //         let len = num - randomStr.length;
+        //         for(let i = 0; i < len; i++){
+        //             randomStr += '0'
+        //         }
+        //         console.log(randomStr)
+        //     }
+        // }
+        // random8(8)();
+        // 这也是闭包 使原来函数里的变量 未完全被释放 通过函数形式返回到外面
+
+
+        // 一般的函数 封装好的可以反复调用的一系列方法
+        // function sayName(name){
+            // 给函数设置默认值 但这种有点麻烦 es6新增了改功能
+        //     let newName = name === undefined ? 'none': name ;
+        //     console.log(newName);
+        // }
+        //  sayName('nnn')
+        //  sayName();
+        //  sayName(false);
+        //  sayName(undefined);
+        //  sayName(null);
+        //  sayName(0);
+        //  sayName('')
+
+
+        // function sayName(name = 'none'){
+        //     console.log(name);
+        // }
+        //  sayName('nnn')
+        //  sayName();
+        //  sayName(false);
+        //  sayName(undefined);
+        //  sayName(null);
+        //  sayName(0);
+        //  sayName('')
+
+        // function person(w = 10 ,h ,s = 'female'){
+        //     console.log(w,h,s)
+        // }
+        // person(undefined,180,undefined)
+
+        // 惰性执行
+        // function getValue(name = 'xb') {
+        //     console.log('执行了')
+        //     return name;
+        // }
+        // function getName(say = getValue()){
+        //     console.log(say)
+        // }
+        // getName('db') 传值就不走默认 不传值就走默认
+
+
+// 扩展运算符；
+//      在vuex状态管理中常用于合并mapMutations(['increase'])接收到的方法 
+        // function rtNum(a,...reg) {
+        //     // ...reg在形参中 有且只能有一个参数 且只能放到最后面
+        //     console.log(reg,a)
+        //     console.log([...reg,2,3,[4]])
+        //     var a = 2, b = 4;
+        //     [a,b] = [b,a];
+        //     console.log(a,b)
+        //     var obj = {name: 'ssdfd'}
+        //     console.log({...obj,age: '332'})
+        // }
+        // rtNum(1,23,4,5)
+        //  他可以去掉[]{} 只去掉最外层的
+        // let arr = [1,2,3,[4],5];
+        // let arr1 = [1,2]
+        // arr1.push(...arr);
+        // arr1.push(arr);
+        // console.log(arr1)
+        // 通过...的方式展开{} 只能展开到一个对象中 不能展开到数组中 当内部有迭代器时才行
+        // 且是浅层克隆 需要一层一层解析才能达到深层克隆的效果 
+        
+
+// 箭头函数
+        // let fn = name => name; 直接有返回值 多余两个形参时得用（）包起来 
+        // 想返回对象时可以如下
+        // let fn = (name,sex) => ({
+        //     name,
+        //     sex
+        // })
+        // console.log(fn('ls','male'))
+        // 箭头函数为匿名函数 函数中无this 但可以绑定this 无arguments 
+        // 无super(相当于指定的原型) 无prototype 不能被new操作符执行 不能被作为构造函数
+        // 更多的功能用于计算 数据流向；方便js引擎优化代码 因为他简便 还不能构造函数
+        // 函数中的this 指外层非箭头函数父级中的this; 父级作用域
+        // var name = 'dxb';
+        // let obj = {
+        //     name: 'cxl',
+        //     sayName: () => {
+        //         // console.log(arguments)
+        //         console.log(this)
+        //         console.log(this.name);
+        //     }
+        // }
+        // obj.sayName();
+
+        // 立即执行函数
+        // let fn = (name => name)('ccc')
+
+        // var name = 'dxb';
+        // let newObj = {
+        //     name: 'baby'
+        // }
+        // let xo = {
+        //     name: 'vvvv'
+        // }
+        // let obj = {
+        //     name: 'cxl',
+        //     sayName(){
+        //         console.log(this.name)
+        //         let say = () => {
+        //             // console.log(arguments)
+        //             // console.log(this)
+        //             console.log(this.name);
+        //         }
+        //         say.call(xo);//只要他非箭头函数的父级this没变 他就不变；
+        //     }
+        // }
+        // obj.sayName()
+        // obj.sayName.bind(newObj)();        
+        // let ss = obj.sayName.bind(xo);
+        // ss(); // bind后返回的函数不可再改变this, bind call ..都不行 但原函数可以多次改变this；
+        // ss.call(newObj); 
+        
+        
+        // this绑定分为四种：
+        // 默认绑定；空执行的函数 没有明确的this指向时 this指向window
+        // 隐式绑定：谁调用绑定谁；
+        // 显示绑定：call apply bind;
+        // new绑定：构造函数 里面的this是个对象 最后隐式返回
+        // 权重 从下到上 依次递增 即先看有没有new绑定 在往上看；
+        // var name = 'window'
+        // function scope() {
+        //     console.log(this)
+        //     setTimeout(() => {
+        //         console.log(this.name)
+        //     }, 333);
+        // }
+        // scope();
+        // scope.call({name: 'name'})
+    </script>
+</body>
+</html>

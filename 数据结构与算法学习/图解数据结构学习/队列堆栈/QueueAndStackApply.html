@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>堆栈队列的综合应用实现计算器</title>
+</head>
+
+<body>
+    <script>
+        //将中序表达式转换成后续表达式并运算出结果 这也是计算机的算术原理
+        // charStack(用于存放运算符) 
+        // outputQueue(用于存放后续表达式) 
+        // resultStack(用于存放输出结果)
+        // 操作步骤：1. 输入正确的中序表达式
+        // 2，循环中序表达式 遇到运算数直接加入输出队列中 若遇到运算符 此时若charStack
+        // 为空则直接压入堆栈 若不为空 则比较优先级 若即将压如的运算符比栈顶的运算符优先级
+        // 高 则直接压入 否则将栈顶的运算符弹出 放到输出队列中 知道遇到优先级低于此运算符时为止
+        //  将次运算符压如堆栈 最后 将剩余的运算符 放到输出队列中  
+        // 3. 计算结果：输出队列的运算数依次弹出 放到resultStack 中 
+        // 若遇到运算符则进行相应的运算 运算结果压如结果栈中 知道得到最后的结果
+        // 代码如下：
+        var charStack = [];
+        var outputQueue = [];
+        var resultStack = [];
+        var signArr = ["^","!","√","*", "/", "+", "-", ")", "(", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
+        var tempStr = "";
+        var preResult;
+
+        // 判断优先级
+        function judgePriority(str) {
+            switch (str) {
+                case "+":
+                    return 1;
+                case "-":
+                    return 1;
+                case "%" :
+                    return 1.5;
+                case "*":
+                    return 2;
+                case "/":
+                    return 2;
+                case "^":
+                    return 3;
+                case "!":
+                    return 4;
+                case "√":
+                    return 5;
+                default: 
+                    return 0;
+            }
+        }
+
+        // 输入操作数
+        function input(midStr) {
+            console.log(midStr);
+            var len = midStr.length;
+            for (var i = 0; i < len; i++) {
+                var temp = midStr[i];
+                if (!signArr.includes(temp)) {
+                    console.log("请输入正确的字符！")
+                    return false;
+                }
+                if (temp <= 9 && temp >= 0 || temp == ".") {//是数字的情况
+                    tempStr += temp;
+                    continue;
+                } else {
+                    if (tempStr.length > 0) {//此时tempstr里是第一个操作数 加入队列 出队时用shift();
+                        outputQueue.push(tempStr)
+                        tempStr = "";
+                    }
+                }
+
+                if (charStack.length === 0 || temp === "(") {//字符栈为空直接压入
+                    charStack.push(temp);
+                    if (isNaN(midStr[i + 1]) && temp === "(") {//当括号内只有一个负号时 在前面补个零
+                        outputQueue.push(0);
+                    }
+                    continue;
+                }
+                var top = charStack.pop();
+                if (temp === ")") {//是")"遇到"("结束
+                    while (top != "(") {
+                        outputQueue.push(top);
+                        top = charStack.pop();
+                    }
+                } else {//优先级不够使 就将运算符弹出 直到优先级达到要求
+                    while (judgePriority(temp) <= judgePriority(top) && top != undefined) {
+                        outputQueue.push(top)
+                        top = charStack.pop();
+                    }
+                    top == undefined ? charStack.push(temp) : charStack.push(top, temp);
+                }
+            }
+            if (tempStr.length > 0) {//此时tempstr里是第一个操作数 加入队列 出队时用shift();
+                outputQueue.push(tempStr)
+                tempStr = "";
+            }
+            while (charStack.length > 0) {
+                outputQueue.push(charStack.pop())
+            }
+            // return outputQueue;
+        }
+       
+
+        // 计算阶乘
+        function jieCheng(n) {
+            var result = 1;
+            for (var i = 1; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // 计算幂的运算
+        function miYunSuan(x, n) {
+            var result = 1;
+            for (var i = 0; i < Math.abs(n); i++) {
+                result *= x;
+            }
+            if (n < 0) {
+                result = 1 / result;
+            }
+            return result;
+        }
+
+         // preResult = input("5*(6+3.3)*7-3*(8+1)/1")
+         input("3^(-2)")
+
+        // 计算根号
+        function retSqrt(n) {
+            return Math.sqrt(n);
+        }
+        // 运算转化成的后续表达式
+        function getResult() {
+            var top;
+            console.log(outputQueue);
+            while (outputQueue.length > 0) {
+                top = outputQueue.shift();
+                switch (top) {
+                    case "+":
+                        resultStack.push(resultStack.pop() + resultStack.pop());
+                        break;
+                    case "-":
+                        var char1 = resultStack.pop();
+                        var char2 = resultStack.pop();
+                        resultStack.push(char2 - char1);
+                        break;
+                    case "*":
+                        resultStack.push(resultStack.pop() * resultStack.pop());
+                        break;
+                    case "/":
+                        var char1 = resultStack.pop();
+                        var char2 = resultStack.pop();
+                        if (char1 === 0) {
+                            console.log("输入不合法，请重新输入！");
+                            return false;
+                        }
+                        resultStack.push(char2 / char1);
+                        break;
+                    case "!":
+                        var char = resultStack.pop();
+                        if (char < 0) {
+                            console.log("请输入合法的表达式！")
+                            return false;
+                        }
+                        resultStack.push(jieCheng(char));
+                        break;
+                    case "√":
+                        var char = resultStack.pop();
+                        if (char < 0) {
+                            console.log("请输入合法的表达式！")
+                            return false;
+                        }
+                        resultStack.push(retSqrt(char))
+                        break;
+                    case "^":
+                        var char1 = resultStack.pop();
+                        var char2 = resultStack.pop();
+                        if(parseInt(char1) != char1) {
+                            console.log("请输入合法的表达式！")
+                            return false;
+                        }
+                        resultStack.push(miYunSuan(char2, char1));
+                        break;
+                    default: resultStack.push(Number(top));
+                }
+                console.log(resultStack)
+            }
+        }
+        getResult();
+    </script>
+</body>
+
+</html>

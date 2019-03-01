@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+</head>
+<body>
+    <div class="wrap">
+        <button v-on:click = "num++">add</button>
+        <button v-on:click = "num--">decrease</button>
+        <p>{{ num }} | {{ result() }} | {{ add }} | {{ compu }}</p>
+        <button @click = "add++">add2</button>
+        <!-- <button @click = "watched">{{ watch }}</button> -->
+
+    </div>
+    <script>
+        new Vue({
+            el : ".wrap",
+            data : {
+                num : 0,
+                add : 0,
+                watch : 0
+            },
+            computed : {
+                compu : function (){
+                    console.log("computed");
+                    return this.num > 5 ? "greater than 5" : "less then 5";
+                    // 只有与此有关的变量发生改变时才会执行此函数，不实时监控，执行顺序落后于methods
+                    // 同步代码，变量变则立即执行；
+                }
+            },
+            watch : {
+                add(){
+                    var _this = this;
+                    // 异步操作，变量改变，可不立即执行；函数名为变量名
+                    setTimeout(function () {
+                        _this.watch++;
+                        console.log("watched");
+                    },12)
+                }
+            },
+            methods : {
+                result(){
+                    console.log("result")
+                    return this.num > 5 ? "greater than 5" : "less then 5";   
+                    // 因为在上面执行了这个方法 所以
+                    // 只要与此有关的变量发生改变是就会执行此函数，时时监听；并且先执行
+                }
+            }
+        })
+    </script>
+</body>
+</html>

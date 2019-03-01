@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>queue</title>
+</head>
+<body>
+    <script>
+        // 利用队列实现qq密码解密
+        // 话说铁锤妹妹给邓哥一串数字274903729,让他先删除一个数，再将下一个数移到末端
+        // 依次进行知道删除最后一个数，删除的数就是铁锤妹妹的qq号；
+        // 邓哥如何解密那：利用队列： 数组 head tail
+        var arr = [2,7,4,9,0,3,7,2,9]
+        function break_qq(arr) {
+            var head = 0;
+            var tail = arr.length;
+            var tempqq = [];
+            while (head != tail) {
+                tempqq.push(arr[head]);
+                head++;
+                if(head != tail) {
+                    arr[tail] = arr[head];
+                    tail++;
+                    head++
+                }
+            }
+            console.log(arr,head,tail)
+            return tempqq;
+        } 
+    </script>
+</body>
+</html>

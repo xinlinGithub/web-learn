@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>人物展示</title>
+    <link rel="stylesheet" href="./col.css">
+</head>
+<body>
+    <div class="wrapper">
+        <a href="javascript: void(0)">
+            <img src="./img/a.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/b.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/c.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/d.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/e.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/f.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/g.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/h.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/i.jpg" alt="">
+        </a>
+        <a href="javascript: void(0)">
+            <img src="./img/j.jpg" alt="">
+        </a>
+    </div>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        function bindEvent() {
+            var href = $('a','.wrapper');
+            var len = href.length;
+            var w = parseInt(href.css('width')),
+                h = parseInt(href.css('height'));
+            function getDix(item,e) {
+                var e = e || window.event;
+                var left = item.offset().left,
+                    top = item.offset().top;
+                var hx = left + w / 2,
+                    hy = top + h / 2;
+                var x = Math.pow(e.pageX - hx,2),
+                    y = Math.pow(e.pageY - hy,2);
+                return Math.sqrt(x+y);
+            }
+            
+            $(document).on('mousemove',function (e) {
+                for(var i = 0; i < len; i++){
+                    var long = getDix(href.eq(i),e);
+                    var minL = Math.min(Math.round(long),180);
+                    var num = Math.abs(minL - 180) / 180;
+                    var newW = num * w * 2 + w,
+                        newH = num * h * 2+ h;
+                    href.eq(i).css({
+                        'width': newW + 'px',
+                        'height': newH + 'px'
+                    })   
+                }
+            })
+        }
+        bindEvent()
+    </script>
+</body>
+</html>

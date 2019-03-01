@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据库学习</title>
+</head>
+<body>
+    <script>
+        /*
+        关系型数据库：代表的 有竖着的字段 还有横着的个体 一行就是一个记录
+            mysql(常用 免费开源 成本低 运行在Linux系统上) 
+            oracle(收费 得借助rbm小型机 还有oracle数据库 ecm存储设备 成本很高 传统常用 因为商家有很多服务支持) 
+            db2(硬盘 收费) sqlserver
+            实时数据库：响应速度快  以上都是
+            非实时：hive
+        非关系型：key-value ... 就是非表型
+            MongoDB(硬盘，且学习成本低 不用secal 语句  但这样不好 只是会用没有建立思想)
+            Redis(常用,得学习 一般后端学 有缓存) memcache(内存)
+            非实时：hbase 很慢  elasticSearch
+        内存的读写速度远高于硬盘 但成本高 
+
+        基本操作：
+            show databases ;显示数据库
+            use mysql;使用数据库
+            show tables ; 显示所有表
+            desc db;显示某个表的基本信息
+            show create table db;显示表的创建信息
+            select * from db; 显示表的所有内容 但在公司禁止使用 因为容易让表跑死 数据内容太多了
+
+            create database school;创建一个数据库
+            库 --> 表 --> 字段
+
+            alter database school character set utf8;//将指定的数据库设置成识别中文
+            alter table students default character set utf8; 将数据库中的某个表设置成识别中文
+            alter table students convert to character set utf8;将数据库中的某个表的字段设置成识别中文
+        表的创建信息：
+        CREATE TABLE `students` (一行一个字段  内容自己写 顺序可调换
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'student id', 
+        一个主键 每个表必须得有 就是一串无逻辑的数字 primary key 只有他可以 auto inc 自增 且本身唯一 所以不用选unique
+        以下均为普通字段
+        `stu_num` int(11) NOT NULL COMMENT 'student number',
+        `name` varchar(32) NOT NULL COMMENT 'student name',
+        `age` int(11) NOT NULL COMMENT 'student age',
+        `class` int(11) NOT NULL COMMENT 'student class',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `students_stu_num_uindex` (`stu_num`) 唯一字段的索引 先学会怎么用 unique
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+        alter table students增加表的内容
+	        add math float not null comment 'student math';
+        alter table students
+            drop column math;删除表的内容 一行
+        MYISAM:读很多 写非常少 写的是表级锁 读的性能较高
+        INNoDB：读较多 写也较多 行级锁 常用 但不都用
+
+
+
+        CREATE TABLE `db` (
+        `Host` char(60) COLLATE utf8_bin NOT NULL DEFAULT '',
+        `Db` char(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+        `User` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+        `Select_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Insert_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Update_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Delete_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Create_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Drop_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Grant_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `References_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Index_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Alter_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Create_tmp_table_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Lock_tables_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Create_view_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Show_view_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Create_routine_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Alter_routine_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Execute_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Event_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        `Trigger_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+        PRIMARY KEY (`Host`,`Db`,`User`),
+        KEY `User` (`User`)
+
+
+
+
+        数据库的增删改查：
+        增加数据：id为主键 自动添加 所以不用加这一条
+        insert into students (`stu_num`,`name`,`age`,`class`) values (77777,"狗", 21, 165);
+        insert into students(数据库名称)(`stu_num`, `name`, `age`, `class`) values(1111111,"小鸟", 12, 162);
+        修改相应内容：
+        update students set age = 18,class = 162 where name = "小鸟" ;
+        查：
+        select * from students;查看所有内容 公司别用 容易跑死
+        select name, age ,id from students where name = "小鸟"; 查看特定字段
+        select count(1) from students;查看数据总数
+        select count(1) from students where age = 18;查看指定条件的数据总数
+        select sum(age) from students where name = "小鸟" and class = 162;查看指定条件的某个字段数据总和、
+        查看平均数      查出来后以什么命名
+        select avg(age) as avg_name from students where name = "小鸟" or name = "狗";
+        分组查看 显示的内容                            以什么字段分组
+        select class,count(1),avg(age) from students group by class;
+        分页查看 只显示一部分     偏移量 查看数量
+        select * from students limit 3,4;
+        以排序的方式查看               把那一个排序
+        select * from students order by id desc limit 2,3;
+        删除数据 一定要指定条件 不然就给全删了
+        delete from students where name = "狗";
+
+        select unix_timestamp(now()) as timestamp;
+        获取时间戳 int类型
+        select from_unixtime(unix_timestamp(now()) ) as time;
+        时间戳转时间
+        select date_format(now(), '%Y-%m-%d') as timestring;
+        时间转字符串
+        select str_to_date(date_format(now(), '%Y-%m-%d'), '%Y-%m-%d %H') as nowtime;
+        字符串转时间
+        select from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s') as unix_string;
+        时间戳转字符串时间
+
+
+        CREATE TABLE `staff` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `staff_num` varchar(5) NOT NULL COMMENT 'staff number',
+        `name` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT 'staff name',
+        `age` int(11) NOT NULL COMMENT 'staff age',
+        `work_years` float NOT NULL COMMENT 'staff working years',
+        `wages` float NOT NULL COMMENT 'staff wages',
+        `telephone` varchar(11) NOT NULL COMMENT 'staff telephone',
+        `Dept_num` varchar(3) NOT NULL COMMENT 'staff department number',
+        PRIMARY KEY (`id`),
+        */
+        
+    </script>
+</body>
+</html>

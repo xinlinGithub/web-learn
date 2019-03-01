@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div id="app" >
+        {{ title }}
+        <my-app :msg="title" :app="appobj"></my-app>
+        <newapp></newapp>
+    </div>
+    
+    <script>
+        Vue.component("my-app",{
+            template: `
+                <div>
+                    <p @click="change">{{ msg }}</p>
+                    <h1>welcome to duyi</h1>
+                    <p @click="changeName"> {{ app}}</p>
+                </div>
+            `,
+            props: {
+                msg: {
+                    type: String
+                },
+                app: {
+                    type: Object
+                }
+            },
+            // 想用什么东西要在模板中写
+            methods: {
+                change(){
+                    this.msg = "sssssss";
+                    // 子集一般不可改变父级的内容 会报警告 但改应用值不会 一般别改；
+                },
+                changeName(){
+                    this.app.name = "bibi"                    
+                }
+            }
+            
+        })
+        var vm = new Vue({
+            el: "#app",
+            components: {
+                newapp: {
+                    template:`
+                        <div>
+                            请输入：
+                            <input type = "text" />
+                        </div>
+                    `
+                }
+            },
+           
+            data(){
+                return {
+                    title: "duyi 666!",
+                    appobj: {
+                        name: "cobe"
+                    }
+                }
+            }
+        })
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.solid{
+    position: relative;
+    width: 800px;
+    height: 360px;
+    margin: 100px auto;
+    box-shadow: 1px 7px 25px #fd8fd9;
+}
+.solid ul{
+    height: 100%;
+}
+.solid ol{
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 10px;
+}
+.solid ol li{
+    display: inline-block;
+    padding: 0 5px;
+    border-radius: 50%;
+    color: #fff;
+    background: deeppink;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+}
+.solid ol li:last-child{
+    margin-right: 0;
+}
+.solid ol li.on{
+    background: #000;    
+}
+.solid ul li{
+    position: relative;
+    list-style: none;
+    height: 100%; 
+    float: left; 
+    transform-style: preserve-3d;
+}
+.solid ul li div{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.solid ul li div:nth-child(1){
+    background: url('../img/long1.jpg') no-repeat;
+    background-size: 800px 100%;    
+    transform: translateZ(180px);
+}
+.solid ul li div:nth-child(2){
+    background: url('../img/long2.jpg') no-repeat;
+    background-size: 800px 100%;    
+    transform-origin: top;
+    transform: translateZ(-180px) rotateX(90deg);
+}
+.solid ul li div:nth-child(3){
+    background: url('../img/long3.jpg') no-repeat;
+    background-size: 800px 100%;    
+    transform-origin: bottom;
+    transform: translateZ(-180px) rotateX(-90deg);
+}
+.solid ul li div:nth-child(4){
+    background: url('../img/long4.jpg') no-repeat;
+    background-size: 800px 100%;    
+    transform: translateZ(-180px) rotateX(180deg);
+}

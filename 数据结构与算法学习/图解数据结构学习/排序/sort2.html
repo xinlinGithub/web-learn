@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>几种简单排序分析</title>
+</head>
+<body>
+    <script>
+        // 冒泡排序
+        var arr1 = [55, 23, 87, 62, 16,1,0,1];
+        function bubble_sort(arr) {
+            var len = arr.length;
+            var flag = false;
+            for(var i = 0; i < len - 1; i++){
+                for(var j = 1; j < len - i; j++){
+                    if(arr[j - 1] > arr[j]) {
+                        [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]];
+                        flag = true;
+                    }
+                }
+                if(flag == false) {
+                    break;
+                }
+            }
+            console.log(arr)
+        }
+        // bubble_sort(arr1);
+        // 选择排序
+
+        function select_sort(arr) {
+            var len = arr.length;
+            var min;
+            for(var i = 0; i < len - 1; i++) {
+                for(var  j = i + 1; j < len;j++) {
+                    if(arr[i] > arr[j]) {
+                        [arr[i],arr[j]] = [arr[j],arr[i]];
+                    }
+                }
+                // min = Math.min(...arr.slice(i + 1));
+                // var ind = arr.indexOf(min);
+                // [arr[i], arr[ind]] = [arr[ind],arr[i]];
+            }
+            console.log(arr);
+        }
+        // select_sort(arr1);
+
+        // 插入排序 
+        function insert_sort(arr) {
+            var len = arr.length;
+            for(var i = 1; i < len; i++) {
+                // for(var j = 0; j < i; j++) {
+                //     if(temp[0] >= arr[i]){
+                //         temp.unshift(arr[i]);
+                //         break;
+                //     }else if(temp[j - 1] <= arr[i]){
+                //         temp.push(arr[i])
+                //         break;
+                //     }else if(arr[i] >= temp[j] && arr[i] <= temp[j + 1]){
+                //         temp.splice(j, 0, arr[i]);
+                //         break;
+                //     }
+                // }
+                var temp = arr[i];
+                var no = i - 1;//借用一个索引 来控制数据位置关系 以及何时插入 逻辑移动
+                while(no >= 0 && temp < arr[no]){
+                    arr[no + 1] = arr[no];
+                    no--;
+                }
+                arr[no + 1] = temp;
+            }
+            console.log(arr);
+        }
+        // insert_sort(arr1);
+
+        // 快速排序 分而治之
+        function quick_sort(arr, left, right) {
+            var i = left;
+            var j = right;
+            var temp = arr[left];
+            if(left > right) {
+                return;
+            }
+            while(i != j) {
+                while(j > i && arr[j] > temp) {
+                    j--;
+                }
+                while(i < j && arr[i] <= temp) {
+                    i++
+                } 
+                if(i < j) {
+                    [arr[i],arr[j]] = [arr[j],arr[i]];
+                }
+            }
+            arr[left] = arr[i];
+            arr[i] = temp;
+            quick_sort(arr,0, i - 1);
+            quick_sort(arr, i + 1, right);
+        }
+        // quick_sort(arr1, 0, arr1.length - 1);
+        // console.log(arr1);
+
+        
+    </script>
+</body>
+</html>

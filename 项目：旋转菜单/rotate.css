@@ -1,0 +1,88 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #045, #002);
+}
+.selector{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 140px;
+    height: 140px;
+    margin-left: -70px;
+    margin-top: -70px;
+    /* border: 1px solid #FFF; */
+}
+.selector button{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    border: 0;
+    box-shadow: 0 0 14px #0cf inset;
+}
+.selector button:hover{
+    box-shadow: 0 0 14px #ff0 inset;
+    transition: all 1s;
+}
+.selector ul{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    bottom: -20px;
+    right: -20px;
+    /* border: 1px solid blueviolet; */
+    /* 让ul大他的父级一圈 */
+}
+.selector ul li{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* border: 2px solid red; */
+    transition: all 0.8s ease-in-out;
+}
+.selector ul li input{
+    display: none;
+}
+.selector ul li label{
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    margin-left: -40px;
+    display: block;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 0px;    
+    background-color: #fff;
+    color: olive;
+    font-weight: 500;
+    font-size: 0px;
+    border: none;
+    transition: all 0.8s ease-in-out;
+    overflow: hidden;
+    opacity: 0;
+}
+.selector ul li label img{
+    width: 100%;
+    height: 100%;
+}
+.selector.open ul li label{
+    /* 只要与上次的不一样就过渡 transition 在改变时过渡 */
+    /* animation 自动过渡 */
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+    line-height: 80px;   
+    opacity: 1; 
+}

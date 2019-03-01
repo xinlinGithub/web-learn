@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSON.stringify</title>
+</head>
+<body>
+    <script>
+        // JSON.stringify(obj): 把对象变成一个字符串形式的对象 
+        // 其实是他直接深度拷贝出来了一个字符串类型的对象 再通过JSON.parse()就可以实现对象的深度拷贝
+        // 但当内部有函数属性时或有正则时就会丢失 出现问题 但大多数情况下都是可用的
+        // JSON.stringify可接受三个参数 第一个：需要转变的对象 
+        // 第二个：一个数组 相当于一个过滤器 只返回数组中有的属性
+        // 也可以是一个函数 接受两个参数 key,value 匹配属性 返回对应的值
+        // 第三个：一个number 用于控制结果中的缩进 亦可以填符号
+
+        // 执行顺序 在对一个对象进行转化时 先看看这个对象里面有没有toJSON方法 
+        // 如果有就会调用这个方法 返回值为转化的返回值 
+        // 如果没有就会按照顺序去转化成json字符串 
+        // 转化之后就看有没有过滤器 如果有并且转化之后是个字符串对象 就进行属性过滤 返回符合条件的属性
+        // 如果转化之后是字符串 则过滤无效 直接将此字符串返回
+        var obj = {
+            name: "ssss",
+            age: 38,
+            children: {
+                name: "ss",
+                age: 11
+            },
+            toJSON() {
+                return this.children;
+            }
+        }
+        console.log(JSON.stringify(obj,["weight"]));
+        console.log(JSON.stringify(obj, null, 4),"缩进4个")
+        console.log(JSON.stringify(obj, null, "----"))
+        console.log(JSON.stringify(obj, function(k,v) {
+            switch (k) {
+                case "name": 
+                    return "wodhiname";
+                case "age":
+                    return "woshiage"
+                default: 
+                    return v;
+            }
+        }))
+        var arr = [1,2,3,4];
+        console.log(JSON.stringify(arr))
+
+        // JSON.parse()
+        // 也可以接受第二个参数
+        // 说白了就是过滤功能 叫做还原函数
+        var obj1 = {
+            name: "deng",
+            age: "44",
+            birthday: +new Date()
+        }
+        console.log(JSON.parse(JSON.stringify(obj1), function (k,v) {
+            if(k === "birthday") {
+                return new Date(v).toLocaleDateString();
+            }else {
+                return v;
+            }
+        }))
+        var date = new Date().toLocaleDateString()
+    </script>
+</body>
+</html>

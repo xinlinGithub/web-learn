@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // a = 10; 可删
+        // var a = 10; // 不可删
+        // console.log(a);
+        // delete a;
+        // console.log(a)
+
+        var obj = {
+            a: 10,
+            b: 20,
+            get X () {
+                return this.a + this.b
+            },
+            set X(value) {
+                console.log(value)
+            }
+        }
+        Object.defineProperty(obj,'c',{
+            value: 10,
+            writable: true,
+            enumerable: false,
+            configurable: false
+        })
+        for(var i in obj){
+            console.log(i,obj[i])
+        }
+        // var a = 10;     //GO            
+        // if (function c() {}) {// 括号中的变成表达式即为true ()中的东西类似立即执行函数 用完即释放(v8引擎) 下面就找不到了
+        //      function f () {
+        //         return typeof c + a;
+        //     }
+        // }
+        // function test (a, b) {
+        //     // AO
+        //     console.log(a); 
+        //     var a = 20; 
+        //     console.log(d); 
+        //     if (b) {
+        //         function d () {
+        //             console.log(b() + a);
+        //         };
+        //     }
+        //     console.log(d); 
+        //     d();
+        // }
+        // test(20, f);
+        // v8垃圾处理机制
+
+
+        // var a = 20;
+        // console.log(c)
+        // // console.log(b)
+        // if(function b(){}){
+        //     delete a;
+        //     console.log(a)
+        //     function c() {
+        //         // console.log(b)
+        //         return typeof b + a; //此b在函数里面 未经声明归全局所有 
+        //     }
+        // }
+        // function test(a,b) {
+        //     a = 100;
+        //     e = 22;
+        //     console.log(a,e)
+        //     delete a;
+        //     // delete e; 可以删 下面再用则报错
+        //     console.log(a,f)
+        //     if(b){
+        //         function f() {
+        //             console.log(b() + a)
+        //         }
+        //     }
+        //     f()
+            
+        // }
+        // console.log(c)
+        // console.log(c())
+        // test(a,c)
+    </script>
+</body>
+</html>

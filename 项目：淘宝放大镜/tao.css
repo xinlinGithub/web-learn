@@ -1,0 +1,84 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body{
+    background-color: rgba(0,0,0,.3)
+}
+.wrapper{
+    position: relative;
+    width: 500px;
+    /* border: 1px solid black; */
+    margin-top: 100px;
+    margin-left: 100px; 
+}
+.wrapper .content{
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc; 
+}
+.wrapper .content .imgCov{
+    width: 100%;
+    height: 100%;
+}
+.wrapper .content .imgCov img{
+    position: absolute;
+}
+.wrapper .content .moveView{
+    background: url('./img/move-box.png');
+    cursor: move;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.wrapper .bottomImg{
+    min-width: 500px;
+    height: 92px;
+    margin-top: 5px;
+    border: 1px solid #EEE;
+}
+.wrapper .bottomImg ul{
+    width: 100%;
+    height: 100%;
+}
+.wrapper .bottomImg ul li{
+    position: relative;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+.wrapper .bottomImg ul li div{
+    height: 78px;
+    text-align: center;
+    display: flex;
+    margin: 4px;
+    align-items: center;
+    justify-content: center;
+}
+.wrapper .bottomImg ul li img{
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.wrapper .bottomImg ul li .active{
+    border: 2px solid red;
+}
+.wrapper .bigView{
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    left: 105%;
+    top: 0;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    display: none;
+}
+.wrapper .bigView img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

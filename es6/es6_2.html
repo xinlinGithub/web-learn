@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象方法属性简写-静态函数—深挖原型—解构赋值</title>
+</head>
+<body>
+    <script>
+        // 对象方法属性的简写
+        // 复习
+        // var obj = {
+        //     name: 'dfs'
+        // }
+        // var obj1 = new Object()
+        // obj1.name = 'name';
+        // obj1['age'] = 23;
+        // delete obj1.age => true;
+        // let name = 'sss',age = 14,love = 'eat';
+        // var obj2 = {name, age, love};//简易赋值
+        // 原理： obj2 = {name: name, age:age,love:love};
+        // var newObj2 = {...obj2,sayName() {
+        //     console.log(this.name)
+        // }}
+        // newObj2.sayName.call(obj1);
+        // 静态方法
+        // // 这种方法既不定义在全局 又不定义在原型上
+        // Object.is(NaN,NaN); // => true isNaN() isInfinity()
+        // Object.is(-0,+0)//此时的+-常表示方向 => false
+        // // 此方法有点类似=== 但不完全一样 有一些特例 比如上面两个
+        // Object.is([],0)
+
+        // var obj = {name: 'eee'}
+        // console.log(Object.keys(obj)) ;
+        // Object.values(obj);
+        // Object.entries(obj)
+
+        // var person = {age: 33,height: 188};
+        // var son = {name: 'son',weight: 55,height: 166};
+        // var nson = Object.assign(son,person);
+        // nson === son
+
+        // 计算属性 就是属性值是一个变量 则用[]括起来就行
+        // var name = "name";
+        // var obj = {[name]: "[name]"}
+
+
+
+        // Object.create() 见下文
+        // 深挖原型
+        
+        // var obj = {
+        //     name: 'dfs'
+        // }
+        // var obj1 = new Object()
+        // obj1.name = 'name';
+        // obj1['age'] = 23;
+        // obj.prototype => undefind 因为只有构造函数才有这个属性 且是一个对象
+        // var f = obj.__proto__ === Object.getPrototypeOf(obj) //可以这样去访问他的原型
+        // console.log(f)//最好用后面的 因为__proto__ 是私有属性 有的浏览器还不兼容 不怎么支持 也不怎么符合规范
+        // console.log(Object.getPrototypeOf(obj).constructor === Object.getPrototypeOf(obj1).constructor)
+        // var obj3 = Object.create(null)// 一个没有原型的对象 创造一个干净的对象
+        // obj3.name = 'lll';
+        // function Person(name = 'none') {
+        //     this.name = name;
+        // }
+
+        // Person.prototype.sayName = function(){
+        //     console.log(this.name + 'proto')
+        // }
+        // var obj4 = {
+        //     name: 'p1=>prototype',
+        //     sayName(){
+        //         console.log(this)
+        //         console.log(this.name + 'obj4')
+        //         console.log(super.name)// super 代指obj4的原型 当obj4用到他的原型时才有作用
+        //     }
+        // }
+        // var obj5 = {
+        //     name: 'obj4=>prototype'
+        // }
+        // var p1 = new Person();
+        // console.log(p1.__proto__.constructor === Person)
+        // p1.sayName();
+        // Object.setPrototypeOf(p1,obj4);
+        // p1.sayName();
+        // Object.getPrototypeOf(p1) === obj4
+        // Object.setPrototypeOf(obj4,obj5);
+        // obj4.sayName()
+        
+        // var grandParent = {
+        //     name: 'grandParent',
+        //     age: 88
+        // }
+        // var parent = {
+        //     name: "parent",
+        //     sex: "man"
+        // }
+        // var child = {
+        //     name: "child",
+        //     age: 18
+        // }
+        // 创建一个以传入对象为原型的对象 相当于继承此对象；
+        // 返回一个空对象 原型时parent
+        
+        // var child2 = Object.create(parent);会返回一个以parent为原型的新对象 相当于一个浅层克隆
+        // // 赋值时他自己没有 就会给自己附上值
+        // child2.name = "modefyName"
+        // console.log(child2, parent)
+        // var child1 = Object.create(parent);
+        // console.log(child1);
+        // // 这样1和2就会共享一个原型 
+        // var mm = Object.create(null);
+        // console.log(mm.__proto__)
+        // 这样mm就是一个没有原型的对象
+        // Object.create()相当于一个对象的浅拷贝 当改变返回对象中的引用值时 传入对象的引用值也会发生改变
+        // 实现：
+            // Object.create =  function (obj) {
+            //     function f () {};
+            //     f.prototype = obj;
+            //     return new f();
+            // }
+        // 他的第二个参数是对返回对象的属性描述 和Object.definePrototype()第三个参数的属性值一样
+            // propertiesObject 参数的详细解释：（默认都为false）
+            // 　数据属性
+            // writable:是否可任意写
+            // configurable：是否能够删除，是否能够被修改
+            // enumerable：是否能用 for in 枚举
+            // value：值
+            // 　访问属性：
+            // get(): 访问
+            // set(): 设置
+
+
+            
+        // 解构赋值
+        // let obj = {
+        //     name: 'ddd',
+        //     age:33,
+        //     mather: {
+        //         age: 55,
+        //         love: 'eat'
+        //     }
+        // }
+        // let {
+        //     name,
+        //     age,
+        //     mather: {
+        //         age: Mage,
+        //         love: Mlove
+        //     }
+        // } = obj
+
+        // var obj = {
+        //     name: 'dd',
+        //     age: 33,
+        //     height: 177
+        // }
+        // let name,age,height;
+        // ({name,age,height} = obj)
+        // 原理： {name: name,age: age,height: height}; 前面的为规则 后面的为真正的赋的值 
+        // 访问也只能访问值 不能访问规则
+
+        // let {PI,random,floor,ceil,round,pai = 3.14} = Math;//用let var 声明都行
+
+        // var arr = [1,2,3,[4,5,[6,7,{num: 666}]]];
+        // let [a,b,c,[d,e,[f,g,{num}]]] = arr
+    </script>
+</body>
+</html>

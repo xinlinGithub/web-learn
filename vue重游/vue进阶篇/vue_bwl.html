@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>备忘录</title>
+    <style lang="">
+        [v-cloak] {
+            display: none;
+        }
+        .fin{
+            color:red;
+            background: lime;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="app" v-cloak>
+        请输入待办事件：<input type="text" v-model="listStr" @keyup.enter="pushList">
+        <div class="item">
+            <ul v-for="(item,index) in itemList">
+                <li :style="style">
+                    <span>{{ index+1 }}:  </span>
+                    {{ item.val }}
+                    <span :style="btn">
+                        <button @click="finish(item)" :class="{fin: item.isFinish}">√</button>
+                        <button @click="del(index)">×</button>
+                    </span>
+                </li>
+            </ul>
+            <button @click="clear" v-show="itemList.length !== 0">清空</button>
+            <button @click="delOpt" v-show="itemList.length !== 0">选中完成事件删除</button>
+            <div v-show="itemList.length == 0">
+                暂无备忘录
+            </div>
+        </div>
+    </div>
+    <script src="../vue.js"></script>
+    <script>
+        var BFC = (function(){
+            return {
+                add(val){
+                    // 保存历史记录
+                    localStorage.setItem('toList',JSON.stringify(val))
+                },
+                clear(){
+                    localStorage.clear();
+                },
+                get(){
+                    return JSON.parse(localStorage.getItem('toList'))
+                }
+            }
+        })()
+        var app = new Vue({
+            el: '#app',
+            data: {
+                itemList: BFC.get() || [],
+                listStr: ''
+            },
+            methods: {
+                pushList(e){
+                    if(this.listStr === ''){
+                        return
+                    }
+                    var listObj = {
+                        val: e.target.value,
+                        isFinish: false
+                    }
+                    this.itemList.push(listObj)
+                    this.listStr = '';
+                },
+                clear(){
+                    this.itemList = [];
+                },
+                del(index){
+                    this.itemList.splice(index,1)
+                },
+                finish(item){
+                    item.isFinish = !item.isFinish;
+                    BFC.add(this.itemList);                                        
+                },
+                delOpt(){
+                    var list = this.itemList;
+                    var len = list.length
+                    for(var i = 0; i < len; i++){
+                        if(list[i].isFinish == true){
+                            list.splice(i,1);
+                            this.delOpt()
+                            return
+                        }
+                    }
+                }
+            },
+            computed: {
+                style(){
+                    return {
+                        listStyle: 'none',
+                        padding: '6px 12px',
+                        width: '500px',
+                        borderBottom: '1px solid orange',
+                        position: 'relative'
+                    }
+                },
+                btn(){
+                    return {
+                        position: 'absolute',
+                        right: '20px'
+                    }
+                }
+            },
+            watch: {
+                itemList(nowVal){
+                    BFC.add(nowVal);                    
+                }
+            }
+        })
+    </script>
+</body>
+</html>

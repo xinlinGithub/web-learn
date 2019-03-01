@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+    <style>
+        #d{
+            width: 50px;
+            height: 50px;
+        }
+        table{
+            border: 1px solid red;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+        th,td{
+            padding: 8px 16px;
+            border: 1px solid #CCC;
+            color: #666;
+            text-align: left;
+            white-space: nowrap;
+        }
+        th{
+            color: blue;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div id="id">
+        <h2>{{ msg }}</h2>
+        <input type="text" v-model="value" placeholder="我是input">
+        <h1>{{ value }}</h1>
+        <span>{{ date }}</span>
+        <div :style="{'width': width}">我是一只小小鸟，怎么飞都飞不高</div>
+        <my-component2 :msg='msg' :numarr='numArr' @changemsg='changeMsg'></my-component2>
+        <!-- <script type="text/x-template" id="my-component2">
+            <p>我是组建</p>
+            <span>{{ msg }}</span>
+        </script> -->
+    </div>
+    <div id="app">
+        <form action="get">
+            <input type="checkbox" v-for='(item,key,index) in flag' @click="retCheck(key)" :name="index + 1" :id="key" :checked="item" :key="key">
+            <!-- <input type="checkbox" name="2" id="b">
+            <input type="checkbox" name="3" id="c"> -->
+            <br>
+            <label for="1">是否全选：</label>
+            <input type="checkbox" @click="selectAll" name="4" id="d">
+        </form>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="(item,index) in infKeys">{{ item }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in inf" :key="index">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.number }}</td>
+                        <td>{{ item.class }}</td>
+                        <td>{{ item.love }}</td>                        
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody is='my-component'></tbody>
+            </table>
+            <div class="unique">
+                <my-component1></my-component1>
+                <my-component1></my-component1>
+                <my-component1></my-component1> 
+                <my-component :width='100'></my-component>               
+            </div>
+        </div>
+    </div>
+    <script>
+    // git版本控制工具
+    // node js的运行环境 自带npm包管理工具 webpack可用npm下载
+    // 他是一种前端自动化构建工具 用来打包代码 为了实现规范 提高工作效率 
+    // 将各个相互关联的功能模块打包在一起，以实现最终想要的功能，可分工合作，效率高
+    // 压缩 处理 时间戳 学会看文档学习 
+    // 模块化前传： 函数封装 命名空间（对象：可在外面随意改动私有变量） 
+    // 闭包（jquery封装作用域的方法）立即执行函数（外面拿不到里面的值，除非用闭包返回）
+    // 以上都是在模块化出现之前解决封闭作用域的方法 各有利弊 
+    // 高内聚 低耦合：各封闭作用域之间重复度越小越好（低耦合）
+    // 当前自己的文件或函数 内部联系很紧密 与外部重复或联系程度很小（高内聚）
+    // 模块化：在模块化编程中，开发者将程序分解成离散功能块(discrete chunks of functionality)，并称之为_模块_。
+    // 将一个复杂的系统分解成多个模块 方便编码 提高效率 各司其职
+    // 为什么要用：降低代码耦合度 便于分工。。。
+    // 模块化规范：commonjs Amd Cmd 
+    // 计算机的同步： 单线程：先做完一件事 再做完一件事 异步：多线程：同时做多件事情
+    Vue.component('my-component',{
+        template: '<div :style="style">我是一个模板,{{ flag }}</div>',
+        data(){
+            return {
+                flag: true
+            }
+        },
+        props: ['width'],
+        computed: {
+            style(){
+                return {
+                    width: this.width + 'px'
+                }
+            }
+        }
+    })
+    // var obj = {
+    //     count: 0
+    // }
+    Vue.component('my-component1',{
+        template: '<button @click="count++">{{ count }}</button>',
+        data(){
+            // return obj; 共享
+            return{
+                count: 0 // 独立
+            }
+        }
+    })
+    Vue.component('my-component2',{
+        // template: '#my-component2',
+        props: {
+            msg: {
+                type: String,
+                default: '22222'
+            },
+            numarr: {
+                type: Array,
+                default(){
+                    return [];
+                }
+            }
+        },        
+        template: '\
+        <div>\
+            <div @click="addOne(msg)" :style="hover">{{ msg }}</div>\
+            <p> {{ numarr}}</p>\
+            <p>{{ curarr }}</p>\
+            <button @click="pushNum(numarr)">give you num</button>\
+        </div>\
+        ',
+        data(){
+            return{
+                myMsg: '',
+                myMsg1: this.msg,
+                myarr: this.numarr,
+                curarr: []
+            }
+        },
+        methods: {
+            addOne(msg){
+                this.myMsg1 += '1';
+                // this.myMsg = msg;
+                this.$emit('changemsg',this.myMsg1)
+            },
+            pushNum(arr){
+                // arr.push(1)
+                // console.log(arr)
+                this.curarr.push(1);
+                console.log(this.curarr)
+            }
+        },
+        computed: {
+            hover(){
+                return{
+                    cursor: 'pointer'
+                }
+            }
+        },
+        created(){
+            this.curarr.push(...this.myarr)            
+        }
+        // data(){
+        //     return {
+        //         msg: '我是一个模板！'
+        //     }
+        // } 
+    })
+    var app1 = new Vue({
+        el: '#id',
+        data: {
+            value: '我是input',
+            date: new Date(),
+            width: '100px',
+            msg: '我是一个模板！',
+            numArr: [0,0,0,0]
+        },
+        methods: {
+            changeDate(){
+                var _this = this;
+                this.timer = setInterval(() => {
+                    _this.date = new Date();
+                },1000)
+            },
+            changeMsg(val){
+                this.msg = val;
+            }
+        },
+        watch: {
+            msg(){
+                console.log(this.msg)
+            },
+            numArr(){
+                console.log(this.numArr)
+            }
+        }
+    })
+    app1.changeDate();
+    var app = new Vue({
+        el: '#app',
+        data: {
+            flag: {
+                flag1: false,
+                flag2: false,
+                flag3: false
+            },
+            inf: [{
+                'name': 'lin',
+                'number': 201608101078,
+                'class': '电气162',
+                'love': 'eat'
+            },{
+                'name': 'wen',
+                'number': 201608101079,
+                'class': '电气162',
+                'love': 'movies'
+            },{
+                'name': 'shuai',
+                'number': 201608101080,
+                'class': '电气162',
+                'love': 'pongpang'
+            }],
+            count: 0,
+            infKeys: []
+        },
+        methods: {
+            retCheck(key){
+                this.flag[key] = this.flag[key] === false ? true : false;
+                console.log(this.flag[key],key)
+            },
+            selectAll(){
+                var allF = this.flag;
+                this.count++;
+                if(this.count % 2 === 0){
+                    for(var i in allF){
+                        allF[i] = false;
+                    }
+                    return false;
+                }
+                for(var i in allF){
+                    allF[i] = true;
+                }
+            }
+        },
+        created: function() {
+            var len = this.inf.length;
+            var curObj = this.inf[0];
+            var l = Object.keys(curObj).length;
+            for(var i = 1; i < len; i++){
+                if(Object.keys(this.inf[i]).length > l){
+                    l = Object.keys(this.inf[i]).length;
+                        curObj = this.inf[i];
+                }
+            }
+            this.infKeys = Object.keys(curObj);
+            console.log(this.infKeys)    
+        }
+    })
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>评分组件</title>
+    <link rel="stylesheet" href="./rate.css">
+    <link rel="shortcut icon" href="./point.jpg" type="image/x-icon">
+</head>
+<body>
+    <div id="app">
+        <rate :point="point" v-cloak></rate>
+        <rate :point="point" v-cloak></rate>        
+    </div>
+    <script src="../vue.js"></script>
+    <script src="./rate.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                point: {
+                    max : 10,
+                    starSize : 32,
+                    showTip : true,
+                    stap :0.5,
+                    rating : 2
+                }
+            }
+        })
+    
+    </script>
+</body>
+</html>

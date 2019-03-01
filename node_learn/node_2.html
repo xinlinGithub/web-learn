@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 
+        http协议：发送(request): 请求头 数据头  返回(response): 返回头 数据体
+        hyper text transfer protocol 超文本传输协议
+        使用http:
+        yum install curl 
+        curl www.baidu.com
+        curl -i www.baidu.com
+
+        server 和 client 之间的收发数据：
+        server: 
+            function: listen close on
+            event: listening connection close
+        client 建立socket: 
+            function: connect end write on 
+            event: connect data close timeout
+            attribute: remoteAddress remotePort localAddress localPort
+     -->
+</body>
+</html>

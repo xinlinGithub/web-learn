@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>head_and_stack</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-size: 0px;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        div {
+            display: inline-block;
+            width: 50%;
+            height: 300px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img src="./train.png" alt="">
+    </div>
+    <div>
+        <img src="./hnt.png" alt="">
+    </div>
+    <script>
+        // 堆栈：Last in first out LIFO
+        // 基本操作：create push pop isEmpty full
+        // 用数组实现堆栈：事先声明长度 且不能改变 这是缺点 
+        // 而且有时不确定声明的具体长度 多了浪费空间 少了不够用 优点：设计算法简单
+        var arr = new Array(10);
+        var _top = -1;//一开始指向栈底
+        // 先让top指向下一个 再入栈 先出栈 再让top指向上一个地址
+        var len = arr.length;
+        // 判断堆栈是否为空
+        function isEmpty() {
+            if (_top === -1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // 判断堆栈是否已满
+        function full() {
+            if (_top >= len) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // 入栈
+        function push(num) {
+            _top += 1;
+            if (full()) {
+                _top -= 1;
+                return "堆栈已满";
+            } else {
+                arr[_top] = num;
+                console.log(_top)
+                return arr;
+            }
+        }
+        // 出栈
+        function pop() {
+            if (isEmpty()) {
+                return "堆栈已空"
+            } else {
+                var temp = arr[_top];
+                arr[_top] = null;
+                _top -= 1;
+                return temp
+            }
+        }
+
+        // 使用链表实现堆栈 ： 优点：可动态改变长度，能有效利用内存资源 缺点：设计算法复杂
+        // 建立链表中的相关节点
+        class Node {
+            constructor(data) {
+                this.data = data;
+                this.next = null;
+            }
+        }
+        // 声明一个全局的指针变量
+        var node_top = null;
+        // 判断是否为空
+        function isEmpty() {
+            if (node_top === null) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // 入栈操作 这个与数组优点不同 他是先入栈 再改变node_top指向
+        function push(data) {
+            var newNode = new Node(data);
+            newNode.next = node_top;
+            node_top = newNode;
+            return node_top;
+        }
+        // 出栈操作 先改变node_top指向在出栈
+        function pop() {
+            if (isEmpty()) {
+                return "the stack is empty!"
+            } else {
+                var data = node_top.data;
+                node_top = node_top.next;
+                return data;
+            }
+        }
+
+        // 堆栈的应用（1）
+        // 有一编号为1,2,3...的车厢，每一节车厢被拖入堆栈，并可以在任何时候将他拖出
+        // 例如 n=3,时 可以先都拖入，再都拖出， 这样顺序为3 2 1，利用堆栈和递归设计一个算法
+        // 当n为任意数时，输出出栈后有几种排序方式，或具体排序过程
+        // 思路：先用数学归纳法分析 寻找突破口 再编程
+        // 这是一个动态规划问题
+        // 先按第k节车厢最后出栈的思路来写 这样那么 1-(k-1) (k + 1)-n 都在k之前出栈
+        // 再按同样的思想递归 1-(k-1) (k + 1)-n这两部分 相乘;
+        // 出口: 当n为1或0时返回1
+        // 如果思路为看谁先出去的话 就变得相对不好计算 
+        // 因为在他之前入栈的是无法再按这个思想进行递归的
+        function allRoute(n) {
+            if (n <= 1) {
+                return 1;
+            }
+            var routes = 0;
+            for (var i = 1; i <= n; i++) {
+                routes += allRoute(i - 1) * allRoute(n - i);
+            }
+            return routes;
+        }
+        // 升级一下：返回所有可能的排列；并缓存类似的可能；以节省性能。
+        // function proRoute(n) {
+        //     if (n <= 1) {
+        //         return 1;
+        //     }
+        //     var routes = 0;
+        //     var arr = [];
+        //     for (var i = 1; i <= n; i++) {
+        //         arr.unshift(i);
+        //         routes += proRoute(n - i) * proRoute(i - 1);
+        //         console.log(arr);
+        //     }
+        //     return routes;
+        // }
+
+        // 堆栈的应用(2): 递归：重点知道规律；无需理解具体的实现；找规律 找出口
+        // 用递归实现n的阶乘
+        function factorial(n) {
+            if (n <= 1) {
+                return 1;
+            }
+            return n * factorial(n - 1);
+        }
+        // 用递归实现斐波拉契数列: 0 1 1 2 3 5...
+        // fib(n) = fib(n-1) + fib(n-2);
+        function fib(n) {
+            if (n === 0) {
+                return 0;
+            }
+            if (n === 1) {
+                return 1;
+            }
+            return fib(n - 1) + fib(n - 2);
+        }
+        function getFibs(n) {
+            var globalFib = [];
+            for (var i = 0; i <= n; i++) {
+                globalFib.push(fib(i));
+            }
+            return globalFib;
+        }
+
+        // 用递归解决汉诺塔问题
+        // 先把第一个碟子上前n-1个盘子都移动到第二个上 再把第n个盘子移到第三个上
+        // 再把第二个碟子上的n-1个移动到第三个上 以此往复循环
+        function hanoi(n, p1, p2, p3) {//盘子总数 碟子顺序 1 2 3
+            if(n === 1) {//如果最后只剩一个盘子就是那个最大的 就移到第三个上
+                console.log(`2从${p1}移动到${p3}`);
+            } else { //否则 就将前n-1个移到第二个上
+                hanoi(n-1, p1, p3, p2);
+                console.log(`1从${p1}移动到${p3}`)
+                // 再将n-1个从p2移动到p3
+                hanoi(n-1, p2, p1, p3);
+                console.log(3)
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>

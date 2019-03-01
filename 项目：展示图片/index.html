@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <ul>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction">有谁不爱泡温泉？浸入雾气蒸腾的泉水之中，把身体泡成一片茶叶，舒展轻盈。有比这更美妙的感觉吗？</div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+            <li>
+                <div class="title">
+                    <h1>温泉酒店</h1>
+                </div>
+                <div class="img"></div>
+                <div class="direction"></div>
+            </li>
+        </ul>
+    </div>
+    <script src="./jquery-3.2.1.js"></script>
+    <script>
+        var $wrap = $('.wrapper');
+        var $li = $wrap.find('li');
+        var len = $li.length;
+        var flag = true;
+        var width = Math.floor((parseInt($wrap.find('ul').css('width')) - 400) / (len - 1));
+        bindEvent();
+        init();
+        function init() {
+            if (flag) {
+                $li.eq(0).trigger('click');
+            }
+
+        }
+
+        function bindEvent() {
+            $li.on('click', function () {
+                if ($(this).index() == 0) {
+                    flag = false;
+                } else {
+                    flag = true;
+                }
+                change($(this))
+            })
+            $wrap.find('ul').on('mouseleave', function () {
+                if (flag) {
+                    init();
+                }
+
+            })
+        }
+
+
+        function change(event) {
+            event.animate({
+                'width': '400px'
+            }, 300, 'linear').siblings().animate({
+                'width': width + 'px'
+            }, 300, 'linear')
+            event.find('.title').css({
+                'display': 'none'
+            })
+            event.siblings().find('.title').css({
+                'display': 'block'
+            })
+            event.find('.direction').css({
+                'bottom': '0px'
+            })
+            event.siblings().find('.direction').css({
+                'bottom': '-50px'
+            })
+        }
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

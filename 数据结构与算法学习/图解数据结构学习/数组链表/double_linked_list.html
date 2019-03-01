@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>double_linked_list</title>
+</head>
+<body>
+    <script>
+        // 双向链表；
+        // 优点：双向通行，方便寻找前后节点，执行速度较快，如果任意节点链接断裂，
+        // 可以快速反向遍历以恢复原节点，主要是可以双方向遍历
+        // 缺点：删除插入节点时，更浪费时间，每个节点都有两个指针变量，较浪费空间
+        // 创建双向链表
+        class Node{
+            constructor (val) {
+                this.val = val;
+                this.rLink = null;
+                this.lLink = null;
+            }
+        }
+        function createDoubleList(start, end = start) {
+            var head = new Node(start++);
+            var ptr = head;
+            for (var i = start; i <= end; i++) {
+                var node = new Node(i);
+                ptr.rLink = node;
+                node.lLink = ptr;
+                ptr = node;
+            }
+            return head;
+        }
+        var head = createDoubleList(0,3);
+
+        // 遍历双向节点 分别左右开始遍历 
+        function traverseList(head) {
+            var ptr = head;
+            while (ptr) {
+                console.log(ptr.val); 
+                if (ptr.rLink === null) {
+                    break;
+                }               
+                ptr = ptr.rLink;                
+            }
+            while (ptr) {
+                console.log(ptr.val);
+                ptr = ptr.lLink;
+            }
+        }
+        traverseList(head)
+
+        // 查找节点
+        function findNode(head, val) {
+            var ptr = head;
+            while (ptr) {
+                if(ptr.val === val) {
+                    return ptr;
+                }
+                ptr = ptr.rLink;
+            }
+            return null;
+        }
+        // 添加节点 若fNode 为空则默认插到头部，否则插到fNode后面
+        function insertNode(head, fNode, val) {
+            var curNode = new Node(val);
+            var ptr = head;
+            if (!head) {
+                return curNode;
+            }
+            if (!fNode) {
+                ptr.lLink = curNode;
+                curNode.rLink = ptr;
+                head = curNode;
+                return head;
+            }
+            while (ptr) {
+                if(ptr === fNode) {
+                    curNode.rLink = ptr.rLink;
+                    ptr.rLink != null ? ptr.rLink.lLink = curNode : ptr.rLink = curNode;
+                    curNode.lLink = ptr;
+                    return head
+                }
+                ptr = ptr.rLink
+            }
+        }
+        console.log(head = insertNode(head, findNode(head,4), 4))
+
+        // 删除节点
+        function deleteNode(head,node) {
+            if(head === node) {
+                head.rLink.lLink = null;  
+                return head.rLink;                              
+            }
+            var ptr = head.rLink;
+            while (ptr) {
+                if (ptr === node) {
+                    ptr.lLink.rLink = ptr.rLink;
+                    ptr.rLink === null ? null : ptr.rLink.lLink = ptr.lLink;
+                    return head;
+                }
+                ptr = ptr.rLink;
+            }
+        }
+        console.log(head = deleteNode(head, findNode(head, 4)))
+    </script>
+</body>
+</html>

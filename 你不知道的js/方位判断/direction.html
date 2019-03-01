@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background: olive;
+            margin: 0;
+            padding: 0;
+        }
+        /* .wrapper{
+            transform-style: preserve-3d;
+            perspective: 300px; 
+        } */
+        .dir {
+            width: 150px;
+            height: 150px;
+            background: blueviolet;
+            margin: 200px auto;
+            /* transition: transform 300ms ease-in-out; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="dir"></div>
+        <div class="instru"></div>
+    </div>
+
+    <script>
+        var dirDiv = document.getElementsByClassName('dir')[0];
+        function bindEvent(dom) {
+            dom.addEventListener('mouseenter', function (e) {
+                getDir(e, dom, 'in');
+            })
+            dom.addEventListener('mouseleave', function (e) {
+                getDir(e, dom, 'out');
+            })
+        }
+        bindEvent(dirDiv)
+        function getDir(e, dom, direction) {
+            var d = getDeg(e, dom);
+            var str = '';
+            var curDir = '';
+            switch (d) {
+                case 0:
+                    curDir = '-top';
+                    break;
+                case 1:
+                    curDir = '-right';
+                    break;
+                case 2:
+                    curDir = '-bottom';
+                    break;
+                case 3:
+                    curDir = '-left';
+                    break;
+            }
+            str = direction + curDir;
+            console.log(str);
+            // turn(str,dom);
+        }
+        function turn(str,dom) {
+            switch(str) {
+                case 'in-left' : 
+                    dom.style.transform = 'rotateY(180deg)';
+                    break;
+            }
+        }
+        function getDeg(e, dom) {
+            var top = dom.offsetTop,
+                left = dom.offsetLeft,
+                w = dom.offsetWidth,
+                h = dom.offsetHeight;
+            var x = (e.clientX - left - w / 2) * (w > h ? (h / w) : 1),
+                y = (e.clientY - top - h / 2) * (h > w ? (w / h) :1),
+                deg = (Math.round((Math.atan2(y, x) * (180 / Math.PI) + 180) / 90) + 3) % 4;
+            return deg;
+        }
+
+
+    </script>
+
+</body>
+
+</html>

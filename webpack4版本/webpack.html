@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // webpack4 的具体指令 必须在node 环境下运行 而且是6版本以上
+        // node -v 看node的版本号
+        // npm -v 看npm的版本号
+        // npm install webpack -g 在全局安装webpack (可选) 以后都可以用
+        // webpack -v 查看当前webpack 版本号 一般为最新版本
+        // 想用不同的版本： npm install webpack@2.0.3
+        // cd .. 退到上一个文件夹
+        
+        // webpack当前没有配置文件（会根据里面的命令进行打包处理），默认的去找当前文件的src下面的index.js作为默认的入口
+        // 默认出口文件是dist文件下的main.js 处理后存入代码的文件 所以必须先建立文件再$ webpack运行
+        // 主要有四点 entry入口 output出口 loader加载器（将所有的文件转化为webpack能处理的文件） plugins插件
+        
+        // 上面是准备操作 可选 一下是正式操作
+        // 在目标文件下Git bush here 或 window+cmd 用电脑自带的
+        // 目标文件名不要用中文 不要用关键词webpack module 
+        // npm init 初始化一下当前文件
+        // npm install webpack --save-dev 在生产环境（development）下安装局部webpack  上线之后的是开发环境product
+        // npm install webpack-cli -g(-D局部下载) 命令行接口
+        // $ webpack 在浏览器上简单运行webpack把运行代码写在src中的index.js文件中 打包在main.js文件中
+        // 配置文件 webpack.config.js 
+        // index.html唯一的HTML文件
+        // $ webpack -w(watch)监听 自动更新
+        // Ctrl + c 结束进程
+    </script>
+</body>
+</html>

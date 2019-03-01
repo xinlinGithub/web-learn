@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <button  @click.left="num<10&&num++">+</button>
+        <span>{{ num }}</span>
+        <button @click.right.prevent="desc">-</button>
+        <!-- 在子元素点击会触发父级事件 这是事件冒泡 -->
+        <div :class="{'box': show}" @click.stop="tar">
+            <div :style='style' v-text="msg" @click.stop = "tar"> 
+                阻止了冒泡事件
+            </div>
+        </div>
+        <input type="text" @keyup.space.13="getVal">
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                num: 0,
+                show: true,
+                msg: '点我看target'
+            },
+            methods: {
+                desc(){
+                    if(this.num > -10){
+                        this.num--;
+                    }
+                },
+                tar(e){
+                    console.log(e.target)
+                },
+                getVal(e){
+                    console.log(e)
+                    console.log(e.target.value)
+                }
+            },
+            computed: {
+                style(){
+                    return {
+                        width: '100px',
+                        height: '100px',
+                        background: '#ccc'
+                    }
+                }
+            }
+        })
+    
+    </script>
+</body>
+</html>

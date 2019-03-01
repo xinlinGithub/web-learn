@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上传文件！</title>
+</head>
+<body>
+    <h1>这是上传文件页面！</h1>
+    <!-- <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file">
+        <input type="submit" value="上传文件">
+    </form> -->
+    <input type="file" name="file" id="file" />
+    <input type="button" value="上传文件" onclick="submitFile()">
+    <div class="view">
+        <h2>文件显示区域</h2>
+        <img src="" alt="#" id="myImg">
+    </div>
+    <script>
+        function submitFile() {
+            var file = document.getElementById("file").files[0];//获取上传的文件
+            console.log(file);
+            var form = new FormData();
+            form.append("file", file);//证明上传的是文件
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    var myImg = document.getElementById("myImg");
+                    myImg.src = "/getPic?path=" + xhr.responseText;
+                    console.log(xhr.responseText);
+                }
+            }
+            xhr.open("post", "/upload", true);
+            xhr.onload = function () {
+                alert("上传完成");
+            }
+            xhr.send(form);
+
+        }
+    </script>
+</body>
+</html>

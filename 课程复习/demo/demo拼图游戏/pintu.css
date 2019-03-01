@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.wrapper{
+    width: 500px;
+    height: 500px;
+    margin: 10px auto;
+}
+.start{
+    width: 60px;
+    height: 30px;
+    color: black;
+    box-shadow: 0 0 8px blue;
+    text-align: center;
+    line-height: 30px;
+    font-size: 25px;
+    margin: 10px auto;
+    cursor: pointer;
+}
+.box{
+    width: 300px;
+    height: 400px;
+    border: 1px solid black;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+}
+.box .cell{
+    box-shadow: 0 0 8px #fff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+.box .hover{
+    z-index: 40px;
+    box-shadow: 0 0 28px #f40;
+}

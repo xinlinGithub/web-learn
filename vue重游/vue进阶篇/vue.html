@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue进阶篇之rander函数</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 第一个点 -->
+        <!-- <ele :show='show' :list='list'></ele>
+        <button @click="show = !show">切换show</button> -->
+        <!-- 第二个点 -->
+        <!-- <ele :list='list'></ele>
+        <button  @click="handleClick">显示列表</button> -->
+        <!-- 对应vue模板 -->
+        <!-- <ul v-if="list.length">
+            <li v-for="(item,index) in list" :key="index">{{ item }}</li>
+        </ul>
+        <p v-else>列表为空</p> --> 
+        <!-- 第三个点 -->
+        <!-- <ele></ele>
+        <ele>
+            <p>显示slot的内容</p>
+        </ele>
+        <ele></ele> -->
+    </div>
+    <script src="../vue.js"></script>
+    <script>
+        // 利用render函数模拟v-if v-else v-for
+        // Vue.component('ele',{
+        //     render(createElement){
+        //         if(this.show){
+        //             return createElement('p','我的show为true')
+        //         }else{
+        //             return createElement('p','我的show为false')
+        //         }
+        //         var nodes = [];
+        //         for(var i = 0; i < this.list.length; i++){
+        //             nodes.push(createElement('p',this.list[i]))
+        //         }
+        //         // 全都是以虚拟dom VNode对象的形式创建而来 然后Vue内部自动将他转换成dom节点 提高性能
+        //         console.log(nodes,createElement('div',nodes))
+        //         return createElement('div',nodes)
+        //     },
+        //     props: {
+        //         show: {
+        //             type: Boolean,
+        //             default: false
+        //         },
+        //         list: {
+        //             type: Array
+        //         }
+        //     }
+        // })
+
+        // var app = new Vue({
+        //     el: '#app',
+        //     data: {
+        //         show: false,
+        //         list:[
+        //             '《你不知道的js》',
+        //             '《高性能MySOL》',
+        //             '《程序员的英语》'
+        //         ]
+        //     }
+        // })
+
+
+        //利用render函数 + map 做个小的列表展示
+        // Vue.component('ele',{
+        //     render(createElement){
+        //         if(this.list.length){
+        //             return createElement('ul',this.list.map(function(item){
+        //                 return createElement('li',item)
+        //             }))
+        //         }else{
+        //             return createElement('ul','列表为空')
+        //         }
+        //     },
+        //     props: {
+        //         list: {
+        //             type: Array,
+        //             default(){
+        //                 return [];
+        //             }
+        //         }
+        //     }
+        // })
+        // var app = new Vue({
+        //     el: '#app',
+        //     data: {
+        //         list: [1]
+        //     },
+        //     methods: {
+        //         handleClick(){
+        //             console.log(this.list)
+        //             this.list = [
+        //                 '《你不知道的js》',
+        //                 '《高性能MySOL》',
+        //                 '《程序员的英语》'
+        //             ]
+        //         }
+        //     }
+        // })
+
+        // 利用render函数实现v-model;
+        // Vue.component('ele',{
+        //     render(createElement){
+        //         var _this = this;
+        //         return createElement('div',[
+        //             createElement('input',{
+        //                 domProps: {
+        //                     value: _this.value
+        //                 },
+        //                 on: {
+        //                     input(event){
+        //                         _this.value = event.target.value
+        //                     }  
+        //                 }
+        //             }),
+        //             createElement('p','value:' + _this.value)
+        //         ])
+        //     },
+        //     data(){
+        //         return {value: 'dddd'}
+        //     }
+        // })
+        // var app = new Vue({
+        //     el: '#app'
+        // })
+
+        // 利用render 函数 撰写事件操作 模拟聊天内容
+        // Vue.component('ele',{
+        //     render(createElement){
+        //         var _this = this;
+        //         if(this.list.length){
+        //             var nodes =  createElement('ul',{
+        //                 style: {
+        //                     border: '1px solid red',
+        //                     padding: '8px',
+        //                     listStyle: 'none',
+        //                     color: 'orange',
+        //                     fontSize: '18px'
+        //                 }
+        //             },this.list.map(function(item){
+        //                 return createElement('li',item)
+        //             }))
+        //         }else{
+        //             var nodes = createElement('div',{
+        //                 style: {
+        //                     width: '200px',
+        //                     textAlign: 'center'
+        //                 }
+        //             },'聊天内容为空！')
+        //         }
+        //         return createElement('div',[
+        //             nodes,
+        //             createElement('input',{
+        //                 attrs: {
+        //                     placeholder: '请输入聊天内容'
+        //                 },
+        //                 style: {
+        //                     width: '200px',
+        //                     padding: 'auto 8px',
+        //                     marginTop: '10px'
+        //                 },
+        //                 on: {
+        //                     keyup(event){
+        //                         if(event.keyCode !== 13) return;
+        //                         _this.list.push(event.target.value)
+        //                         event.target.value = _this.value;
+        //                     }
+        //                 }
+        //             })
+        //         ])
+        //     },
+        //     data(){
+        //         return {
+        //             list: [],
+        //             value: ''
+        //         }
+        //     }
+        // })
+
+        // slot默认显示问题
+        // Vue.component('ele',{
+        //     render(createElement){
+        //         console.log(this.$slots.default)
+        //         if(!this.$slots.default){
+        //             return createElement('div','显示自己写的默认的slot！没有slot')
+        //         }else{
+        //             return createElement('div',this.$slots.default)
+        //         }
+        //     }
+        // })
+        var app = new Vue({
+            el: "#app"
+        })
+    
+    </script>
+</body>
+</html>

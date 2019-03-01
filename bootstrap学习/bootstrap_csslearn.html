@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=;, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>全局css样式</title>
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <style>
+        .wrap {
+            background: #ccc;
+            text-align: center;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        .row div {
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        /* .own {
+            width: 100px;
+            height: 200px;
+            background: orange;
+            border-bottom: 1px solid black;
+            padding: 10px 20px;
+            margin: 0 -20px;
+        }
+        .own div {
+            border-bottom: 1px solid black;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="container">
+            <div class="wrap">
+                <!-- <div class="row">
+                    <div class="col-md-4 col-lg-6 col-xs-6"> col-md-4 </div>
+                    <div class="col-md-4 col-lg-6 col-xs-6"> col-md-4 </div>
+                    <div class="col-md-4 col-lg-6 col-xs-6"> col-md-4 </div>
+                    <div class="col-md-4 col-lg-6 col-xs-6"> col-md-4 </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                    <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                    <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                </div> -->
+                <!-- <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-8">.col-xs-12 .col-sm-6 .col-md-8</div>
+                    <div class="col-xs-6 col-md-4 right">.col-xs-6 .col-md-4</div>
+                </div> -->
+                <!-- <div class="row">
+                    <div class="col-xs-9">.col-xs-9</div>
+                    <div class="col-xs-4">.col-xs-4
+                        <br>Since 9 + 4 = 13 &gt; 12, this 4-column-wide div gets wrapped onto a new line as one contiguous unit.
+                    </div>
+                    <div class="col-xs-6">.col-xs-6
+                        <br>Subsequent columns continue along the new line.
+                    </div>
+                </div> -->
+                <!-- <div class="row">
+                    <div class="col-xs-6 col-sm-3">.col-xs-6 .col-sm-3</div>
+                    <div class="col-xs-6 col-sm-3">.col-xs-6 .col-sm-3</div>
+
+                    <!-- Add the extra clearfix for only the required viewport -->
+                <!-- <div class="clearfix visible-xs-block"></div> -->
+
+                <!-- <div class="col-xs-6 col-xs-offset-6 col-sm-3 col-sm-offset-3">
+                        .col-xs-6 .col-sm-3
+                        <div class="row">
+                            <div class="col-xs-12">col-xs-12</div>
+                        </div>
+                    </div> -->
+                <!-- <div class="col-xs-6 col-sm-3">.col-xs-6 .col-sm-3</div> -->
+                <!-- </div>  -->
+                <!-- <div class="row">
+                    <div class="col-sm-9">
+                        Level 1: .col-sm-9
+                        <div class="row">
+                            以父级为12
+                            <div class="col-xs-8 col-sm-6">
+                                Level 2: .col-xs-8 .col-sm-6
+                            </div>
+                            <div class="col-xs-4 col-sm-6">
+                                Level 2: .col-xs-4 .col-sm-6
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-9 col-md-push-3">.col-md-9 .col-md-push-3</div>
+                    <div class="col-md-3 col-md-pull-9">.col-md-3 .col-md-pull-9</div>
+                </div>
+                <div class="h1">h1
+                    <small>h1一般用于说明</small>
+                </div>
+                <div class="h2">h2
+                    <small>h2</small>
+                </div>
+                <div class="h3">h3</div>
+                <div class="h4">h4</div>
+                <div class="p">
+                    <p>Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient
+                        <p class="lead"><mark>montes,</mark> nascetur ridiculus mus.</p> Nullam id dolor id nibh ultricies vehicula. Cum sociis natoque penatibus
+                        et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor
+                        fringill<del>a. Duis mollis, est non commod</del>o luctus, nisi erat porttitor ligula, eget lacinia odio sem
+                        nec elit. Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus varius
+                        blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non
+                        commodo <s>luctus, nisi erat porttitor </s>ligula, eget lacinia odio sem nec elit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="own">
+        <div>
+            own
+        </div>
+    </div> -->
+    <script>
+        // 全局css样式：
+        // 栅格系统：12份 row => col<= 12 响应式布局 sm lg md xs offset(改变margin移动) 嵌套(父级12份)
+                //  push推几份 pull拉几份
+    </script>
+</body>
+
+</html>

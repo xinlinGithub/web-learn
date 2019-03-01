@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html{
+            height: 300%;
+        }
+        .selected li{
+            list-style: none;
+            background: red;
+            height: 20px;
+        }
+        .color{
+            color:blue;
+        }
+        .foo{
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            line-height: 100px;
+            text-align: center;
+        }
+        .sad{
+            background: black;
+        }
+        .happy{
+            background: blue;
+        }
+        span{
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <img src="" alt="">
+    <input type="checkbox">
+    <input type="checkbox">
+    <input type="text">
+    <ul class="box">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <button>点我点我！！！</button>
+    <div class="bar">
+        <div class="foo">
+            我是DIV
+        </div>
+    </div>
+    
+    <p>
+        <span>
+            我是p
+        </span>
+    </p>
+    <p class="text">
+        666666666
+    </p>
+    <input type="username">
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        // 斯坦福大学公开课
+        // 一定要区分原生方法和jquery方法
+        $('img').attr('class','demo')
+        $('img').attr({src: '../bj.jpg',alt: '#'});
+        $('img').attr('title',function(){
+            return this.alt
+        })
+        $('img').attr('class')
+        $('img').removeAttr('title')
+        // prop主要用于input的disabled checked selected 的设置
+        $('input[type=checkbox]').prop('disabled',true);
+        $('input[type=checkbox]').prop({'disabled': false,'checked':true})
+        $('input[type=checkbox]').prop('checked',function (i,val){
+            return !val
+        })
+        $('input[type=checkbox]').removeProp('disabled')
+        $('.box').addClass('selected')
+        $('.box').addClass('selected1 selected2')
+        $('.box li').addClass(function(){
+            // console.log(index,class)
+            return 'item-' + $(this).index();
+        })
+        $('.box').removeClass('selected');
+
+        var count = 0;
+        $('button').click(function(){
+            $(this).toggleClass('color',++count % 3 == 0);
+            console.log(count)
+        });
+        $('button').toggleClass('color')
+        $('div.foo').toggleClass(function(){
+            console.log($(this).parent().is('.bar'))
+            if($(this).parent().is('.bar')){
+                return 'happy';
+            }else{
+                return 'sad';
+            }
+        })
+        console.log($('p').html())
+        $('p').html('wo shi<span>span</span>')
+        $('p').html(function(index,html){
+            return 'wo shi di ' + index + '个' + '!原来的我是' + html;
+        })
+        $('.text').text('wo shi<span>span</span>')
+        console.log($('.text').text())
+        $('p').html(function(index,text){
+            return 'wo shi di ' + index + '个' + '!原来的我是' + text;
+        })
+        $('input[type=text]').val(["check2", "radio1"]).on('input',function(){
+            var self = this;
+            setTimeout(function(){
+                console.log($(self).val())
+            },300)
+        })
+        $('input[type=username]').addClass('input').val(function(){
+            return this.className;
+            // className 为原生的方法
+        })
+    </script>
+</body>
+</html>

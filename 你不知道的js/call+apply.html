@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>call+apply+bind手写</title>
+  </head>
+  <body>
+    <script>
+      var obj = {
+        name: "obj",
+        getName(params, cd) {
+          this.cd = cd;
+          console.log(this.name, params, cd);
+        }
+      };
+      var pet = {
+        name: "pet"
+      };
+      var arr = [
+        1,
+        2,
+        {
+          name: "arr"
+        }
+      ];
+      // obj.getName.call(pet,"params")
+      // obj.getName.bind(pet)();
+      // obj.getName.apply(pet, ["dsf","fdsf"]);
+
+      // 深度克隆 引用值可以直接赋值 原始值不行
+      // 数组对象 通用
+      function deepClone(origin) {
+        var target;
+        var toString = Object.prototype.toString;
+        if (toString.call(origin) === "[object Object]") {
+          target = {};
+          for (let prop in origin) {
+            target[prop] = deepClone(origin[prop]);
+          }
+        } else if (toString.call(origin) === "[object Array]") {
+          target = [];
+          origin.forEach((item, index) => {
+            target[index] = deepClone(item);
+          });
+        } else {
+          target = origin;
+        }
+        return target;
+      }
+      // var cloneObj = deepClone(arr);
+      // cloneObj.age = 18
+      // console.log(cloneObj, arr)
+      // console.log(cloneObj);
+
+      // 仿写call
+      // 三步走
+      // 1.在更改的this对象中加入 调用call的目的函数target.fn = this;
+      // 2.执行 target.fn(eval(...));
+      // 3.删除 delete target.fn;
+      Function.prototype.myCall = function() {
+        var target = arguments[0];
+        target.fn = this;
+        // 简单的情况下可以用eval但复杂情况最好别用 可能会改变作用域
+        // eval()可以让字符串执行
+        var params = [];
+        for (var i = 1; i < arguments.length; i++) {
+          params.push("arguments[" + i + "]");
+        }
+        console.log(params);
+        // 不能直接将数组字符串化  因为他会当成变量用 会报错
+        eval("target.fn(" + params.join(",") + ")");
+        // target.fn(...params) 这样不行 会把arguments[1]整体当成字符串
+        delete target.fn;
+      };
+      // obj.getName.myCall(pet,"params", "wfsa");
+
+      // 仿写apply
+      Function.prototype.myApply = function() {
+        var target = arguments[0];
+        var params = [];
+        var arg1 = arguments[1];
+        target.fn = this;
+        if (typeof arg1 === "object") {
+          for (var i = 0; i < arg1.length; i++) {
+            params.push("arg1[" + i + "]");
+          }
+          eval("target.fn(" + params.join(",") + ")");
+        } else {
+          eval("target.fn(" + "arg1" + ")");
+        }
+        // 简单的情况下可以用eval但复杂情况最好别用 可能会改变作用域
+        // eval()可以让字符串执行
+
+        delete target.fn;
+      };
+      // obj.getName.myApply(pet,["params", "wfsa"]);
+
+      // 仿写bind
+      // 下面写的只是实现一小部分功能 不好
+      Function.prototype.myBind = function() {
+        var target = arguments[0] || window;
+        var params = arguments[1];
+        var name = this.name;
+        var myObj = deepClone(target); //其实可以没必要这么用 这里只是想用一下克隆
+        myObj[name] = this;
+        return function() {
+          return Object.prototype.toString.call(params) === "[object Array]"
+            ? myObj[name](...params)
+            : myObj[name](params);
+        };
+      };
+      //   obj.getName.myBind(pet, ["params","sfs"])();
+      // 一个功能比较完备的bind
+      Function.prototype.meBind = function() {
+        var _this = this; //那个函数调用 this就指向那个函数
+        var context = arguments[0];
+        var args = Array.prototype.slice.call(arguments, 1);
+        var Fnf = function() {};
+        // 中间函数 其缓冲作用
+        var fBind = function() {
+          // 此函数会返回出去 当他普通执行时 里面的this指向window 让保留的那个调用meBind的函数执行
+          // 并通过apply的方式改变需要的this指向
+          // 当返回出去后 进行new 操作时 内部的this就是new操作后返回的对象 然后然原来的函数apply
+          // 并把this指向改为这个this 当原来函数执行时 就会给这个this对象附上一定的值
+          // 并返回出去 若原函数返回的是对象则会覆盖这个this实例
+          // 如果返回的函数当构造函数用 那么绑定的this 无效 将this指向他自己
+          return _this.myApply(
+            this instanceof Fnf && context ? this : context || window,
+            [].concat(args, Array.prototype.slice.call(arguments))
+          ); //这个arguments是fBind的参数 不是上一步的原型；
+        };
+        // 圣杯模式 防止更改原来的原型
+        // 让返回出去的函数 和调用的函数共享一个原型；
+        Fnf.prototype = this.prototype;
+        fBind.prototype = new Fnf();
+        // 这样new fBind()之后产生的实例化对象 即使fBind构造出来的 又是Fnf构造出来的
+        return fBind;
+      };
+
+      obj.getName.prototype = {name: "naem"};
+      var Fn = obj.getName.meBind(pet, "params", "sfs");
+      console.log(new Fn())
+
+
+      // function Fn(x,y) {
+      //   console.log(this)
+      //   this.x = x;
+      //   this.y = y;
+      // }
+      // Fn.prototype.show = function () {
+      //   console.log("x:" + this.x + ";y:" + this.y);
+      // }
+      // var obj3 = {
+      //   x: 1,
+      //   y: 2
+      // }
+      // var Myfn = Fn.meBind(obj3);
+      // var myfn = new Myfn(2,3);
+    </script>
+  </body>
+</html>

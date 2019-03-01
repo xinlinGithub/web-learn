@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div></div>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        // jquery 是个库 而不是一个框架 是一个优秀的库
+        // 匿名函数的自执行
+        (function () {
+            // console.log(0.1 + 0.2)
+            // console.log(0.1 + 0.2 == 0.3)
+
+            // console.log(1);
+            // setTimeout(() => {
+            //     console.log(2);
+            // }, 1000);
+            // setTimeout(() => {
+            //     console.log(3)
+            // }, 0);
+            // console.log(4)
+
+            // jquery-2.0.3.js 源码解析 他是面向对象而写的
+            // 1(21,94) 定义了一些变量 和函数
+            // 2(96,283) jquery 添加方法和属性
+            // 3(285,347) extend:继承方法 为后续的扩展做铺垫
+            // 4(349,817) 说明了一些扩展工具的方法
+            // 5(877,2877) 完成一个复杂的选择器的功能 
+            // 6(2880,3042)$.Callbacks() 函数的统一管理
+            // 7(3043,3183) deferred : 延迟对象 异步的同意管理
+            // 8(3184,3295) support 功能检测方法
+            // 9(3308,3652) data: 数据缓存
+            // (3653,3797) queue: 入队 队列管理功能  dequeue: 出队 
+            // (3803,4299) attr() prop() val() addClass()
+            // (4300,5128) on() trigger() 事件操作
+            // (5140,6057)DOM 操作 appendTo()  append()
+            // (6058,6620) css操作 
+            // (6621,7854) 提交数据和ajax的操作 包括一些跨域 请求什么的 ajax() load()
+            // (7855,8584) 运动animate show() hide()
+            // (8585,8792) offset() scrollTop()位置与尺寸
+            // (8804,8821) 模块化
+            // (8826) window.jquery = window.$ = jquery;
+            // 类似于对象的调用
+            // $()实例方法 $. 工具方法
+            $('div').text('hello world').css({'width': '100px','height': 50,'border': '1px solid black'})
+                .html('<p>hello</p>');
+            console.log($('div').css('width'))
+            $('div').append($('<span>span</span>'))
+            $('div>p').append('<p>hello</p>')
+            $('div p').css({'backgroundColor': 'red'})
+            $('div>p>p').remove()
+
+            // var cb = $.Callbacks();
+            // function fn1() {
+            //     alert(1)
+            // }
+            // function fn2() {
+            //     alert(2)
+            // }
+            // cb.add(fn1);
+            // cb.add(fn2);
+            // // cb.fire()
+            // cb.remove(fn2);
+            // cb.fire()
+
+            // 异步
+            // setTimeout(function(){
+            //     alert(1);
+            // },1111)
+            // alert(2)
+
+            // $('div').('name','hello');
+            // $('div').data('name')
+            $('div').css({'position':'absolute'})
+            setInterval(() => {
+                $('div').animate({'left': 300},1000).animate({'left':0},1000);
+            },2000)
+            $('div').attr('class','demo')
+            setInterval(() => {
+                $('div').hide()                
+            }, 500);
+            setInterval(() => {
+                $('div').show()
+            }, 1000);
+            // $('div').prop('class')
+        })()
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+body, .wrapper, .content{
+	width: 100%;
+	height: 100%;
+	background: #000;
+}
+body{
+	background: #000;
+}
+.wrapper{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.wrapper .content{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 80%;
+	height: 80%;
+	overflow: hidden;
+} 
+.wrapper .content .item{
+	position: relative;
+	width: 16%;
+	height: 100%;
+	background: #333;
+	border-radius: 20px;
+	overflow: hidden;
+	transition: width 0.5s linear,height 0.5s linear 0.5s;
+
+}
+
+.wrapper .content .item .inner:hover .bj{
+	opacity: 1;
+}
+.wrapper .content .item .inner:hover .img h2{
+	font-size: 24px;
+}
+.wrapper .content .item .inner{
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	transform: translate3d(0,100%,0);
+}
+.active .content .item:not(.fd){
+	width: 0;
+	height: 0;
+	transition: height 200ms linear,width 200ms linear 200ms;
+}
+.active .content .fd{
+	width: 100%;
+	transition: width 1s linear 600ms;
+}
+.init .content .item .inner{
+	transform: translate3d(0,0,0);
+}
+.init .content .item:nth-of-type(1) .inner{
+	transition: transform 1000ms linear;
+}
+.init .content .item:nth-of-type(2) .inner{
+	transition: transform 1000ms linear 100ms;
+}
+.init .content .item:nth-of-type(3) .inner{
+	transition: transform 1000ms linear 200ms;
+}
+.init .content .item:nth-of-type(4) .inner{
+	transition: transform 1000ms linear 300ms;
+}
+.init .content .item:nth-of-type(5) .inner{
+	transition: transform 1000ms linear 400ms;
+}
+.init .content .item:nth-of-type(6) .inner{
+	transition: transform 1000ms linear 500ms;
+}
+
+.wrapper .content .item .bj{
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	background-size: cover;
+	background-position: center;
+	opacity: 0.6;
+	transition: opacity 200ms linear;
+}	
+.wrapper .content .item:nth-of-type(1) .inner .bj{
+	background-image: url(./img./1.jpg);
+}
+.wrapper .content .item:nth-of-type(2) .inner .bj{
+	background-image: url(./img./2.jpg);
+}
+.wrapper .content .item:nth-of-type(3) .inner .bj{
+	background-image: url(./img./3.jpg);
+}
+.wrapper .content .item:nth-of-type(4) .inner .bj{
+	background-image: url(./img./4.jpg);
+}
+.wrapper .content .item:nth-of-type(5) .inner .bj{
+	background-image: url(./img./5.jpg);
+}
+.wrapper .content .item:nth-of-type(6) .inner .bj{
+	background-image: url(./img./6.jpg);
+}
+.wrapper .content .item .inner .img{
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 60px;
+	height: 21px;
+	transform: translate3d(-50%,-50%,0);
+	
+}
+.wrapper .content .item .inner .img h2{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate3d(-50%,-50%,0);
+	color: #fff;
+	font-size: 16px;
+	transition: color 200ms linear;
+}
+.active .content .item .inner .img h2{
+	color: transparent;
+	transition: color 0.5 linear 300ms;
+}
+/*展开后的代码*/
+.wrapper .content .item .inner .direction{
+	position: absolute;
+	top: 10px;
+	width: 100%;
+}
+.active .content .item .inner .direction .bird{
+	float: left;
+	color: #fff;
+	margin-left: 10px;
+	transition: color 0.5s linear 400ms;
+}
+.wrapper .content .item .direction .bird{
+	float: left;
+	color: transparent;
+	margin-left: 10px;
+	transition: color 0.4s linear;
+}
+.active .content .item .inner .direction .close{
+	float: right;
+	margin-right: 20px;
+	height: 20px;
+	width: 20px;
+	cursor: pointer;
+	transition: width 0.5s linear 400ms,height 0.5s linear 400ms;
+	
+}
+.wrapper .content .item .inner .direction .close{
+	float: right;
+	margin-right: 20px;
+	height: 0px;
+	width: 0px;
+	cursor: pointer;
+}
+.wrapper .content .item .inner .direction .close::after,
+.wrapper .content .item .inner .direction .close::before{
+	content: "";
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	width: 0px;
+	height: 0px;
+	background-color: #fff;
+}
+.active .content .item .inner .direction .close::after,
+.active .content .item .inner .direction .close::before{
+	content: "";
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	width: 20px;
+	height: 5px;
+	background-color: #fff;
+	transition: width 0.5s linear 400ms,height 0.5s linear 400ms;
+}
+.wrapper .content .item .inner .direction .close::after{
+	content: "";
+	transform: rotateZ(45deg);
+}
+.wrapper .content .item .inner .direction .close::before{
+	content: "";
+	transform: rotateZ(-45deg);
+}

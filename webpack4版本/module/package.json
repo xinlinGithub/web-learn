@@ -1,0 +1,17 @@
+{
+  "name": "mnode",
+  "version": "1.0.0",
+  "description": "this is modulen",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ffff"
+  ],
+  "author": "cxl",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^16.2.2"
+  }
+}

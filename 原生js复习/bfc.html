@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>bfc</title>
+    <style>
+        /* *{
+            margin: 0;
+            padding: 0;
+        }
+       
+        .inner1, .inner2{
+            width: 200px;
+            height: 200px;
+        }
+        .wrap{
+            overflow: hidden;
+            height: 200px;
+            background-color: blue;
+        }
+       
+        .inner1{
+            float: left;
+            background-color: green;
+        }
+        .wrap .inner2{
+            float: right;
+            background-color: orange;
+        }
+        .bott{
+            width: 100px;
+            height: 100px;
+            float: left;
+            background-color: orange;
+            margin-top: 100px;
+        }
+        .top{
+            width: 200px;
+            height: 200px;
+            background-color: brown;
+            margin-bottom: 100px;
+        } */
+        .box1{
+            float: left;
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+        }
+        .box2{
+            float: left;
+            width: 200px;
+            height: 200px;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- margin塌陷 margin合并 -->
+    <!-- 浮动元素产生了浮动流： 浮动流对块级元素有影响
+            产生了浮动流的元素块级元素看不到他 其他都可以看到
+            bfc元素可以看到他 看到他的不会覆盖他的位置 看不到的会覆盖他原来的位置
+            当他不存在  所以他的效果和position:absolute 还不完全一样
+    
+    -->
+        <!-- 三栏布局 -->
+        <!-- <div class="inner1"></div>
+        <div class="wrap">
+            <div class="inner2"></div>
+        </div>
+        <div class="top"></div>
+        <div class="bott"></div> -->
+
+        <div class="box1"></div>
+        <div class="box2">好久没有记随笔了，上次记随笔那还是在校时，后来踏入了浮躁的社会，每天为工作的事情，生活的事情——裸露点说呢就是为了钱的事儿，闹得忧心忡忡焦头烂额，也就不曾思考过梦幻的人生和那遥不可及的理想。直到体验过银行工作中忧心挠首的绝望并毅然辞职后，这才开始重新考虑这一人生重要问题————职业与生活 。才开始了长达半年的万里路万卷书计划。这其中游历过后是看大量纪录片，把纪录片看遍过后就开始了系统的读新领域读物，了解不同类型“书呆子”的精神世界。
+
+                古语有云:书中自有黄金屋，书中自有颜如玉。读了那么多年的书，也没能找到半点金半块玉，倒是把人给整迷糊了～ 那就有种被欺骗了的感觉～尤其是上大学以后，对于那些 “马哲思修毛概近代史”那些东西的学习，让我开始对于读书这件事情竟颇为怀疑。读书是为自己读的还是为马克思读的?
+                
+                带着这个疑问我曾想，高中学的就是文科知识，就高中政治学里边就把 大学这几门公共课吃得干干净净的了，高中嘛因为分科学习倒不觉得学马克思主义考毛泽东思想有啥特殊意义，毕竟读大学，参加高考，没不选数理化，也不适合再读经史子集 四书五经之类的前现代知识 国家选拔人才总得要考核点什么吧!读大学之后发现所有人不分专业院系年级，都要学，都必考，即凡高等教育都免不了思想教育。当然，进入大学后也在《安全教育》课程上了解到了洗脑这种思想控制手段，而眼下的这几门所有人都必须学的东西，似乎也与洗脑二字，有啥特别的关系。当时的我，就是这么偏执地觉得着。</div>
+
+
+
+    <script>
+        // 触发bfc: position: absolute,fixed; float: left right;  这俩会在内部将元素自动设置成inline-block元素
+        // 所以会有稍稍的变化
+        // overflow:除visible以外  display: inline-block,table-call
+        // 盒子的一个独立渲染规则
+    
+    </script>
+</body>
+</html>

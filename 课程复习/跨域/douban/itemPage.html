@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./src/css/search.css">
+</head>
+<body>
+    <div class="title-nav">
+        <div class="title-nav-right">
+            <a href="">注册</a>
+            <a href="">登录</a>
+            <a href="">下载豆瓣客户端</a>
+        </div>
+        <div class="title-nav-left">
+            <ul>
+                <li>
+                    <a href="">豆瓣</a>
+                </li>
+                <li>
+                    <a href="">读书</a>
+                </li>
+                <li>
+                    <a href="">电影</a>
+                </li>
+                <li>
+                    <a href="">音乐</a>
+                </li>
+                <li>
+                    <a href="">同城</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="nav-music">
+        <div class="nav-wrap">
+            <div class="nav-search">
+                <div class="nav-logo">
+                    <a href="https://music.douban.com/"></a>
+                </div>
+                <div class="nav-form">
+                    <form action="https://music.douban.com/subject_search">
+                        <input type="text" class="nav-inp" placeholder="唱片名、表演者、条码" name="search_text" autocomplete="off">
+                        <input type="submit" class="nav-submit">
+                    </form>
+                    
+                </div>
+                <div class="search-data">
+                    <ul>
+                       <!-- 动态引入 -->
+                    </ul>
+                </div>
+            </div>
+            <div clas="nav-secondary"></div>
+        </div>
+    </div>
+    <script src="./src/js/jquery-3.2.1.js"></script>
+    <script src="./src/js/search.js"></script>
+    <script>
+        var id = location.search.slice(1).split('=')[1];
+        console.log(id);
+
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.douban.com/v2/music/'+id,
+            dataType: 'jsonp',//设置为jsonp跨域方式
+            success: function(data) {
+                console.log(data);
+            }
+        })
+    
+    
+    
+    </script>
+</body>
+</html>

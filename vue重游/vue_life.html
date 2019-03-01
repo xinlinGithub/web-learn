@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>生命周期-插槽-过度动画-自定义指令</title>
+    <style>
+        /* 防止页面刚进入时抖动 */
+        [v-cloak] {
+            display: none;
+        }
+        .v-enter{
+            /* 动画进入之前 */
+            transform: translateX(-100%);
+        }
+        .v-enter-to{
+            /* 动画最终状态 */
+            transform: translateX(0);
+        }
+        .v-enter-active{
+            /* 动画形式 */
+            transition: all 1s ease-in-out;
+        }
+        .v-leave{
+            /* 动画离开之前 */
+            transform: translateX(0);
+        }
+        .v-leave-to{
+            /* 动画离开到那个状态 */
+            transform: translateX(-100%)
+        }
+        .v-leave-active{
+            /* 动画离开的动作 */
+            transition: all 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        {{ msg }}
+        <my-list :love="love">
+            <template slot-scope="prop">
+                <transition>
+                    <!-- 定义过渡动画操作的dom元素 -->
+                    <p @click="{prop.item.flag = false}" v-show="prop.item.flag" :style="{cursor: 'pointer'}">
+                        {{ prop.index+1 }}: {{ prop.item.like }} | {{ prop.item.flag}}
+                    </p>
+                </transition>
+            </template>
+        </my-list>
+        <!-- 指定过渡的方式 -->
+        <transition mode='out-in'>
+            <keep-alive>
+                <component :is="comname" @change='change'></component>                    
+            </keep-alive>
+        </transition>
+        <!-- <button @click="comname = (comname == 'passward' ? 'username' : 'passward')">shange</button> -->
+        <button @click="test">test</button>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var div = null;
+        var div1 = null;
+        // 自定义全局指令 需要传一个对象 对象里面有几个接口api 指定如何去定义这个指令
+        Vue.directive('focus',{
+            bind(el,binding,vNode,oldVnode){
+                el.focus();
+            },
+            inserted(el,binding,vNode,oldVnode){
+                el.focus()
+                console.log(binding)
+            },
+            update(el,binding,vnode,oldVnode){
+
+            },
+            componentUpdated(el,binding,vnode,oldVnode){
+
+            },
+            unbind(el,binding,vnode,oldVnode){
+
+            }
+        })
+        Vue.component('myList',{
+            template: `
+                <div class='slot'>
+                    <div>top</div>
+                    <slot :item='item' :index='index' v-for="(item,index) in mylove">
+                        {{ index+1 }}: {{ item }}
+                    </slot>
+                </div>
+            `,
+            data(){
+                return {
+                    mylove: this.love
+                }
+            },
+            props: {
+                love: {
+                    type: Array,
+                    required: true
+                }
+            },
+            methods: {
+                changeFlag(pro){
+                    console.log(pro)
+                }
+            }
+        })
+        const passward = {
+            template: `
+                <div>
+                    <span>passward:</span>
+                    <input type="passward" name='passward' @keyup.enter="transfer" v-focus:msg.a.b="ins"/>
+                </div>
+                
+            `,
+            methods: {
+                transfer(){
+                    this.$emit('change')
+                }
+            },
+            data(){
+                return {
+                    ins: 'sdga'
+                }
+            }
+        }
+        const username = {
+            template: `
+                <div>
+                    <span>username:</span>            
+                    <input type='username' name='username' @keyup.enter="transfer" v-focus/>
+                </div>
+            `,
+            methods: {
+                transfer(){
+                    this.$emit('change')
+                }
+            }
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                msg: 'vue',
+                love: [
+                    {
+                        like: '看书',
+                        flag: true,
+                    },
+                    {
+                        like: 'movies',
+                        flag: true
+                    },
+                    {
+                        like: 'buy cloth',
+                        flag: true
+                    },
+                    {
+                        like: 'travel',
+                        flag: true
+                    },
+                    {
+                        like: 'end',
+                        flag: true
+                    }
+                ],
+                comname: 'username'
+            },
+            components: {
+                passward,
+                username
+            },
+            methods: {
+                change(){
+                    if(this.comname == 'username'){
+                        this.comname = 'passward'
+                    }else{
+                        this.comname = 'username'
+                    }
+                },
+                test(){
+                    app.msg = 'sssssss';
+                    console.log(this.msg)
+                }
+            },
+            beforeCreate() {
+                console.log(Object.entries(this), 'beforeCreate')
+            },
+            created() {
+                console.log(Object.entries(this), 'created')
+            },
+            beforeMount() {
+                div = this.$el;
+                console.log(Object.entries(this), 'beforeMount')
+                // 将原来的dom 生成虚拟dom对象 还没有真正渲染到页面；
+            },
+            mounted() {
+                div1 = this.$el;
+                console.log(Object.entries(this), 'mounted')
+                // 将虚拟dom渲染成真正的dom节点 但这个是vue重写的 并不是原来页面上写的
+            },
+            beforeUpdate() {
+                // console.log(this.msg);
+                console.log(Object.entries(this),'brforeUpdate')
+            },
+            updated() {
+                console.log(Object.entries(this),'update')
+            },
+            beforeDestroy() {
+                // 只能卸载一次 若想多次卸载则改变 this._isBeingDestroyed = false
+                // 卸载完后不能在外改变app 里面的东西
+                console.log(Object.entries(this),'beforedestroy')
+            },
+            destroyed() {
+                console.log(Object.entries(this),'destroy')
+            }
+        })
+    </script>
+</body>
+</html>

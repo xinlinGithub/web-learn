@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./hrd.css">
+</head>
+<body>
+    <div class="success" style="display: none;">
+    </div>
+    <div class="cloth">
+        <div class="circle">
+            <h1 class = 'wec'>欢迎来到数字华容道</h1>
+            <span class = 'direct'><p>游戏简介：本游戏是一款益智类游戏；锻炼个人的逻辑思维能力和推理能力。</p>
+                <br>
+                本游戏分为两部分，练习模式和闯关模式，练习模式主要是让本人熟悉游戏玩法，闯关模式是对游戏者的熟练度和连贯度的一个综合考验。
+                在游戏过程中，你需要在最可能短的时间内将随意打乱的若干数字进行滑动重排，知道变为标准顺序范围成功，且每次只能挪动一个数字。闯关模式需要你在规定时间内完成每一关！
+                还等什么，赶快试试吧！！！
+            </span>
+            <h3 class = 'gb'>阅读完毕请按确认键开始游戏：</h3>
+            <div class="close">确认</div>
+        </div>
+    </div>
+    
+    <div class="mode" style="display: none">
+        <div class="prac">练习模式</div>
+        <div class="cross">闯关模式</div>
+    </div>
+    <div class = "barrier" style="display: none">
+        <div class="back">返回</div>
+        <div class="through">第一关</div>
+        <div class="through">第二关</div>
+        <div class="through">第三关</div>
+        <div class="through">第四关</div>
+        <div class="through">第五关</div>
+        <div class="through">第六关</div>
+        <div class="through">第七关</div>    
+    </div>
+    <div class="blogs" style="display: none">
+        <div class = 'hrd'> 
+            <ul class="time">
+                <!-- 计时器 -->
+                <li class="miniter">0</li>
+                <li class="second">0</li>
+                <li class="msecond">0</li>
+            </ul>
+            <h2 class = 'h2'></h2>        
+            <ul class="box">
+                <!-- 运动方块，可手动添加 -->
+            </ul>
+        </div>
+        <div class="wrapper">
+            <button id ='Start'>开始游戏</button>
+            <button class = 'end' style="display: none">完成游戏</button>
+            <button id = 'again' style = "display: none">重置</button>
+            <button class = 'back'>返回</button>
+            <button class="back">返回</button>     
+        </div>
+    </div>
+    
+    
+    <script>
+        // 计时器
+        var time = document.getElementsByClassName('time')[0],
+            miniter = document.getElementsByClassName('miniter')[0] ,
+            second = document.getElementsByClassName('second')[0],
+            msecond = document.getElementsByClassName('msecond')[0],
+            circle = document.getElementsByClassName('circle')[0],
+            cloth = document.getElementsByClassName('cloth')[0],
+            direct = document.getElementsByClassName('direct')[0],
+            h2 = document.getElementsByClassName('h2')[0],
+            close = document.getElementsByClassName('close')[0] ,
+            oStart = document.getElementById('Start'),
+            oEnd = document.getElementsByClassName('end')[0],
+            oAgain = document.getElementById('again'),
+            num1=0,
+            num2=0,
+            num3=0,
+            flag,
+            flag1=true,
+            flag2,
+            timer;
+
+        // 模式间的转换
+        var prac = document.getElementsByClassName('prac')[0],
+            mode = document.getElementsByClassName('mode')[0],
+            cross = document.getElementsByClassName('cross')[0],
+            barrier = document.getElementsByClassName('barrier')[0],
+            back = document.getElementsByClassName('back'),
+            through = document.getElementsByClassName('through');
+        
+        
+        // 华容道间的交互
+        var random = document.getElementById('random'),
+            box = document.getElementsByClassName('box')[0],
+            eject = document.getElementsByClassName('eject')[0],
+            sure = document.getElementsByClassName('sure')[0],
+            no = document.getElementsByClassName('no')[0],
+            wec = document.getElementsByClassName('wec')[0],
+            gb = document.getElementsByClassName('gb')[0],
+            blogs = document.getElementsByClassName('blogs')[0],
+            oDiv = document.getElementsByClassName('wrapper')[0],
+            arr=[],
+            symbol=0,
+            Li = [],
+            w,
+            h,
+            F,
+            tim;
+            // F来判断闯了几关；tim来限定闯关的时间；
+        // 闯关模式
+
+
+        close.onclick = function () {
+            circle.classList.add('activ');
+            circle.classList.remove('circle');
+            this.style.display = 'none';
+            direct.style.display = 'none';
+            wec.style.display = 'none';
+            gb.style.display = 'none';
+            setTimeout(function () {
+                mode.style.display = 'block';
+            },200)
+        }
+        // 各种关卡间的交互
+        function first() {
+            for(var j=0; j<7; j++){
+                (function (i) {
+                    through[i].onclick = function () {
+                        barrier.style.display = 'none';
+                        oStart.style.display = 'inline-block';
+                        var len = (i+3)*(i+3);
+                        var column = Math.sqrt(len);
+                        createLi(len-1,column);
+                        blogs.style.display = 'block';
+                    }
+                })(j);
+            }
+        }
+        // first();
+        // 练习模式
+        prac.addEventListener('click',function () {
+            cloth.style.display = 'none';
+            flag2 = 1;
+            h2.style.display = 'none';
+            oEnd.classList.remove('active');
+            oAgain.innerText = '重置';
+            oEnd.style.display = 'none';
+            back[2].style.display = 'none';
+            back[1].style.display = 'inline-block';
+            if(flag1){
+                flag1 = false;
+                first();
+            }
+            mode.style.display = 'none';
+            barrier.style.display = 'block';
+        })
+
+        // 闯关模式
+        cross.addEventListener('click',function () {
+            cloth.style.display = 'none';
+            flag2 = 2;
+            h2.style.display = 'block';
+            if(!flag1){
+                flag1=true;
+                for(var i=0; i<7; i++){
+                    (function (j) {
+                        through[j].onclick = 'none';
+                    })(i)
+                }
+            }
+            oAgain.innerText = '';
+            oAgain.style.display = 'none';
+            oEnd.style.display = 'none';
+            back[2].style.display = 'inline-block';
+            back[1].style.display = 'none';
+            oEnd.classList.add('active');
+            var oAct = document.getElementsByClassName('active')[0];
+            F = 3;
+            Cross(F);
+            tim=1;
+            h2.innerText = '请在'+ tim + '分钟内完成，否则提交无效。';
+            back[2].onclick = function () {
+                blogs.style.display = 'none';
+                mode.style.display = 'block';
+                cancle();
+            }
+            mode.style.display = 'none';
+        })
+        // 每过一关进行判断 ；
+        function Cross(F) {
+            var len = F*F;
+            var column = F;
+            oStart.style.display = 'inline-block';
+            createLi(len-1,column);
+            blogs.style.display = 'block';
+        }
+        // 不同的模式绑定不同的函数
+        function end1(len,column) {
+            oEnd.style.display = 'none';
+            oStart.style.display = 'inline-block';
+            oAgain.style.display = 'none';
+            clearInterval(timer);
+            var m = num3,
+                s = num2,
+                ms = num1,
+                t=0;
+            if(m>=tim){
+                alert('对不起，时间超出，游戏失败！请重新开始游戏。');
+                t=0;
+                cancle();
+                F=3;
+                Cross(F);
+                return false;
+            }
+            for(var i=0; i<len; i++){
+                if(parseInt(Li[i].className) == parseInt(Li[i].innerText)){
+                    t++;
+                }
+            }
+            if(t==len && Li[len-1].style.left == (column-2)*50 + 'px'){
+                alert('恭喜游戏成功，你的用时为：' + m +'分' + s +'秒' + ms + '。' + '请进入下一关！！！');
+                tim++;
+                h2.innerText = '请在'+ tim + '分钟内完成，否则提交无效。';
+                t=0;
+                F++;
+                if(F==10){
+                    success = document.getElementsByClassName('success')[0];
+                    success.style.display = 'block';
+                    success.innerHTML = '<br></br>' + '<br></br>' + '功夫不负有心人，只要努力一切皆有了能。恭喜你完美的通过每一关，请相信自己，努力一定会有回报，继续努力。'+ '<br></br>' + '<div class="not">确认</div>';
+                    not = document.getElementsByClassName('not')[0];
+                    not.addEventListener('click',function () {
+                        success.style.display = 'none';
+                    })
+                    F=3;
+                    baCross();
+                    barrier.style.display = 'none';
+                    mode.style.display = 'block';
+                    return false;
+                }
+                cancle();
+                Cross(F);
+
+            }else{
+                alert('对不起，游戏失败！千万不要灰心，请重新开始游戏。');
+                t=0;
+                cancle();
+                F=3;
+                Cross(F);
+            }
+            // box.removeEventListener('click');
+            box.onclick = 'none';
+            msecond.innerText = 0;
+            second.innerText = 0;
+            miniter.innerText = 0;
+        }
+        function cancle() {
+            clearInterval(timer);
+            num1 = 0;
+            num2 = 0;
+            num3 = 0;
+            msecond.innerText = 0;
+            second.innerText = 0;
+            miniter.innerText = 0;
+            box.innerHTML = '';
+            Li = [];
+            arr = [];
+            box.onclick = 'none';
+            oEnd.onclick = 'none';
+            oAgain.onclick = 'none';
+            oStart.onclick = 'none';
+        }
+        
+        // 第一个返回按钮
+        back[0].addEventListener('click',function() {
+            barrier.style.display = 'none';
+            mode.style.display = 'block';
+        })
+        // 第二个返回按钮，每次要注意不要重复绑定事件；
+        back[1].addEventListener('click',baCross.bind(baCross));
+        function baCross() {
+            cancle();
+            blogs.style.display = 'none'; 
+            barrier.style.display = 'block';
+            oAgain.style.display = 'none';
+            oEnd.style.display = 'none';
+            h2.style.display = 'none';
+        }
+        // 建立不同的难度系数
+        function createLi(len,column) {
+            box.style.width = column*50 + 'px';
+            box.style.height = column*50 + 'px';
+            w = column*50;
+            h = column*50;
+            var str = '';
+            for(var i=1; i<len+1; i++){
+                str += '<li>' + i+'</li>';
+                arr.push(i-1);
+            }
+            box.innerHTML = str;
+            var li = document.getElementsByTagName('li');
+            for(var i=3; i<len+3; i++){
+                li[i].className = i-2+'';
+            }
+            orign(len,column);
+        }
+        // 定义初始状态
+        function orign(len,column) {
+            for(var i = 1; i<=len; i++){
+                var M = document.getElementsByClassName(i + '')[0];
+                    Li.push(M);
+            }
+            arr = [];
+            for(var i = 0; i<len; i++){
+                arr.push(i);
+            }
+            for(var i=0; i<column; i++){
+                for(var j=0; j<column; j++){
+                    if(symbol <len){
+                        Li[arr[symbol]].style.top = i*50 + 'px';
+                        Li[arr[symbol]].style.left = j*50 + 'px';
+                        symbol++;
+                    }
+                }
+            }
+            symbol=0;
+            oStart.onclick = Start.bind(Start,len,column);
+            // oStart.addEventListener('click',Start.bind(Start,len,column));
+            if(flag2 == 1){
+                oEnd.onclick = end.bind(end,len,column);
+            }else if(flag2 == 2){
+                oEnd.onclick = end1.bind(end1,len,column)
+            }
+            
+            // oEnd.addEventListener('click',end.bind(end,len,column));
+            // oAgain.addEventListener('click',Again.bind(Again,len,column));
+            oAgain.onclick = Again.bind(Again,len,column);
+        }
+
+        // 计时器以及按钮间的操作
+        function test() {
+            num1++;
+            msecond.innerText = num1;
+            if(num1==10){
+                num1 = 0;
+                num2++;
+                second.innerText = num2;
+                if(num2 == 60){
+                    num2=0;
+                    num3 ++;
+                    miniter.innerText = num3;
+                }
+            }
+        }
+       
+        
+        
+         // 重排
+        function restore(len,column) {
+            for(var i = 0; i < len; i++){
+                var text = Li[i].innerText;
+                Li[i].className = text;
+            }
+            Li = [];
+            for(var i = 1; i<=len; i++){
+                var M = document.getElementsByClassName(i + '')[0];
+                    Li.push(M);
+            }
+            arr = [];
+            for(var i = 0; i<len; i++){
+                arr.push(i);
+            }
+            for(var i=0; i<column; i++){
+                for(var j=0; j<column; j++){
+                    if(symbol <len){
+                        Li[arr[symbol]].style.top = i*50 + 'px';
+                        Li[arr[symbol]].style.left = j*50 + 'px';
+                        symbol++;
+                    }
+                }
+            }
+            symbol=0;
+        }
+        
+        
+        function Start(len,column) {
+            clearInterval(timer);
+            num1 = 0;
+            num2 = 0;
+            num3 = 0;
+            oStart.style.display = 'none';
+            if(oAgain.innerText != ''){
+                oAgain.style.display = 'inline-block';
+            }
+            oEnd.style.display = 'inline-block';
+            // 利用冒泡绑定事件
+            changeResot(len,column);
+            // box.addEventListener('click',start);
+            var l = len;
+            var c = column;
+            box.onclick = function start(e) {
+                var len = l;
+                var column = c;
+                var e = e || window.event;
+                var target = e.target;
+                if(e.target != box){
+                    var dn = parseInt(target.className);
+                    var tLeft = parseInt(target.style.left);
+                    var tTop = parseInt(target.style.top);
+                    progress(len,dn,target,tLeft,tTop,column);
+                }
+            }; 
+            timer = setInterval(test,100);
+            flag = true;
+        }
+        
+        function end(len,column) {
+            oEnd.style.display = 'none';
+            oStart.style.display = 'inline-block';
+            oAgain.style.display = 'none';
+            clearInterval(timer);
+            var m = num3,
+                s = num2,
+                ms = num1,
+                t=0;
+            for(var i=0; i<len; i++){
+                if(parseInt(Li[i].className) == parseInt(Li[i].innerText)){
+                    t++;
+                }
+            }
+            if(t==len && Li[len-1].style.left == (column-2)*50 + 'px'){
+                alert('恭喜游戏成功，你的用时为：' + m +'分' + s +'秒' + ms + '。' + '一定要继续努力吆！！！');
+                t=0;
+            }else{
+                alert('对不起，游戏失败！千万不要灰心，请重新开始游戏。');
+                t=0;
+                restore(len,column);
+            }
+            // box.removeEventListener('click');
+            box.onclick = 'none';
+            msecond.innerText = 0;
+            second.innerText = 0;
+            miniter.innerText = 0;
+        }
+        
+        function Again(len,column) {
+            if(flag){
+                clearInterval(timer);
+                oEnd.onclick = 'none';
+                num1 = 0;
+                num2 = 0;
+                num3 = 0;
+                msecond.innerText = 0;
+                second.innerText = 0;
+                miniter.innerText = 0;
+                box.onclick = 'none';
+                var l = len;
+                var c = column;
+                flag = false;
+                setTimeout(function () {
+                    // 利用冒泡绑定事件
+                    changeResot(len,column);
+                    oEnd.onclick = end.bind(end,len,column);
+                    // box.addEventListener('click',start);
+                    box.onclick = function start(e) {
+                        var len = l;
+                        var column = c;
+                        var e = e || window.event;
+                        var target = e.target;
+                        if(e.target != box){
+                            var dn = parseInt(target.className);
+                            var tLeft = parseInt(target.style.left);
+                            var tTop = parseInt(target.style.top);
+                            progress(len,dn,target,tLeft,tTop,column);
+                        }
+                    };
+                    timer = setInterval(test,100);
+                    flag = true;
+                },800);
+            }
+        }
+        // 向下运动后复原className值
+        function downChangeClassName(len,cn,column){
+            for(var i = cn; i <= cn + column - 2 ;i++){
+                Li[i].className = i + '';
+            }
+            Li[cn-1].className = cn + column - 1 + '';
+            Li = [];
+            for(var i = 1; i<=len; i++){
+                var M = document.getElementsByClassName(i + '')[0];
+                    Li.push(M);
+            } 
+        }
+
+        
+        // 向上运动后复原className值
+        function upChangeClassName(len,cn,column){
+            for(var i = cn-column; i <= cn-2;i++){
+                Li[i].className = i + 2 + '';
+            }
+            Li[cn-1].className = cn - column + 1 + '';
+            Li = [];
+            for(var i = 1; i<=len; i++){
+                var M = document.getElementsByClassName(i + '')[0];
+                    Li.push(M);
+            }
+        }
+        
+        // 随机打乱小方块
+        function changeResot(len,column) {
+            // 打乱各个数字
+            for(var j=0; j<100; j++){
+                arr.sort(function () {
+                    return Math.random() - 0.5;
+                });
+                for(var i = 0; i<len; i++){
+                    var cn = parseInt(Li[arr[i]].className);
+                    var tLeft = parseInt(Li[arr[i]].style.left);
+                    var tTop = parseInt(Li[arr[i]].style.top);
+                    progress(len,cn,Li[arr[i]],tLeft,tTop,column);
+                }
+            }
+            
+        }
+        
+        // 点击方块运动
+        
+        
+
+        // 共有运动函数
+        function progress(len,cn,target,tLeft,tTop,column) {
+            if(cn==len){
+                // 左右运动
+                if(tLeft == w -  100){
+                    target.style.left = w -50 + 'px';
+                }else if(tLeft - parseInt(Li[cn-2].style.left) == 100){
+                    target.style.left = tLeft - 50 + 'px';
+                }else if(tLeft - parseInt(Li[cn-column-1].style.left) == 50 && tLeft - parseInt(Li[cn-2].style.left) == 50 && tTop == parseInt(Li[cn-column].style.top)){
+                    target.style.top = tTop - 50 +'px';
+                    upChangeClassName(len,cn,column);
+                }
+            }else if(cn==1){
+                // 左右运动
+                if(tLeft == 50){
+                    target.style.left = '0px';
+                }else if(parseInt(Li[cn].style.left) - tLeft == 100){
+                    target.style.left = tLeft + 50 + 'px';
+                }else if(tLeft - parseInt(Li[cn+column-1].style.left) == -50 && tLeft - parseInt(Li[cn].style.left) == -50 && tTop == parseInt(Li[cn+column-2].style.top)){
+                    // 只能向下运动；
+                    target.style.top = tTop + 50 +'px';
+                    downChangeClassName(len,cn,column);
+                }
+
+            }else{
+                // 左右运动
+                if(tLeft - parseInt(Li[cn-2].style.left) == 100){
+                    target.style.left = tLeft - 50 + 'px';
+                }else if(parseInt(Li[cn].style.left) - tLeft ==100){
+                    target.style.left = tLeft + 50 + 'px';
+                }else if(tTop != parseInt(Li[cn-2].style.top) && tLeft == 50){
+                    target.style.left = tLeft - 50 + 'px';
+                }else if(tTop != parseInt(Li[cn].style.top) && tLeft == w-100){
+                    target.style.left = tLeft + 50 + 'px';
+                }else if(test1(len,cn,tTop,tLeft,column)){
+                        target.style.top = tTop + 50 + 'px';
+                        downChangeClassName(len,cn,column);
+                }else if(test2(len,cn,tTop,tLeft,column)){
+                        target.style.top = tTop + 50 + 'px';
+                        downChangeClassName(len,cn,column);
+                }else if(test3(len,cn,tTop,tLeft,column)){
+                        target.style.top = tTop - 50 + 'px';
+                        upChangeClassName(len,cn,column);
+                    }
+                else if(test4(len,cn,tTop,tLeft,column)){
+                        target.style.top = tTop - 50 + 'px';
+                        upChangeClassName(len,cn,column);
+                    }
+            }
+        }
+
+
+        function  test1(len,cn,tTop,tLeft,column) {
+            if(cn+column-1<len){
+                return tTop - parseInt(Li[cn+column-1].style.top) == -50 && parseInt(Li[cn+column-1].style.left) - tLeft ==50 && parseInt(Li[cn +column-2].style.left) != tLeft;
+            }
+            else{
+                return false;
+            }
+        }
+        function  test2(len,cn,tTop,tLeft,column) {
+            if(cn+column-1==len){
+                return tTop - parseInt(Li[cn+column-2].style.top) == -50 && parseInt(Li[cn+column-2].style.left) - tLeft == -50 ;
+            }
+            else if(cn + column<=len){
+                return tTop - parseInt(Li[cn+column-2].style.top) == -50 && parseInt(Li[cn+column-2].style.left) - tLeft == -50 && parseInt(Li[cn+column-1].style.left) != tLeft;
+            }else{
+                return false;
+            }
+        }
+        function  test4(len,cn,tTop,tLeft,column) {
+            if(cn-column-1>=0){
+                return tTop - parseInt(Li[cn-column-1].style.top) == 50 && tLeft - parseInt(Li[cn-column-1].style.left) == 50 && parseInt(Li[cn-column].style.left) != tLeft;
+            }
+            else{
+                return false;
+            }
+        }
+        function  test3(len,cn,tTop,tLeft,column) {
+            if(cn >= column+1){
+                return tTop - parseInt(Li[cn-column].style.top) == 50 && parseInt(Li[cn-column].style.left) - tLeft == 50 && parseInt(Li[cn-column-1].style.left) != tLeft;
+            }
+            else if(cn ==column){
+                return tTop - parseInt(Li[cn-column].style.top) == 50 && parseInt(Li[cn-column].style.left) - tLeft == 50;
+            }else{
+                return false;
+            }
+        }
+        
+
+
+    </script>
+    
+</body>
+</html>

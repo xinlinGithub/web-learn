@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 
+        多提问,问到无话可问,刨根问底,尽可能深挖
+        用户名root 密码：123456
+        先ping个地址，看看联网了没，没联网则cd /etc/sysconfg/network-scripts/进入一个文件
+        vi ifcfg-enp0s3 打开这个文件 i 进入编辑模式
+        将最后一行的no改成yes 在按esc + ：wq + 回车 + reboot 重启
+        先运行在node上 借用一个会话管理器Xshell wget + node链接地址 安装linux系统的
+        ip addr 找到端口地址 用xshell打开yum install -y wget安装
+        wget node地址 可复制很方便
+        然后解压node:
+        xz -d ...
+        tar -xf ...
+        输入ls执行 但输入node就不执行 因为在根路径/下
+        / 下有个bin/ 文件夹 里面是一些可执行文件 所以要把node 加到上面去
+        创建快捷方式： cd ~ 
+        ln -s ~/解压的node.../bin/node /usr/bin/node (~代表home路径 )
+        ln -s ~/.../bin/npm /usr/bin/npm  (经常用npm安装文件)
+        usr: 和软件安转相关的
+        var: 系统运行过程相关
+        bin: 可执行文件
+        boot: 系统开机相关的目录，存放开机会使用的文件
+        dev: linux上所有的接口都是以文件的形式存在
+        home: 存放各种用户的用户文件
+        ~: pwd => /root 管理员文件夹
+        lib: 存放Linux系统函数库
+        media: 存放可删除的设备
+        mnt: 类似media
+        opt: 第三方软件存放目录
+        root: 管理员目录
+        sbin: 管理员的可执行文件
+        tmp: 临时文件 需要定期删除
+        proc: 虚拟文件系统
+        sys: 虚拟文件系统 内核模块
+        lost+found: 当文件系统发生错误时 可以将丢失的目录片段放到这个目录下
+
+        基本的命令：
+            pwd查看当前的路径
+            cd 进入某个目录下
+            cd .. 返回上一级目录
+            cd ../bin 返回到上一级的指定目录
+            cd /etc/sysconfig
+            cd tab 自动补全路径
+            ll 查看目录详情，看文件夹 ls 只有目录名 ll => ls-l 的缩写
+            ls -al查看隐藏文件
+            mkdir ... 创建文件夹 make是制造的意思 dir是路径的意思
+            pwd: 查看具体位置
+            mkdir test 表示当前路径下
+            mkdir /test 表示根目录下
+            mkdir test/abc 在test文件夹里继续创建文件夹
+            mkdir -p test2/qwe 当test2不存在时一下子创件多级目录
+            rmdir 删除路径 rm => remove的缩写 安全删除 里面没有东西时删除
+            rm -rf test2 强制删除文件夹 f => focus 强制
+            pwd 查看当前路径
+            vi test.txt 创建文件 + esc 回到命令状态 + ：+ q(quit离开) 直接退出 / + wq 保存并退出 w=>write
+            vi test.txt + i 进入insert编辑状态 + esc 退出 + : + q! 强制退出 不保存/ + wq!保存并退出
+            j下 k上 h左 l右 + i 进入编辑状态
+            3 l 数字和光标合用；
+            ctrl + d 向下翻半页 ctrl + u 向上翻半页
+            end/$ 键移动到行尾 home/0 键移动到行头 
+            G 行尾 gg行头 8j 移动8行
+            /asd 迅速找到对应位置 往下找
+            ?asd 往上找
+            rm -f test.txt 删除文件 
+            tail test.txt 查看文件的后10行  tail 尾巴
+            tail -200 看文件的后200行
+            tail -f test.txt 浮动(常用)
+            ssh root@192.... 链接另一个会话
+            cat test.txt 打印出这个文件
+            cat test.txt |grap "panda" 打印出所有带panda的行
+            ll |grap "txt" 找出txt文件
+            tail -f text.txt |grep "user" 查看带有"user" 关键字的日志
+
+            -文件 d 路径 l 连接
+            前三：当前所属用户权限
+            中三：当前所属组的用户权限
+            后三：其他用户权限
+            r 可读4
+            w 可写2
+            x 可执行1                 4+2  4+1   2+1
+            rwx 可读可写可执行        rw-  r-x   -wx
+            chmod 用三个数字来代替权限 num  num  num 文件名
+                                     前三 中三  后三
+            chmod 653 + 文件名  777 + 文件名（eg:k.sh) 全都可读可写可执行
+
+            第二节；
+            useradd lin 创建用户
+            cat /etc/passwd 查看用户
+            groupadd lin/chen 创建用户组
+            cat /etc/group 查看用户组
+            groupdel lin 删除用户组 但不能删除主要组 每个用户都属于一个主要组
+            userdel lin 删除用户
+            useradd -G xiulin guowen 将guowen加到已存在组xiulin中
+            su lin 切换用户 exit 退回到上一个用户
+            usermod -g chenxiulin guowen 更改用户组中的用户 这样就可以删除这个用户了
+            groups chenxiulin 查看用户组
+            id lin 查看用户详细信息
+            lscpu 查看机器cpu类型
+            df 看磁盘空间 df -h  df => 地方（磁盘还剩多少地方
+            df -i 看磁盘的索引空间 index 占用越多证明碎文件越多
+            ps aux 查看那些服务正在运行 可加过滤
+            top命令 查看CPU的运行状况
+             
+            :q :wq文件的退出
+            systemctl disable firewalld 关闭防火墙 以在web访问服务
+            reboot 重启服务
+     -->
+</body>
+</html>

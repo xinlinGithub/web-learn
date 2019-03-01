@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖与节流</title>
+    <style>
+        #box{
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            line-height: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        将两个功能封装成一个函数
+     -->
+    <div id="box">0</div>
+    <script> 
+        var oBox = document.getElementById("box");
+        function debounceOrThtottle(handler, delay, type=true) {
+            var lastTime = 0;
+            var timer = null;
+            if(type === true) {
+                //防抖
+                return function (e) {
+                    var _this = this;
+                    var _args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        handler.apply(_this, _args);
+                    }, delay);
+                }
+            }else{
+                //节流
+                return function (e) {
+                    var curTime = new Date().getTime();
+                    if(curTime - lastTime > delay) {
+                        handler.apply(this, arguments);
+                        lastTime = curTime;
+                    }
+                }
+            }
+        }
+        function debounceAndThtottle(handler, delay){
+            // 第一次触发时 先执行一次 以后连续频繁触发时 delay时间内触发的只执行一次 
+            // 最后触发后 等待delay时间后 再执行一次
+            var lastTime = 0;
+            var timer = null;
+            return function () {
+                var _this = this;
+                var _args = arguments;
+                var curTime = new Date().getTime();
+                if(curTime - lastTime > delay) {
+                    handler.apply(_this, _args);
+                    lastTime = curTime;
+                }
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    handler.apply(_this, _args);
+                }, delay);
+            }
+        }
+        function move(e) {
+            this.innerText = parseInt(this.innerText) + 1;
+        }
+        // 默认为防抖函数 true 为防抖 false为节流
+        // oBox.onmousemove = debounceOrThtottle(move, 1000,false);
+        oBox.onmousemove = debounceAndThtottle(move, 1000);
+    </script>
+</body>
+</html>

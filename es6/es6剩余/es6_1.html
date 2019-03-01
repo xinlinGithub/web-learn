@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>数据劫持-模拟vue数据绑定</title>
+  </head>
+  <body>
+    <!-- 测试检测对象用的 -->
+    <input id="inp" type="text" />
+    <div id="innerText"></div>
+    <input id="inp1" type="text" />
+    <div id="innerText1"></div>
+
+    <!-- 测试检测数组用的 -->
+    <input id="inp2" type="text" />
+    <div id="innerText2"></div>
+    <script>
+      // es5 -> defineProperty
+      // var obj = {
+      //     name: 'cxl'
+      // }
+
+      // console.log(obj.name);//可读
+      // obj.name = obj.name.toUpperCase();//可写
+      // console.log(obj);
+      // 可配置
+      // delete obj.name;
+      // 可枚举
+      // for(var p in obj){};
+
+      // eg: Function.prototype 就是不可写的
+      // window上通过var声明的变量就是不可配置的 就是不能删除
+      // var obj = {
+      //     name: "sss",
+      //     age: "23",
+      //     __proto__: {
+      //         sex:"man",
+      //         __proto__: {
+      //             height: 178
+      //         }
+      //     }
+      // }
+      // Object.prototype是不可以枚举的
+      // __proto__也是可以枚举的；
+      // for(var i in obj) {
+      //     console.log(i);
+      // }
+
+      // var obj = {
+
+      // }
+      // 在vue中的源码中经常用到这一个
+      // 里面的属性要是不写默认为false
+      // // 通过Object.definePrototype来监听数据的改变 可以进行数据的劫持
+      // var tempval = "";
+      // Object.defineProperty(obj, "name", {
+      //     // value: "cxl",//可读
+      //     // writable: true,//可写
+      //     configurable: true,// 可配置
+      //     enumerable: true, //可枚举
+      //     // 下面的与上面的前两行不可共存
+      //     // 这样就不可写不可读了 但是可以通过下面这种方式拿到值
+      //     // set也就相当于写了 get相当于读；所以上面的读写操作不能再有了
+      //     set(targetval) {
+      //         tempval = targetval;
+      //         return true;
+      //     },
+      //     get() {
+      //         return tempval;
+      //     }
+      // })
+
+      // var obj2 = {
+      //     // 这样写与上面的写法功能类似 也不可以有name属性 有也不起作用
+      //     set name (val) {//必须传参
+      //         this.tempval = val;
+      //     },
+      //     get name () {
+      //         return this.tempval;
+      //     }
+      // }
+
+      // var obj1 = {//一个对象里面的属性天生可读可写可配置 只有通过下面方式改变后的属性才会有所变化
+      //     name: "sf"
+      // }
+      // Object.defineProperty(obj1, "name", {
+      //     value: "sfsfsgs",
+      //     writable: false
+      // })
+
+      // 通过数据劫持功能模拟vue双向数据绑定
+      let oInp = document.getElementById("inp");
+      let oText = document.getElementById("innerText");
+      let oInp1 = document.getElementById("inp1");
+      let oText1 = document.getElementById("innerText1");
+      // 测试监听数组
+      let oInp2 = document.getElementById("inp2");
+      let oText2 = document.getElementById("innerText2");
+      let arr = [{ name: "array" }, 1, 2];
+      oInp2.oninput = function() {
+        arr[0].name = this.value;
+      };
+      //上面是监听数组的代码
+
+      let objText = {
+        inner: {
+          value: "text"
+        },
+        value: "value1"
+      };
+      // 渲染视图
+      function update() {
+        oText.innerText = objText.inner.value;
+        oText1.innerText = objText.value;
+        // 测试监听数组
+        oText2.innerText = arr[0].name;
+      }
+      // 触发事件
+      oInp.oninput = function() {
+        objText.inner.value = this.value;
+        // 如果在这里直接作用到oText那将会非常笨重 没有模块性 作用范围小
+        // 使用检测器可以监听所有数据的变化
+      };
+      oInp1.oninput = function() {
+        objText.value = this.value;
+      };
+      update();
+
+      // 检测器
+      function Observer(obj) {
+        // 检测的 必须是一个对象
+        if (obj === null || typeof obj !== "object") return;
+        // 对对象里面的 每一个属性进行检测
+        // 用在里面向当于一个闭包
+        Object.keys(obj).forEach(key => defineReactive(obj, key, obj[key]));
+      }
+      // 数据劫持
+      function defineReactive(obj, key, val) {
+        console.log(obj);
+        // 当一个对象里面有多个对象嵌套一块时为了都监听到 可以再递归一下 是对象就再次检测 不是对象就返回
+        Observer(val);
+        // 数据劫持
+        Object.defineProperty(obj, key, {
+          get() {
+            // console.log('get')
+            return val;
+          },
+          set(newVal) {
+            // console.log("set")
+            val = newVal;
+            // 监听到数据有变化就会执行预先准备好的函数
+            update();
+          }
+        });
+      }
+      Observer(objText);
+
+      // 上述检测只能检测对象 若想检测数组 vue是给他重写了
+      // 举个检测数组push方法的例子
+      function updateArr(params) {
+        console.log(params);
+      }
+      function ObserveArray(arr, methods) {
+        if (arr === null || typeof arr != "object") return;
+        if (Object.prototype.toString.call(arr) === "[object Object]")
+          Observer(arr);
+
+        defineReactiveArr(Array.prototype, methods, arr);
+      }
+      function defineReactiveArr(obj, key, target) {
+        let { push, pop } = Array.prototype;
+        Object.defineProperty(Array.prototype, key, {
+          // 因为push是个方法 所以需要返回一个函数
+          value: (function() {
+            return (...args) => {
+              switch (key) {
+                case "push":
+                  push.apply(target, args);
+                  updateArr(target);
+                  break;
+                case "pop":
+                  pop.apply(target, args);
+                  updateArr(target);
+                  break;
+                default:
+                  null;
+              }
+            };
+          })()
+        });
+      }
+
+      ObserveArray(arr, "push");
+      ObserveArray(arr, "pop");
+      ObserveArray(arr[0]);
+
+      // 如何实现一个自存档对象。 当设置temperature 属性时，archive 数组会获取日志条目。
+      function Archiver() {
+        var temperature = null;
+        var archive = [];
+
+        Object.defineProperty(this, "temperature", {
+          get: function() {
+            console.log("get!");
+            return temperature;
+          },
+          set: function(value) {
+            temperature = value;
+            archive.push({ val: temperature });
+          }
+        });
+
+        this.getArchive = function() {
+          return archive;
+        };
+      }
+
+      var arc = new Archiver();
+      arc.temperature; // 'get!'
+      arc.temperature = 11;
+      arc.temperature = 13;
+      arc.getArchive(); // [{ val: 11 }, { val: 13 }]
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        "use strict";//严格模式 一般不用 有很多不兼容
+        var a = 1000;
+        // var b = 0100; //use strict下 这样写不行 
+        // ctrl + f 搜索
+        window.b == undefined;
+        typeof window.b == 'undefined';
+        typeof undefined == 'undefined';
+
+        // $.type() 判断类型；{"[object Object]": "object","[object Array]": "array"}
+        // 可以明确判断 object array typeof 就不行；
+        // trim 去掉前后空格 '  '.trim();
+
+        // 一般形式
+        // function dy() {
+        // }
+        // dy.prototype.init = function(){};
+        // dy.prototype.css = function(){};
+        // var dy1 = new dy();
+        // dy1.css();
+
+        // function jQuery(){
+        //     return new jQuery.fn.init();
+        // }
+        // jQuery.fn = jQuery.prototype
+        // jQuery.prototype.init = function () {};
+        // jQuery.prototype.css = function () {};        
+        // jQuery.fn.init.prototype = jQuery.fn;
+        // 这是高级的做法 比较方便；
+
+        // -ms- ie前缀 -webkit 谷歌
+        // -webkit-margin-left: webkitMarginLeft 判断横线后面的是否大写
+    </script>
+</body>
+</html>

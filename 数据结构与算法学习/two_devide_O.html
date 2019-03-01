@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // 分而治之
+        var preArr = [];
+        function add() {
+            var n = 0;
+            for(var i = 0; i < 100000000; i++) {
+                // n += i;
+                preArr.push(i)
+            }
+            // console.log(n)
+        }
+        add();
+        function allTime(callback,numArr,target) {
+            var prevTime = new Date().getTime();
+            // var sArr = [].slice.call(arguments,1)
+            // console.log(...sArr)
+            var inf = callback(arguments[1],arguments[2]);
+            var curTime = new Date().getTime();
+            console.log('执行时间：' + (curTime - prevTime),'执行结果' + inf);
+        }
+        // allTime(findNum,preArr,) allTime(findSlowNum,preArr,)
+        function findSlowNum(numArr,target) {
+            var len = numArr.length - 1;
+            var setTime = 0;
+            for(var i = 0; i < len; i++){
+                var tarNum = numArr[i];
+                setTime++;
+                if(tarNum == target){
+                    console.log('执行次数为：'+ setTime);
+                    return '执行成功,索引为：' + i;
+                }
+            }
+            return 'no find this target';
+        }
+        function findNum(numArr,target) {
+            var low = 0,
+                high = numArr.length - 1,
+                mid,
+                midNum,
+                setTime = 0;
+            while(low <= high){
+                mid = Math.floor((low + high) / 2);
+                setTime++;
+                midNum = numArr[mid];                
+                if(midNum == target) {
+                    console.log('执行次数为：'+ setTime)
+                    return 'target的索引为：' + mid;
+                }else if(midNum > target) {
+                    high = mid - 1;
+                }else{
+                    low = mid + 1;
+                }
+            }
+            console.log('执行次数为：'+ setTime);
+            return 'no find this target';
+        }
+        allTime(findNum,preArr,100000000) 
+        allTime(findSlowNum,preArr,100000000)
+        // 比较时间 差别相当大
+        
+
+        
+    </script>
+</body>
+</html>

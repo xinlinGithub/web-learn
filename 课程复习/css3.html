@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>css3复习</title>
+    <style lang="">
+        /* div:not([class^='ss'])::after{
+            content: '6666';
+            display: inline-block;
+        } */
+        /* div::content{
+            color: blue;
+            background: red;
+        } */
+        /* div{
+            width: 100px;
+            height: 100px;
+            background: red;
+            margin-left: 0;
+            box-shadow: 5px 5px 10px 10px #aaa inset;
+            animation: move 0.5s ease-in-out 2s alternate-reverse infinite forwards;
+        }
+        input::selection{
+            color: yellow;
+        }
+        @keyframes move {
+            from {
+                margin-left: 50px;
+            }to {
+                margin-left: 100px;
+            }
+        } */
+        div{
+            width: 200px;
+            height: 200px;
+            /* background: linear-gradient(90deg,red 10%,blue,yellow); */
+            background: radial-gradient(50% 10%,red, yellow ,#fff);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="sss">
+        div
+    </div>
+    <input type="text" >
+    <script>
+        var div = document.getElementsByTagName('div')[0];
+        var deg = 0;
+        // setInterval(() => {
+        //     // deg++;
+        //     deg === 360 ? deg = 0 : deg++;
+        //     div.style.background = `linear-gradient(${deg}deg,red 10%,blue 50%,yellow 100%)`;
+        // },10)
+        // 选择器方面
+        /*
+            css3属性选择器:
+            [title] 选中带有title属性的所有元素
+            [title='ss'] 选中有title属性 且值为'ss' 的元素
+            [title~='ss'] 选中含有'ss'的title属性的元素 以空格分开
+            [title|='ss'] 选中含有'ss'的title属性的元素 以-分开
+            input[type='button'] 选中特定类型的input
+            div[class^='demo'] 作用于以什么开头
+            div[class$='demo'] 作用于以什么结尾
+            div[class~='demo'] 含有demo 以空格分开
+            div[class|='demo'] 含有demo 以-分开
+            div[class*='demo'] 作用于含有'demo'字段的div元素
+
+            css3子元素选择器
+            input:checked + div 选中紧挨着符合要求的input的兄弟元素div
+            div > p 选中div直接子元素p
+            div ~ p 选中div的兄弟节点p
+            css3伪类选择器：选中当前元素的某一类元素 作用于元素本身或以外的元素
+            a:target 作用于被锚点中的元素 a标签点击后 调到有指定ID的元素 就是被锚点中的元素
+            a:active 作用于刚点击后的元素 a标签以外也可以
+            a:link 作用于没有被访问的a标签的元素
+            a:visited 作用于被访问之后的a
+            input:checked 作用于被选中的input
+            input:enabled 作用于可以操作的input
+            input:disabled 作用于不能操作的input
+            input:read-only 作用于只读input
+            input:read-write 作用于可读可写的input
+            div:empty 作用于空的div
+            div:hover 鼠标划上去时作用
+            div:last-child 选中所有的父元素中的第一个子元素div 必须是符合要的 第一个不是div 则不选
+            div:last-of-type 只作用div这一类 中的最后一个 
+            div:first-child 选中所有的父元素中的最后一个子元素div 必须是符合要的 最后一个不是div 则不选
+            div:first-of-type 只作用div这一类 中的第一个
+            div:nth-child(2) 选中所有的父元素中的第二个子元素div 必须是符合要的 第二个不是div 则不选
+            div:nth-of-type(2) 只作用div这一类 中的第二个
+            div:nth-last-child(2); 倒数
+            div:nth-last-of-type(2) 倒数
+            div:not([class^='ss']) 选中class不是以'ss'开头的div
+
+            css3伪元素选择器：作用于此元素内部 不占dom节点 
+            div::after 常用与清除浮动
+            div::before
+            div::selection div中的内容选中之后相应的变化
+            div::first-line 初始化第一行字 只作用于块级元素
+            div::first-letter 初始化第一个字 只作用于块级元素
+        */
+        // css3属性方面
+        /*
+            运动 :
+            transition: 属性名 时间（s) timing-function(ease-in,ease-in-out...) delay-time 想同时作用多个属性用','分开写
+            animation: 运动名称 时间 timing-function delay alternate(reverse) 次数(infinity,3,2..) forwards(backwards)
+            backwards(从定义时开始运动，直接跳到0%,最后停在定义时的点,简单理解为停在后面)
+            forwards(从keyframes开始运动,最后停在100%,简单理解为停在前面)
+            结合@keyframes使用 
+            阴影:
+            box-shadow: offsetx offsety 模糊程度 模糊扩展大小 颜色 方式(inset 默认向外)
+            text-shadow: 同上
+            背景 渐变：
+            background: url() no-rapeat 大小/color
+            background-image:url();
+            background-size: 图片大小 100px 100px, 100% 100%；cover(按比例覆盖 有三个边重合即可) contain(肯定完全覆盖)
+            background-position: x y;
+            background-position-x: 
+            background-position-y:
+            background-repeat: no-rapeat;
+            background-origin: 背景图片的起始位置；border-box padding-box(默认) content-box
+            background-clip: 限制覆盖范围 border-box padding-box content-box；
+            还可裁剪文本 在这不过多赘述 现用现查
+            background: linear-gradient(to top/to top right/ 角度(0度向上) ,#aaa 10%,#bbb 50%,#ccc 100%);
+            不写默认向下
+            background: radial-gradient(circle/ellipse at center/top/50% center/top/50%, 颜色同上)
+            若不写 circle ellipse默认为椭圆 且两个百分数分别表示 长轴和短轴
+            图形变换
+            盒模型
+            边界
+            user-select: none; 使元素中的文本不可选
+            vertical-align: middle; 文本类元素的对齐方式 即所谓的行及元素
+        */
+    </script>
+</body>
+</html>

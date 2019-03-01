@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>array</title>
+</head>
+<body>
+    <script>
+        // 里面的数据必须存储在一系列相邻地址中， 加入数据后，若无相邻地址，则重新分配
+        // 但查找 和获取非常便利
+
+        // 二维数组实现矩阵相乘 第一个参数的列是第二个参数的行
+        var arr1 = [[1, 2, 3], 
+                    [1, 2, 3], 
+                    [1, 2, 3], 
+                    [1, 2, 3]];
+
+        var arr2 = [[1, 2, 3, 4, 5],
+                    [1, 2, 3, 4, 5], 
+                    [1, 2, 3, 4, 5]];
+        function matrix_multiply(arr1, arr2) {
+            if (arr1[0].length != arr2.length) {
+                return "the datas form is false!"
+            }
+            var tempArr = [];
+            var tempSum = 0;
+            var len1 = arr1.length;
+            var len11 = arr1[0].length;
+            var len22 = arr2[0].length;
+            for (var i = 0; i < len1; i++) {
+                tempArr.push([]);
+                for (var k = 0; k < len22; k++) {
+                    for (var j = 0; j < len11; j++) {
+                            tempSum += arr1[i][j] * arr2[j][k];
+                    }
+                    tempArr[i][k] = tempSum;
+                    tempSum = 0;
+                }
+            }
+            return tempArr;
+        }
+        // console.log(matrix_multiply(arr1, arr2))
+        
+        // 二维数组实现数组转置
+        var arr = [[1,2,3],
+                   [4,5,6],
+                   [7,8,9]];
+        function matrix_turn(arr) {
+            var len = arr.length;
+            var tempArr = new Array(len);
+            for (var i = 0; i < len; i++) {
+                tempArr[i] = new Array(len);
+            }
+            arr.forEach((item1, index1) => {
+                item1.forEach((item2, index2) => {
+                    tempArr[index2][index1] = item2;
+                })
+            })
+            return tempArr;
+        }
+        // console.log(matrix_turn(arr))
+
+        // 压缩稀疏矩阵
+        var arr = [[1,2,0,0,0],[0,0,0,3,7],[0,0,5,0,0]];
+        // console.log(arr);
+        var compress = [[]];//第零项：[总行数, 总列数, 非零项的数目],其余项：[所在行，所在列，值]
+        function matrix_compress(arr) {
+            var len = arr.length;
+            var len1 = arr[0].length;
+            compress[0][0] = len;
+            compress[0][1] = len1;
+            for (var i = 0; i < len; i++) {
+                for (var j = 0; j < len1; j++) {
+                    if (arr[i][j] != 0) {
+                        compress.push([i,j,arr[i][j]]);
+                    }
+                }
+            }
+            compress[0][2] = compress.length - 1;
+            return compress;
+        }
+        // console.log(matrix_compress(arr))
+
+        // 用一位数组压缩上三角形矩阵
+        var arr1 = [[1,2,3,4,5],
+                   [0,6,7,8,9],
+                   [0,0,10,11,12],
+                   [0,0,0,13,14],
+                   [0,0,0,0,15]]
+        function matrix_top(arr) {
+            var compress = [];
+            arr.forEach(item => {
+                item.forEach(item1 => {
+                    if (item1 != 0) {
+                        compress.push(item1);
+                    }
+                })
+            })
+            return compress;
+        }
+        // console.log(matrix_top(arr))
+    </script>
+</body>
+</html>

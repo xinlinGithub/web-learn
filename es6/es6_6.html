@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>class-promise</title>
+</head>
+<body>
+    
+    <script>
+
+    // class 类；
+        // 原始的构造函数 产生实例化对象；
+        // person.__proto__.constructor === Person
+        // Person.prototype = {
+        //     name: "prototype",
+        //     // constructor: Person
+        // }
+        // function Person(name,age = 0) {
+        //     this.name = name;
+        //     this.age = age;
+        // }
+        // Person();
+        // var person = new Person('dxb',6);
+        // 通过new 操作符执行函数内部的this会指向构造出的实例对象 这是与直接执行的最大不同
+        // console.log(person)        
+        // 缺点：和普通的函数一样 可以自执行 执行后会把this中的属性添加给window
+        // 而且添加和修改原型比较复杂
+        // Person('xxb',4)
+        // 因此引入class 不存在变量提升 与 let const 类似
+        
+    //与function person() {}类比
+    // 也可以let person = class {}
+        // class person {
+        //     // 相当于原型的constructor 即上面的Person;
+        //     constructor(name,age = 0) {
+            // 私有属性
+        //         this.name = name;
+        //         this.age = age;
+        //     }
+        //     // 将下面的方法添加到原型中；
+                // 公有属性
+        //     showName() {
+        //         console.log(this.name)
+        //     }
+        // }
+        // var p = new person('xxb',6)
+        // 还可以当参数传进去
+        // function p(callback,name,age = 0) {
+        //     return new callback(name, age)
+        // }
+        // var p1 = p(person,'xxb',8)
+
+        // 高级用法
+        // 继承
+        // 原始继承：
+        // function Animal(name = 'xiao bai', age = 0) {
+        //     this.name = name;
+        //     this.age = age;
+        // }
+        // var animal = new Animal()
+        // Animal.prototype.speak = function () {
+        //     console.log('my is a animal')
+        // }
+        
+        // function Person(name = 'wxb', age = 3) {
+        //     // 继承Animal 有很多方法 最经典的为圣杯模式 这里用改变this指向的方法
+        //     // 即借用别的函数实现自己的功能；
+            // 继承私有属性 不能继承公有属性
+        //     Animal.call(this,name,age);
+        // }
+        // 改变原型时需重写；
+        // Person.prototype.speak = function () {
+        //     console.log("my is person");
+        // }
+        // 下面这样也可以 只是子类原型改变父类也跟着变；
+            // 继承共有属性 共享原型
+        // Person.prototype = Animal.prototype;
+        // Person.prototype.eat = function () {
+        //     console.log("I eat a apple")
+        // }
+        // var person = new Person();
+        
+        // 目前比较好的方式是 使用Object.setPrototypeOf(Person.prototype, Animal.Prototype);
+        // 就是让person的原型继承Animal的原型 这样你再更改Person的原型父级原型也不会改变
+        // 也可以Person.prototype.__proto__ = Animal.prototype
+        // 就算这种比较完备的 继承 你在子级去修改原始值无影响 但你修改引用值时 还是会对父级产生一定的 影响的
+
+        // 下面用class实现
+        // Animal就相当于原型 里面的costructor相当于函数
+        // class Animal {
+        //     constructor (name, age = 0) {
+            // 私有属性
+        //         this.name = name;
+        //         this.age = age;
+        //     }
+                // 公有属性
+        //     speak () {
+        //         console.log('my is a animal')
+        //     }
+        //     getThis () {
+        //         this.add = 1;
+        //     }
+        // }
+        // var a = new Animal();
+        // class Person extends Animal{
+        //     constructor (name, age = 3,add = 0) {
+                // 相当于改变this指向
+        //         super(name,age);//这个super是调用父级实例 并返回this对象；供子类使用
+        //         // 且子类在父类中使用this 指的是自己的this;
+        //         this.height = 100;
+        //         this.add = add;
+        //     }
+        //     //自己的原型写在这儿 且不会改变父类原型
+            // 共有属性
+        //     speak () {
+        //         console.log("my is a person")
+        //     }
+        //     static inc (add) {// 为函数添加静态方法 需Person.inc()调用
+        //         // var add = 0;
+        //         return new Person('person',undefined,++add);
+        //     }
+        // }
+        // var p = new Person('xiu lin',12)
+        // 使用class声明后的函数的原型和静态属性不可枚举
+        // 只能通过new操作符操作
+
+
+
+        // promise 承诺 更好的更方便的处理异步；涉及知识 new Promise().then Promise.resolve Promise.reject Promise.all(); Promise.race();
+        // 通常可能会出现这种情况：
+        // var a(() => {
+            //     b(() => {
+            //         c(() => {
+            //            d(() => {
+            //                e(() => {
+
+            //                })
+            //            }) 
+            //         })  
+            //     })
+            // })
+        // a执行完b执行 依次往下执行 这样做法首先写法上比较恶心 思路容易混乱
+        // 再者相互依赖性比较强 b依赖a c依赖b .... 而一个好的解决方案就是使用promise
+        // var p = new Promise((resolve,reject) => {
+        //     // 若什么都不执行 则状态为pending 此时.then操作无效 只有状态改变时才决定执行相应的回调函数；
+        //     resolve({value: 1});//通过执行resolve() => resolved reject() => rejected
+        //                         // 来确定promise 的状态；一旦resolve() 执行以后 再reject()就不好使了；
+        //                         // () 中可以传值 方便.then是接受；
+        //     // .then操作若没返回promise 则默认状态为resolved 
+        // })
+        // .then((data) => {
+        //     console.log(data);
+        //     // return data;
+        //     return new Promise((resolve, reject) => {
+        //         // resolve(data);
+        //         reject('err');
+        //     })
+        // },(err) => {console.log(err)})
+        // .then(data => console.log(data), err => console.log(err))
+
+        // var p1 = Promise.resolve('p1')//产生一个状态为resolved的promise对象 与new出来的别无二致 只是更简洁；
+        // var p2 = Promise.reject('p2')
+        //     .then(data => console.log(data))//不执行
+        //     .catch((err) => {console.log(err + 'err'); return new Promise((resolve, reject) => {
+        //         resolve(err)
+        //     })})// 与then的操作类似 下面的执行取决于此的状态
+        //     .then((data) => {console.log(data + 'resolved'); return new Promise((resolve, reject) => {
+        //         resolve(data);
+        //     })}, (err) => console.log(err))
+        // 产生一个状态为rejected的promise对象 与new出来的别无二致 只是更简洁；后面catch是捕获状态 就好像知道前一个promise的状态是rejected一样
+        // 直接执行对应rejected状态的回调函数 若为resolve 则不执行上式为常用法；
+        // p2的状态看最终的状态 即最后一个then的状态 返回Promise 则按返回的状态 不反回默认为resolved 内容为undefined
+        
+        // var pCatch = new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve('rrrr')
+        //     },5000)
+        // }).catch((err) =>{
+        //     console.log(err)
+            // return new Promise((resolve, reject) => {
+            //     resolve('ddd')
+            // })
+        // })
+
+
+        // var p3 = Promise.resolve();
+        // var p4 = Promise.reject('p4');
+        // var p5 = new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve('p5')
+        //     },5000)
+        // })
+        // var p6 = new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         reject('p6');
+        //     },7000)
+        // })
+        // var pAll = Promise.all([p3,p5,p4]);
+        // 参数为一个数组 里面是promise对象 若都为resolved 则返回状态为promise的对象 且数据为数组中
+        // promise对象的数据组成的数组 顺序不变 若存在rejected状态的 则返回第一个为rejected状态的promise对象 此时二者不是同一个 只是返回他的值
+        // 若存在pending状态的则返回 一个状态为pending的promise对象；
+        // var pRace = Promise.race([p3,p4])
+        // 看谁先变成 resolved 状态的 就他的数据返回 即使后面有变成rejected状态的也无影响 promise对象状态为resolved新对象
+        // 若先有rejected 状态的 就返回一个状态为rejected的promise对象 且数据相同
+
+        // 手动封装Promise函数
+        class myPromise {
+            static resolve (data) {
+                return new myPromise((resolve, reject) => {
+                    resolve(data);
+                })
+            }
+            static reject (err) {
+                return new myPromise((resolve, reject) => {
+                    reject(err)
+                })
+            }
+            static all (arr) {
+                if(Object.prototype.toString.call(arr) != "[object Array]"){
+                    throw TypeError(`#<Promise> is not iterable at Function.all`)
+                }
+                let len = arr.length;
+                // 根据数组中的promise对象的状态 用一个新数组重新存一下动态 再在下面一起判断
+                let resolveArr = new Array(len).fill(null);  
+                //   实参数组中的promise对象是相互独立的 互不影响；
+                for(let i = 0; i < len; i++) {
+                    if( arr[i].status === 'resolved' ) {
+                        resolveArr[i] = arr[i].data;
+                    } else if( arr[i].status === 'rejected' ){
+                        return myPromise.reject(arr[i].data);
+                    } else {
+                        resolveArr[i] = new myPromise((resolve, reject) => {
+                            // 使用立即执行函数，执行完内存即被释放 更合理
+                            let all_resolve = (() => {
+                                return (data) => {
+                                    resolveArr[i] = data;
+                                    !resolveArr.includes(null) && resolveArr.every((item,index,array) => {return !(item instanceof myPromise)}) && resolve(resolveArr);
+                                }
+                            })();
+                            let all_reject = (() => {
+                                return (err) => {
+                                    resolveArr[i] = null;
+                                    reject(err);
+                                }
+                            })();
+                            // 数组中状态为pading的promise对象 预存一下两个函数 当此对象状态改变时执行他们 
+                            // 以改变新promise对象的状态
+                            arr[i].rejectArr.push(all_reject);
+                            arr[i].resolveArr.push(all_resolve);
+                        })
+                    }
+                }
+                if(!resolveArr.includes(null) && resolveArr.every((item,index,array) => {return !(item instanceof myPromise)})) {
+                    return myPromise.resolve(resolveArr);
+                }else{
+                    return new myPromise((resolve, reject) => {
+                        resolveArr.forEach((item, index,arr) => {
+                            if(item instanceof myPromise) {
+                                // console.log(resolveArr)
+                                item.then(resolve, reject);
+                            }
+                        })
+                    })
+                }
+            }
+            static race (arr) {
+                if(!Array.isArray(arr)){
+                    throw TypeError(`#<Promise> is not iterable at Function.all`)
+                }
+                let len = arr.length;
+                let tempRaceArr = [];
+                for (let i = 0; i < len; i++) {
+                    if (arr[i].status === "resolved") {
+                        return myPromise.resolve(arr[i].data);
+                    } else if (arr[i].status === "rejected") {
+                        return myPromise.reject(arr[i].data);
+                    } else {
+                        tempRaceArr.push(arr[i]);
+                    }
+                }
+                return new myPromise((resolve, reject) => {
+                    tempRaceArr.forEach((item,index,arr) => {
+                        item.then(resolve, reject);
+                    })
+                })
+            }
+            constructor (fn) {
+                this.status = 'pending';//定义状态
+                this.data = undefined;//定义数据
+                this.rejectArr = [];
+                //当then 时状态为pending时 存储reject回调函数 当状态改变时在resolve函数中执行；
+                this.resolveArr = [];
+                //当then 时状态为pending时 存储resolve回调函数 当状态改变时在reject函数中执行；
+                // 参数必须是函数；
+                if (typeof fn != 'function') {
+                    console.log(fn)
+                    throw new TypeError(`Promise resolver ${fn} is not a function`);
+                };
+                // 在内部定义resolve 和 reject 函数 当做参数传到传过来的函数中；
+                // 去改变内部的状态
+                let resolve = (data) => {
+                    setTimeout(() => {
+                        if (this.status === 'pending') {
+                            this.data = data;                        
+                            this.status = 'resolved';
+                            this.resolveArr.length > 0 && this.resolveArr.shift()(data);
+                            this.rejectArr.length > 0 && this.rejectArr.shift();
+                        }
+                    })
+                };
+                let reject = (err) => {
+                    setTimeout(() => {
+                        if (this.status === 'pending') {
+                            this.data = err;                        
+                            this.status = 'rejected';
+                            this.resolveArr.length > 0 && this.resolveArr.shift();
+                            this.rejectArr.length > 0 && this.rejectArr.shift()(err);
+                        }
+                    });
+                }
+                // new完之后fn会立即执行
+                fn(resolve, reject);
+            }
+            // 将then函数定义在原型上 
+            then(resolved, rejected){
+                // 当上一个promise对象状态为resolved时执行第一个回调函数
+                // 若回调返回promise对象 则在then中返回状态为此promise对象；
+                // 若回调没有返回promise对象 则在then中默认返回状态为resolved的promise对象；
+                if(this.status !== "pending"){
+                    let pro = this.status === "resolved" ? resolved(this.data) : rejected(this.data);
+                    if (pro instanceof myPromise) {
+                        return pro;                        
+                    }else {
+                        return myPromise.resolve(pro)
+                    }
+                }
+                
+                // 当状态为pending时 先把函数存起来 再当状态改变时在对应的函数中执行
+                if (this.status === "pending") {
+                    // 不管一开始为什么状态 .then之后肯定会返回一个promise构造出的实例对象的
+                    // 状态以后再变
+                    return new myPromise((resolve, reject) => {
+                        let nowResolve = ((resolved) => {
+                            // 以闭包的形式返回
+                            return (data) => {
+                                // 等状态变化后还是执行 先前then中对应的回调函数
+                                let pro = resolved(data); 
+                                //让then中的resolve回调函数执行，并把上一个状态的promise数据传入，看返回值                           
+                                if (pro instanceof myPromise) {
+                                    pro.then(resolve, reject);
+                                    // 若返回值是promise对象，则通过.then的形式去改变此函数返回的promise对象的状态；
+                                    // 若pro也存在异步，则同样的方法去分析
+                                }else {
+                                    // 若返回的不是promise对象，则自动反回一个状态为resolved的promise对象；数据为返回值
+                                    resolve(pro);
+                                }
+                            }
+                        })(resolved);
+                        let nowReject = ((rejected) => {
+                            return (err) => {
+                                let pro = rejected(err);
+                                if(pro instanceof myPromise) {
+                                    pro.then(resolve, reject);
+                                }else {
+                                    resolve(pro);
+                                }
+                            }
+                        })(rejected)
+                        this.resolveArr.push(nowResolve);
+                        this.rejectArr.push(nowReject);                        
+                    }) 
+                }
+            }
+            catch(rejected) {
+                if (this.status === "resolved") {
+                    return this;
+                }
+                if (this.status === "rejected") {
+                    let pro = rejected(this.data);
+                    if (pro instanceof Promise) {
+                        return pro;
+                    } else {
+                        return Promise.resolve(pro);
+                    }
+                }
+                if (this.status === "pending") {
+                    return new myPromise((resolve, reject) => {
+                        let afterReject = ((rejected) => {
+                            return (data) => {
+                                let retReject = rejected(data);
+                                if (retReject instanceof myPromise) {
+                                    retReject.then(resolve,reject);
+                                } else {
+                                    reject(retReject);
+                                }
+                            }
+                        })(rejected);
+                        let afterResolve = ((resolve) => {
+                            //如果是resolved状态 直接返回一个相同状态的promise对象就行了 因为catch不对此做处理
+                            return (data) => {
+                                resolve(data)
+                            }
+                        })(resolve);
+                        this.rejectArr.push(afterReject);
+                        this.resolveArr.push(afterResolve);                        
+                    })
+                }
+            }
+            
+        }
+
+        // var myCatch = new myPromise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         reject('rrrr')
+        //     },5000)
+        // }).catch((err) =>{
+        //     console.log(err)
+        //     return new myPromise((resolve, reject) => {
+        //         resolve('ddd')
+        //     })
+        // })
+
+        // 处理一下异步操作
+        // console.log('111');
+        // var p8 = new myPromise((resolve, reject) => {
+        //     console.log('222')
+        //     resolve('3333')
+        //     console.log('444')
+        // }).then((data) => console.log(data))
+        // console.log('555')
+
+        // var p3 = myPromise.resolve();
+        // var p4 = myPromise.reject('p4');
+        // var p5 = new myPromise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve('p5')
+        //     },5000)
+        // })
+        // var p6 = new myPromise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         reject('p6')
+        //     },6000)
+        // })
+        // var mypAll = myPromise.all([p3,p4,p5,p6]);        
+        // myRace = myPromise.race([p5, p6])
+        // 测试只能resolve和reject一次
+        // var promise = new myPromise((resolve, reject) => {
+        //     resolve('sss')
+        //     reject('reject')            
+        // })
+            
+        // var p7 = new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         console.log('success')
+        //         reject('p7p7')
+        //     },3000)
+        // }).then(data => {console.log(data);return "success"}, err => console.log(err));
+
+        // var myp = new myPromise((resolve, reject) => {
+        //     // setTimeout(() => {
+        //         resolve('resolve');
+        //     // },1000)
+        // }).then((data) => {console.log(data); return data + "return"}, (err) => console.log(err))
+        // .then((data) => {return new myPromise((resolve, reject) => {
+        //     console.log(data)
+        //     resolve(data + 'succ');
+        // })});
+
+        // 每次异步时then是肯定执行的 只不过返回的promise对象是 根据异步控制的回调函数的执行 而改变状态的
+        // var myp1 = new myPromise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         console.log("第一次执行")
+        //         resolve("first");
+        //     }, 1000);
+        // }).then((data) => {
+        //     console.log("第一次then执行");
+        //     return new myPromise((resolve,reject) => {
+        //         setTimeout(() => {
+        //             console.log("第二次执行")
+        //             reject(data + ' second')
+        //         }, 2000)
+        //     })
+        // },(err) => {
+        //     console.log(err);
+        // }).then((data) => {
+        //     console.log(data);
+        // }, (err) => {
+        //     setTimeout(() => {
+        //         console.log("第二次then执行" + err)
+        //     }, 3000);
+        //     return 'three three three'
+        //     // 必须在两个回调函数中的返回值才有效 在其他函数中的返回值没有效果 不会作用到promise数据中
+        // })
+
+        // 总结：Promise 其实就是一种信任机制，一种回调函数管理器，我们可以信任的将 会在具体时刻执行
+        // 的回调函数交给他管理 让他在适当的时候去触发对应的回调函数；而普通的控制回调函数如 setTimeout
+        // 我们只是把回掉函数交给了他 时候就不受我们的控制了 不具有可信性 和可控性 所以promise能更好的处理异步
+        // 他有基本的四个特性：只能resolved一次 且resolved后就不可改变（这也是他的一个小缺点） 不是成功就是失败 可进行数据传递
+    </script>
+</body>
+</html>

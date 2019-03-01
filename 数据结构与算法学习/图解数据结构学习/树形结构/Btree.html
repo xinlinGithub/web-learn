@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>二叉树的实现</title>
+    <style>
+        body{
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    
+    <script>
+        // 二叉查找树的特点：每个节点若不为空都对应着键值 为空默认为零
+        // 且每个节点对应的值大于左子节点的值 小于右子节点的值
+        //每一层的最大节点数为2的(n-1)次幂 n为层数 每一层的起始节点也为2的(n-1)次幂
+        // 用数组实现二叉查找树 最好不要有 重复的值
+        var data = [6, 3, 5, 4, 7, 8, 9, 2];
+        function create_Btree(data) {
+            var bTree = ["bTree"];
+            var len = data.length;
+            var level;
+            for(var i = 0; i < len; i++) {
+                level = 1;//每次都从第一个根节点开始遍历 最后再检索到末尾时附上值；
+                while (bTree[level] != undefined) {
+                    bTree[level] > data[i] ? level = level * 2 : level = level * 2 + 1;
+                }
+                bTree[level] = data[i];
+            }
+            return bTree;
+        }
+
+        // 用链表实现二叉查找树
+        // 创建每个链表节点
+        function Tree(val) {
+            this.val = val;
+            this.left = null;
+            this.right = null;
+        }
+        // 一下子创建完
+        function create_Btree1(data) {
+            if(data == null || data.length == 0) {
+                return null;
+            }
+            var tree = new Tree(data[0]);
+            var ptrTree;//常用操作 先用一个备用的指向链表头 避免直接操作链表头
+            var tempTree;//指向倒数第二个节点 当这个节点 左右值为空时 方便赋值
+            for(var i = 1; i < data.length; i++) {
+                ptrTree = tree;
+                while(ptrTree) {
+                    tempTree = ptrTree;
+                    if(ptrTree.val > data[i]) {
+                        ptrTree = ptrTree.left;
+                    }else {
+                        ptrTree = ptrTree.right;
+                    }
+                }
+                if(tempTree.val > data[i]) {
+                    tempTree.left = new Tree(data[i]);
+                }else {
+                    tempTree.right = new Tree(data[i]);
+                }
+            }
+            return tree;
+        }
+
+
+        // 一个个添加创建 可以方便后来的插入节点
+        function create_Btree2(ptrTree, val) {
+            if(!ptrTree) {
+                return new Tree(val);
+            }else {
+                var temp = ptrTree;
+                var backTree;// 后备树
+                while(temp) {
+                    backTree = temp;
+                    if(temp.val > val) {
+                        temp = temp.left;
+                    }else {
+                        temp = temp.right;
+                    }
+                }
+                if(backTree.val > val) {
+                    backTree.left = new Tree(val);
+                }else {
+                    backTree.right = new Tree(val);
+                }
+            }
+            return ptrTree;
+        }
+        var ptr = null;
+        for(var i = 0; i < data.length; i++){
+            ptr = create_Btree2(ptr, data[i]);
+        }
+
+        // 二叉树的遍历：一般都是用链表实现；再结合递归
+        // 中序遍历：左中右(一种排序方法)
+        // 前序遍历：中左右
+        // 后序遍历：左右中
+        // 首先建立二叉树 再遍历
+        // console.log(ptr);
+        // 中序遍历： 不必太在意内部具体递归过程 主要看一下思想
+        function inorder(ptr) {
+            if(ptr) {
+                inorder(ptr.left);
+                console.log(ptr.val);
+                inorder(ptr.right);
+            }
+        }
+        // 前序遍历；
+        function preorder(ptr) {
+            if(ptr) {
+                console.log(ptr.val);
+                preorder(ptr.left);
+                preorder(ptr.right);
+            }
+        }
+        // 后序遍历：
+        function postorder(ptr) {
+            if(ptr) {
+                postorder(ptr.left);
+                postorder(ptr.right);
+                console.log(ptr.val);
+            }
+        }
+        var data1 = [ 7, 4 , 1, 5, 16, 8, 11, 12, 15, 9, 2];
+        console.log(data1);
+        var btree_1 = create_Btree1(data1);
+        // console.log(btree_1);
+        // inorder(btree_1);
+        // console.log("+++++++++++++")
+        // preorder(btree_1);
+        // console.log("+++++++++++++")
+        // postorder(btree_1);
+
+
+        // 二叉树节点的查找、插入和删除
+        // 查找：
+        function searchBtreeNode(bTree, val) {//在那个树 上查找哪个值
+            var ptr = bTree;
+            while(true) {
+                if(!ptr) {
+                    return false;
+                }
+                if(ptr.val === val) {
+                    return ptr;
+                }
+                // 所查找的val比现在的小 则往左查 否则 往右查；
+                ptr.val > val ? ptr = ptr.left : ptr = ptr.right;
+            }
+        }
+        //插入 插入二叉树中没有的节点
+        console.log(ptr);
+        function insertBtreeNode(bTree, val) {//在那个树上插入那个节点
+            if(searchBtreeNode(bTree, val)) {
+                console.log("二叉树中已有此节点")
+            }else{
+                bTree = create_Btree2(bTree, val);
+            }
+            return bTree;
+        }
+
+        // 删除
+        // 1： 删除节点为树叶直接将指向它的节点 指向null;
+        // 2:  删除节点只有一个子节点 就直接让指向它的节点指向此子节点
+        // 3： 删除节点有两棵子树(较麻烦);有两种方法 都可以
+        //    (1): 找到中序立即先行者, 找出此节点左子树上最大的节点 上提
+        //    (2): 找到中序立即后继者,找出此节点右子树上最小的节点 代替此删除的节点
+        // 删除操作比较麻烦 可不用代码表示
+        function deleteBtreeNode(bTree, val) {//在那个树上删除那个节点
+            var ptr = bTree;
+            var lastTree;
+            var midTree;
+            if(ptr.val == val && ptr.left == null && ptr.right == null) {
+                return null;
+            }
+            if(ptr.val == val){
+                lastTree = ptr;
+                midTree = ptr.left;
+                ptr = ptr.left;
+                while(ptr) {
+                    lastTree = ptr;
+                    midTree = ptr.right;
+                    ptr = ptr.right;
+                }
+                lastTree = null;
+                midTree.left = bTree.left;
+                midTree.right = bTree.right;
+                return midTree;
+            }
+        }
+        console.log(ptr);
+        
+    </script>
+</body>
+</html>

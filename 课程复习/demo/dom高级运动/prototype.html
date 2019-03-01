@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #ccc;
+        }
+        /* 缓冲运动 */
+        /* div{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100px;
+            height: 100px;
+            background: red;
+            opacity: 1;
+        } */
+
+        /* 加减速运动 */
+        /* *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        ul{
+            position: relative;
+            width: 600px;
+            height: 80px;
+            border: 1px solid black;
+            margin: 100px auto 0;
+        }
+        ul li.nav{
+            width: 148px;
+            height: 78px;
+            border: 1px solid black;
+            float: left;
+            line-height: 78px;
+            text-align: center;
+            color: blue;
+            font-weight: 300;
+            font-size: 30px;
+        }
+        ul li.show{
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 150px;
+            height: 80px;
+            background: orange;
+            opacity: 0.7;
+        } */
+        /* 模拟重力场运动 */
+        div{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100px;
+            height: 100px;
+            background: orange;
+        }
+        span{
+            width: 5px;
+            height: 5px;
+            background: #000;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+    <script>
+        var oDiv = document.getElementsByTagName('div')[0];
+        var timer;
+        
+        oDiv.onmousedown = function (e) {
+            clearInterval(this.timer);
+            var e = e || window.event;
+            var disX = e.clientX - this.offsetLeft;
+            var disY = e.clientY - this.offsetTop;
+            var that = this;
+            var lastLeft = this.offsetLeft;
+            var lastTop = this.offsetTop;
+            var speedX = 0;
+            var speedY = 0;
+            document.onmousemove = function (e) {
+                var e = e || window.event;
+                var newLeft = e.clientX - disX;
+                var newTop = e.clientY - disY;
+                that.style.left = newLeft + 'px';
+                that.style.top = newTop + 'px';
+                
+                speedX = newLeft - lastLeft;
+                speedY = newTop - lastTop;
+                lastLeft = newLeft;
+                lastTop = newTop;
+            }
+            document.onmouseup = function () {
+                document.onmouseup = 'none';
+                document.onmousemove = 'none';
+                move(that,speedX,speedY);
+            }
+        }
+
+
+        
+        function move(dom,speedX,speedY) {
+            clearInterval(dom.timer);
+            var g = 6,
+                u = 0.8;
+            dom.timer = setInterval(function () {
+                speedY += g;
+                var nowSpeedX = dom.offsetLeft + speedX;
+                var nowSpeedY = dom.offsetTop + speedY;
+                if(nowSpeedY >= document.documentElement.clientHeight - dom.offsetHeight){
+                    speedY *= -1;
+                    speedY *= u;
+                    speedX *= u;
+                    nowSpeedY = document.documentElement.clientHeight - dom.offsetHeight;
+                }
+                if(nowSpeedY <= 0){
+                    speedY *= -1;
+                    speedY *= u;
+                    speedX *= u;
+                    nowSpeedY = 0;
+                }
+                if(nowSpeedX >= document.documentElement.clientWidth - dom.offsetWidth){
+                    speedX *= -1;
+                    speedY *= u;
+                    speedX *= u;
+                    nowSpeedX = document.documentElement.clientWidth - dom.offsetWidth;
+                }
+                if(nowSpeedX <= 0){
+                    speedX *= -1;
+                    speedY *= u;
+                    speedX *= u;
+                    nowSpeedX = 0;
+                }
+                if(Math.abs(speedX) < 1){
+                    speedX = 0;
+                }
+                if(Math.abs(speedY) < 1){
+                    speedY = 0;
+                }
+                if(speedX == 0 && speedY == 0 && nowSpeedY == document.documentElement.clientHeight - dom.offsetHeight){
+                    console.log('over')
+                    clearInterval(dom.timer);
+                }else{
+                    dom.style.left = nowSpeedX + 'px';
+                    dom.style.top = nowSpeedY + 'px';
+                }
+            },30)
+        }
+
+
+
+
+
+
+
+
+
+        
+        // function move(dom,target) {
+        //     clearInterval(timer);
+        //     var speed = 40;
+        //     var a;
+        //     var u=0.80;
+        //     timer = setInterval(function () {
+        //         a = (target - dom.offsetLeft) / 7;
+        //         speed = speed + a;
+        //         speed = speed*u;
+        //         if(Math.abs(speed) <1 && Math.abs(a) < 1){
+        //             clearInterval(timer);
+        //             dom.style.left = target + 'px';
+        //             console.log('over')
+        //         }
+        //         dom.style.left = dom.offsetLeft + speed + 'px';
+        //     },30)
+        // }
+
+
+
+
+
+    // 缓冲运动
+        // var oDiv = document.getElementsByTagName('div');
+        // var timer = null;
+        // // 多值多项链式调用
+        // var obj = {
+        //     width : 200,
+        //     height : 200,
+        //     left : 400,
+        //     top : 300,
+        //     opacity : 50
+        // }
+        // for(var i = 0; i<oDiv.length; i++){
+        //     oDiv[i].style.top = i*110 + 'px';
+        // }
+        // oDiv[0].onclick = function () {
+        //     move(this,obj,function () {
+        //         move(oDiv[1],obj,function () {
+        //             move(oDiv[2],obj,function () {
+        //                 move(oDiv[3],obj,function () {
+        //                     move(oDiv[4],obj)
+        //                 })
+        //             })
+        //         })
+        //     })
+        // }
+        // function getStyle(dom,attr) {
+        //     // 返回值为数组
+        //     if(dom.currentStyle){
+        //         return dom.currentStyle(attr);   
+        //     }else{
+        //         return window.getComputedStyle(dom,false)[attr];
+        //     }
+        // }
+        // function move(dom,iObj,callback) {
+        //     clearInterval(dom.timer);
+        //     var speed ,urll;
+        //     dom.timer = setInterval(function () {
+        //         var iStop = true;
+        //         // 上一句为转折点
+        //         for(var attr in iObj) {
+        //             if(attr == 'opacity'){
+        //                 urll = parseFloat(getStyle(dom,attr))*100;
+        //             }else{
+        //                 urll = parseInt(getStyle(dom,attr));
+        //             }
+        //             speed = (iObj[attr] - urll)/9;
+        //             speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+        //             if(attr == 'opacity'){
+        //                 dom.style.opacity = (urll + speed) / 100;
+        //             }else{
+        //                 dom.style[attr] = urll + speed + 'px';
+        //             }
+
+        //             // 判断停止
+        //             if(urll != iObj[attr]){
+        //                 iStop = false;
+        //             }
+        //         }
+        //         if(iStop){
+        //             clearInterval(dom.timer);
+        //             setTimeout(function () {
+        //                 typeof callback == 'function' ? callback() : '';
+        //             },200)
+                    
+        //         }
+        //         console.log(callback)
+        //     },40)
+        // }
+
+
+        
+        
+    
+    </script>
+</body>
+</html>

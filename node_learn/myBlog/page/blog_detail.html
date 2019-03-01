@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人博客详情页</title>
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/blog_detail.css">
+    <script src="./bootstrap-wysiwyg-master/jquery-3.2.1.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="containter">
+            <a href="#" class="title">我的个人博客 | 技术博客</a>
+            <ul class="menu">
+                <li><a href="./index.html">首页</a></li>
+                <li><a href="./siteMap.html">地图</a></li>
+                <li><a href="./about.html">关于</a></li>
+                <li><a href="./guestbook.html">留言</a></li>
+            </ul>
+            <div class="search_bar" id="search_bar">
+                <input type="text" id="inp" placeholder="输入关键词查找" @keyup.enter="jumpPage" @input="showList">
+                <input id="search" type="button" value="搜索" @click="jumpPage" >
+                <ul class="showList" v-show="showText.length > 0">
+                    <li class="preTitle" v-for="(item,index) in showText" :key="index"><a href="#" @click="tapTitle(item.title,item.link)">{{ item.title }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="content">
+        <div class="content_left">
+            <div class="blog" id="blog_detail">
+                <div class="blog_detail_title">{{ title }}</div>
+                <div class="blog_detail_msg">
+                    作者：<span style="color: red">cxl</span>;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    标签：<span style="color: blue">{{tags}}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    发布于：<span style="color: orange">{{ ctime }}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    浏览（<span style="color: green">{{ views }}</span>）
+                </div>
+                <div class="blog_detail_content" v-html="content"></div>
+            </div>
+            <div class="blog_comments" id="blog_comments">
+                <span class="blog_comments_msg">
+                    评论：目前有<span style="color: blue">{{ commentCounts }}</span>条评论
+                    <a href="#sendComments">我要评论</a>
+                </span>
+                <div class="blog_comment" v-for="(comments,index) in commentList" :key="index">
+                    <span><b>{{ comments.user_name }}</b><b v-show="comments.parent > 0">@{{ comments.parent_name }}</b>: 发表于{{ comments.ctime }}<a href="#sendComments" @click="replyOption(comments.user_name, comments.id)">[回复]</a></span>
+                    <div>{{ comments.comment }}</div>
+                </div>
+            </div>
+            <div class="send_comments" id="sendComments">
+                <span>发表评论:</span>
+                <a href="#blog_comments" class="retComment">(返回评论区)</a>
+                <div>
+                    <input type="text" placeholder="昵称" id="comment_name">
+                    <input type="text" placeholder="邮箱（评论被回复时你能收到通知）" id="comment_email">
+                    <input type="hidden" id="parent" name="parent" value="-1">
+                    <input type="hidden" id="parent_name" name="parent_name" value="0">
+                </div>
+                <div>
+                    <textarea name="comment_area" id="comment_content" cols="30" rows="10" placeholder="请输入想要表达的内容"></textarea>
+                </div>
+                <div class="testCode">
+                    <input type="text" placeholder="验证码" id="comment_code">
+                    <p v-html="randomCode" @click="changeCode"></p>
+                </div>
+                <button @click="sendComments">提交评论</button>
+            </div>
+        </div>
+        <div class="content_right">
+            <div class="right_module" id="randomCloud">
+                <div class="right_title">随机标签云</div>
+                <a :href="tag.link" v-for="(tag, index) in tags" :key="index" :style="{color: randomColor(), fontSize: randomSize()}">{{ tag.tag }}</a>
+            </div>
+            <div class="right_module" id="now_hot">
+                <div class="right_title">最近热门</div>
+                <ul>
+                    <li v-for="(hot, index) in hots" :key="index"><a :href="hot.link">{{ hot.title }}</a></li>
+                </ul>             
+            </div>
+            <div class="right_module" id="now_comment">
+                <div class="right_title">最近评论</div>
+                <ul class="now_comment">
+                    <li v-for="(comment, index) in comments" :key="index">
+                        <div class="top">
+                            <span>{{ comment.user }}</span>
+                            <span class="time">{{ comment.date }}</span>
+                        </div>
+                        <p>{{ comment.content }}</p>
+                    </li>
+                </ul>             
+            </div>
+            <div class="right_module">
+                <div class="right_title">友情链接</div>
+                <span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span><span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span>
+                <span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span><span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span>
+                <span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span><span><a href="/makeBlogProcess.html">博客项目的编写过程</a></span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer" id="footer">
+            <ul>
+                <li v-for="(tag,index) in tags" :key="index">{{ tag.tag }}</li>
+                <!-- <li>c++</li>
+                <li>python</li>
+                <li>java</li>
+                <li>javacript</li>
+                <li>c</li>
+                <li>go to</li>
+                <li>php</li>
+                <li>node</li>
+                <li>c++</li>
+                <li>python</li>
+                <li>java</li>
+                <li>javacript</li>
+                <li>c</li>
+                <li>go to</li>
+                <li>php</li>
+                <li>node</li> -->
+            </ul>
+            <p>copyright | chenxl |  :当你在master分支上工作时你不想把已经修改的内容提交到master分支上而想提交到feature分支上,</p>
+        </div>
+    </footer>
+
+    <script src="./js/base.js"></script>
+    <script src="./js/blog_detail.js"></script>
+</body>
+</html>

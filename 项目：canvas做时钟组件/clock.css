@@ -1,0 +1,17 @@
+canvas{
+    /* 一般用属性值设置宽高 */
+    border: 1px solid black;
+    /* 居中 两种方法都可以*/
+    /* position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -250px;
+    margin-top: -250px; */
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border-radius: 10px;
+}

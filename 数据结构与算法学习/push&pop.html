@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var arr = [];
+        var arr1 = [];
+        function push(node) {
+            if(node){
+                arr.push(node);
+            }
+            return arr;
+        }
+        function pop() {
+            var len = arr.length;
+            for(var i = 0; i < len; i++){
+                arr1.push(arr.pop());
+            }
+            var result = arr1.pop();
+            var len1 = arr1.length;            
+            for(var j = 0; j < len1; j++){
+                arr.push(arr1.pop())
+            }
+            return result;
+        }
+        push(1) 
+        push(2)
+        push(3)
+        console.log(arr);
+        var num = pop();
+        console.log(num,arr)
+    // 想从栈底拿数据 而不是栈顶；
+    // 本来先进后出  这样先进先出；shift unshift;
+    </script>
+</body>
+</html>

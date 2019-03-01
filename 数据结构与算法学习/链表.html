@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 创建链表
+        function CreateNode(data,next) {
+            this.data = data;
+            this.next = next;
+        }
+        // 前一个的知道下一个的是什么；
+        function setData() {
+            var root = new CreateNode(1,null);
+            var midRoot = root;
+            for(var i = 2; i <= 5; i++) {
+                var node = new CreateNode(i,null);
+                midRoot.next = node;
+                midRoot = node;
+            }
+            return root;
+        }
+        var rootNode = setData();
+        console.log(rootNode)
+        // 链表逆序 思路：找到最顶端的那个节点 不停的向前回调 直到第一个为止
+        function reverse(node,pre) {
+            if(node.next){
+                var result = reverse(node.next,node);
+                node.next = pre;
+                console.log(result)
+                return result;
+            }else{
+                node.next = pre;
+                console.log(node)
+                return node;
+            }
+        }
+        var reverseNode = reverse(rootNode,null)
+        console.log(reverseNode)
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas{
+            border: 1px solid black;
+            background-image: url(./gou.jpg);
+            background-size: 70% 50%;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <canvas width=500 height=500 ></canvas>
+
+
+
+
+
+
+
+    <script src = './gaussFun.js'></script>
+    <script>
+        var canvas = document.getElementsByTagName('canvas')[0];
+        var ctx = canvas.getContext('2d');
+        var w = canvas.width;
+        var h = canvas.height;
+        var offsetX,offsetY,lastOffsetX,lastOffsetY;
+
+        function init() {
+            ctx.fillStyle = '#ccc';
+            ctx.fillRect(0,0,w,h);
+            var M = Math.random();
+            // 可随机插入图片；
+            canvas.addEventListener('mousedown',downFun,false);
+        }
+        init();
+        
+        
+        function downFun(e) {
+            var e = e || window.event;
+            offsetX = e.pageX - canvas.offsetLeft;
+            offsetY = e.pageY - canvas.offsetTop;
+            
+            canvas.addEventListener('mousemove',moveFun,false);
+            document.addEventListener('mouseup',upFun,false);
+            
+        }
+        function moveFun(e) {
+            ctx.globalCompositeOperation = 'destination-out';
+            lastOffsetX = e.pageX - canvas.offsetLeft;
+            lastOffsetY = e.pageY - canvas.offsetTop;
+            ctx.beginPath();
+            ctx.moveTo(offsetX,offsetY);
+            ctx.lineTo(lastOffsetX,lastOffsetY);
+            ctx.lineWidth = 40;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.fillStyle = 'red';
+            ctx.arc(lastOffsetX, lastOffsetY, 20,Math.PI*2,0);
+            ctx.closePath();
+            ctx.fill();
+
+            offsetX = lastOffsetX;
+            offsetY = lastOffsetY;
+            
+                
+            
+        }
+        function upFun() {
+            canvas.removeEventListener('mousemove',moveFun,false);
+            clearAll(); 
+        }
+        function clearAll() {
+            var imageData = ctx.getImageData(0,0,w,h);
+            var data = imageData.data;
+            var num = 0;
+            for(var i = 0;i < data.length;i+=4){
+                if(data[i]==0){
+                    num++;
+                }
+            }
+            if(num >= w*h*0.7){
+                ctx.clearRect(0,0,w,h);
+            }
+        }
+        
+        
+
+
+        
+        
+        
+        
+        
+        
+
+
+
+        
+
+    
+    
+
+
+    </script>
+</body>
+</html>

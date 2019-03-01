@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>picture</title>
+    <style>
+        .three{
+            width: 0;
+            height: 0;
+            border: 100px solid transparent;
+            border-bottom: 100px solid red;
+        }
+        .five, .three{
+            display: inline-block;
+        }
+        .five{
+            margin-left: 100px;
+            animation: turn linear infinite 20s;
+        }
+        .six{
+            position: relative;
+            margin-left: 400px;
+            animation: turn linear infinite 25s;            
+        }
+        .six::before, .six::after{
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 0;
+        }
+        .six::before{
+            left: -100px;
+            border-right: 50px solid #666;
+            border-left: 50px solid transparent;
+            border-top: 86.6px solid transparent;
+            border-bottom: 86.6px solid transparent;
+        }
+        .six::after{
+            right: -100px;
+            border-right: 50px solid transparent;
+            border-left: 50px solid #666;
+            border-top: 86.6px solid transparent;
+            border-bottom: 86.6px solid transparent;
+        }
+        @-webkit-keyframes turn{
+            from{
+                transform: rotateZ(0deg);
+            }to{
+                transform: rotateZ(360deg);
+            }
+        }
+        
+
+        .fiveDeg{
+            position: absolute;
+            top: 500px;
+            left: 800px;
+        }
+        .fiveDeg .deg{
+            height: 155px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            transform-origin: bottom;
+            /* border: 1px solid blueviolet; */
+        }
+
+        .fiveDeg .deg .Top, .fiveDeg .deg .Bott{
+            width: 0px;
+            height: 0px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="three"></div>
+    <div class="five">
+        <div class="top"></div>
+        <div class="bott"></div>
+    </div>
+    <div class="six"></div>
+    <div class="fiveDeg">
+        <div class="deg">
+            <div class="Top"></div>
+            <div class="Bott"></div>
+        </div>
+        <div class="deg">
+            <div class="Top"></div>
+            <div class="Bott"></div>
+        </div>
+        <div class="deg">
+            <div class="Top"></div>
+            <div class="Bott"></div>
+        </div>
+        <div class="deg">
+            <div class="Top"></div>
+            <div class="Bott"></div>
+        </div>
+        <div class="deg">
+            <div class="Top"></div>
+            <div class="Bott"></div>
+        </div>
+    </div>
+    <script src="../jquery-3.2.1.js"></script>
+    <script>
+        function five() {
+            var $bott = $('.bott','.five');
+            var $top = $('.top','.five');            
+            var x = 100 * Math.sqrt(2);
+            var a = x * Math.cos(54 * Math.PI / 180);
+            var b = x * Math.sin(54 * Math.PI / 180)
+            var y = x * Math.sin(72 * Math.PI / 180);
+            var z = x * Math.cos(72 * Math.PI / 180);
+            $top.css({
+                'width': 0,
+                'height': 0,
+                'border-top': `${a}px solid transparent`,
+                'border-bottom': `${a}px solid orange`,
+                'border-left': `${b}px solid transparent`,
+                'border-right': `${b}px solid transparent`
+            })
+            $bott.css({
+                'width': x + 'px',
+                'height': 0,
+                'border-top': `${y}px solid orange`,
+                'border-bottom': `${y}px solid transparent`,
+                'border-left': `${z}px solid transparent`,
+                'border-right': `${z}px solid transparent`
+            })
+        }
+        five()
+        function six() {
+            var $six = $('.six');
+            var x = 50 * Math.sqrt(3);
+            $six.css({
+                'width': '100px',
+                'height': 2 * x + 'px',
+                'background': '#666'
+            })
+        }
+        six()
+
+        function fiveDeg() {
+            var $deg = $('.deg','.fiveDeg');
+            var $Bott = $('.Bott','.deg');
+            var $Top = $('.Top','.deg');  
+            var x = 50;
+            var y = x * Math.tan(54 * Math.PI / 180);
+            var b = x * Math.tan(72 * Math.PI / 180);
+            $Top.css({
+                'border-top': b + 'px solid transparent',
+                'border-bottom': b + 'px solid #f40',
+                'border-left': x + 'px solid transparent',
+                'border-right': x + 'px solid transparent'
+            })
+            $Bott.css({
+                'border-top': `${y}px solid #f40`,
+                'border-bottom': `${y}px solid transparent`,
+                'border-left': `${x}px solid transparent`,
+                'border-right': `${x}px solid transparent`
+            })
+            for(var i = 0; i < 5; i++){
+                $deg.eq(i).css({
+                    'transform': 'rotateZ('+ 72 * i +'deg)'
+                })
+            }
+            setInterval(function () {
+                var h = parseInt($deg.css('height'));
+                h++;
+                $deg.css('height',h + 'px');
+                if(h > 375){
+                    h = 155;
+                    $deg.css('height',h + 'px');                    
+                }
+            },30)
+        }
+        fiveDeg();
+    </script>
+</body>
+</html>

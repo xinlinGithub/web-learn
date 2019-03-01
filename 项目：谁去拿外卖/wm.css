@@ -1,0 +1,151 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+    text-decoration: none;
+}
+body{
+    background: #f7f7f7;
+}
+.nav{
+    position: relative;
+    width: 90%;
+    height: 100px;
+    border: 1px solid black;
+    margin: 100px auto 0;
+    text-align: center;
+    line-height: 100px;
+    font-size: 50px;
+    font-weight: 500;
+    color: green;
+    background: #bbb;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 5px yellow;
+}
+.nav .logo{
+    position: absolute;
+    display: block;
+    width: 186px;
+    height: 55px;
+    right: 0;
+    top: -50px;
+}
+.nav .logo img{
+    width: 100%;
+}
+
+
+.mask{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+.container{
+    position: absolute;
+    width: 360px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    /* 居中 */
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.head{
+    box-sizing: border-box;
+    width: 100%;
+    height: 44px;
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+.head p{
+    float: left;
+}
+.head .close{
+    float: right;
+    cursor: pointer;
+    color: #ccc;
+    width: 16px;
+    line-height: 24px;
+}
+.head .close:hover{
+    color: blue;
+}
+.wrapper{
+    margin: 0 auto;
+    width: 300px;
+    color:#555;
+    padding: 15px;
+}
+.wrapper .inner{
+    margin: 0 auto 10px;
+    font-size: 12px; 
+    background: #dbf0fa;
+    padding-top: 15px;   
+}
+.inner h3{
+    width: 186px;
+    height: 188px;
+    margin: 0 auto;
+    background: url(./img/ico.png) 0 -120px no-repeat;
+}
+.inner button{
+    display: block;
+    width: 271px;
+    height: 40px;
+    background:  url(./img/ico.png) 0 0 no-repeat;
+    border: 0;
+    margin: -45px auto 15px;
+    cursor: pointer;
+}
+.inner .textcontent{
+    position: relative;
+    margin: 10px;
+    text-align: center;
+    color: #777;    
+}
+.inner .textcontent::after{
+    position: absolute;    
+    content: "";
+    display: block;
+    width: 40px;
+    height: 7px;
+    background: #CCC;
+    right: 16px;
+    top: 5px;
+}
+.inner .textcontent::before{
+    position: absolute;    
+    content: "";
+    display: block;
+    width: 40px;
+    height: 7px;
+    background: #CCC;
+    left: 16px;
+    top: 5px;
+}
+.inner ul{
+    height: 180px;
+    margin: 0 10px;
+    padding: 5px 5px 0 5px;
+    overflow: hidden;
+}
+.inner ul li{
+    padding-left: 5px;
+    margin-bottom: 2px;
+}
+.inner ul li.takeout-list{
+    background: url(./img/ico.png) 0 -320px no-repeat;
+    font-weight: 700;
+    color: #fe5a23;
+    height: 19px;
+    line-height: 19px;
+}
+.inner button:hover{
+    background-position: 0 -40px;
+}

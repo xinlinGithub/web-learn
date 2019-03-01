@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <my-component v-model="count" :count="count"></my-component>
+      <p>{{ count }}</p>
+    </div>
+
+    <script src="../vue.js"></script>
+    <script>
+      // mixin
+      var mixin = {
+        template: `
+                <div id="app">
+                    {{ msg }}
+                </div>
+            `,
+        data() {
+          return {
+            msg: "minin"
+          };
+        },
+        methods: {
+          hello() {
+            console.log("hello mixin");
+          }
+        },
+        created() {
+          this.hello();
+        }
+      };
+      var component = Vue.extend({
+        mixins: [mixin]
+      });
+      new component().$mount("#app");
+
+      Vue.component("my-component", {
+        name: "my-component",
+        props: {
+          count: {
+            type: Number,
+            default: 0
+          },
+          value: {
+              type: Number,
+              default: 0
+          }
+        },
+        template: `
+                <div class = 'children'>
+                    <my-component :count="count + 1" v-if="count < 3">
+                    </my-component>
+                </div>
+            `,
+        watch: {
+            count(val) {
+                this.$emit("input", val);
+            }
+        },
+      });
+      var app = new Vue({
+        el: "#app",
+        data: {
+          count: 0
+        }
+      });
+    </script>
+  </body>
+</html>

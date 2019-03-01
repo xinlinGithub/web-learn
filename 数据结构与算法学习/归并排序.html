@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 思路：两个相同数量的模块相互比较；用一个模块和另一个模块的每一个比 大小放到不同的模块；
+        function mergeSort(arr) {
+            if (arr.length < 2) {
+                return arr;
+            }
+            var mid = Math.floor(arr.length / 2);
+            var left = arr.slice(0, mid);
+            var right = arr.slice(mid);
+            // 最后返回过来的两个数组肯定是有序的 最后归归到一起
+            return merge(mergeSort(left), mergeSort(right));
+        }
+        function merge(left, right) {
+            var result = [];
+            while(left.length && right.length) {
+                if (left[0] < right[0]) {
+                    var num = left.shift();
+                    result.push(num);
+                    // pop 删除最后一项   shift删除第一箱
+                } else {
+                    var num = right.shift();
+                    result.push(num);
+                }
+            }
+            return result.concat(left, right);
+        }
+        console.log(mergeSort(arr))
+    </script>
+</body>
+</html>

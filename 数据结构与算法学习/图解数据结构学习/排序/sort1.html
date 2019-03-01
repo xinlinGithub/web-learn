@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基础知识</title>
+</head>
+<body>
+    <!-- 
+        排序是指将一组数据按照特定的规则调整位置，使其具有某种位置关系
+        移动方式：直接移动(效率低下) 逻辑移动(只改变指针方向 不改变原来位置)
+        算法分析：
+            算法是否稳定(本来就想等的数据不调换位置)
+            t时间复杂度：数据的变动次数 (最好 最坏 平均)
+            s空间复杂度：在执行算法时额外要占用的空间 最好不要用到递归 位置对调次数尽量少
+            内部排序法：数量少 可在全部加载时进行排序
+                简单排序：冒泡排序（bubble sort）:两两依次比较；大者右移 每次都在剩余中找到一个最大值 知道最后找完
+                            稳定 s最佳 t：bestO(n) bad(O(n2))
+                        选择排序（selection sort）：在剩余中找到最小值放到前面 在依次找 依次放 知道找完
+                            不稳定 s最佳 t: O(n2);
+                        插入排序（insertion sort）：后面的值依次插入前面排好的队列中 先和最靠近他的比 再依次次往左
+                            稳定 s最佳 t:bad(O(n2)) best(O(n));
+                         希尔排序（shell sort）(了解)
+                高级排序：快速排序（quick sort):分而治之 以第一个为基准值 从右往左找比他小的值 从左往右找比他大的值 且i < j; 互换；i = j 基准值与i的值互换 分成两份 再递归
+                            不稳定 s：bad(O(n)) best(O(log2n)) t:最佳
+                        堆积排序（heap sort）（了解）：利用堆积树
+                        基数排序（radix sort）（了解）：比较个十百等位数 再依次合并 最终排序完成
+
+
+     -->
+</body>
+</html>

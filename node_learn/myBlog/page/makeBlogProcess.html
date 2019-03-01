@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        :root,
+        body{
+            height: 100%;
+            background-color: green;
+        }
+        div.blog{
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 95%;
+            box-sizing: border-box;
+            border: 1px solid black;
+            font-size: 20px;
+            color: #ccc;
+            overflow:scroll;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="blog">
+        <h1>博客制作过程：</h1>
+        <div>
+            本个人博客主要模块：<br>
+            每篇博客内容 每篇博客对应的评论 每篇博客相关标签 博客与标签之间的映射<br>
+            <br>
+            本个人博客利用nodeJs结合vue以及mysql数据库去搭建此全栈小项目<br>
+            首先将项目分层处理，分为浏览器层 web层 dao层 持久层<br>
+            nodejs引入express框架去构建服务器ip地址为127.0.0.1，端口为12306 <br>
+            <br>
+            文件主要模块：<br>
+            服务器入口文件 index.js <br>
+            web文件夹：负责编写浏览器请求的动态请求<br>
+            page文件夹：负责编写浏览器请求的静态文件js html css font...<br>
+            util文件夹：负责编写在web层主要的通用js文件 例如获取博客的当前编写完成或更改时间<br>
+            dao文件夹：连接mysql数据库(所谓的持久层) 以及一系列操作数据库的方法 增删改查等等<br>
+            通过浏览器访问服务器 若是静态请求 直接操作page文件夹 若是动态请求 则调用web层 web层再调用dao层 dao层再操作数据库 层层相调 脉络比较清晰<br>
+            <br>
+            数据库主要表格：<br>
+                blog存储每篇博客的内容<br>
+                comment存储每篇博客对应的评论内容<br>
+                tags存储博客对应的标签<br>
+                tags_blog_mipping标签和博客的id映射 方便相互查找<br>
+                everyday存储博客初始页面上的每日一句 虽然历史数据用不到 但要尽肯能的保存历史数据 以防以后使用<br>
+                <br>
+            具体内容编写：<br>
+                每日一句和博客内容都是借助于bootstrap-wysiwyg一个富文本编辑器来实现的<br>
+                编写完后直接将编写内容提交到数据库 以便使用<br>
+                <br>
+            静态页面的具体编写：<br>
+                分为主页index.html 在主页中有分别可以进入about.html(关于页) siteMap.html(地图页) guestBook.html(留言页) 以及blog_detail.html(详情页);<br>
+                点击某个标题时会在跳转链接blog_detail.html后拼接上文章对应的id 这样就能进入指定页面<br>
+                并且评论时也会传入对应文章的id这样每篇文章只显示对应他的评论<br>
+                在进行评论回复时 会改变原来parent为-1的字段为文章对应的id 这样只要评论中parent字段为正值就显示某人@某人回复...<br>
+                每点击进去一片文章就会通过文章id 使他的浏览量增加 通过浏览量来确定最近热门要显示的内容<br>
+                本博客在提交评论时有一个验证码 是同过引入svg-captcha模块来实现的 通过返回前端请求的动态url 为captcha.create({fontSize: 50, width: 100, height: 34})来实现验证码的加载<br>
+                本博客用到了少量的jquery<br>
+                本博客通过Vue来操作虚拟dom来操作页面 操作某一块代码时就绑定一次 对这块带码进行单独操作 节省了一部分性能 也很方便<br>
+                还借助axios来向后端发送请求来异步请求数据 有时需要一段代码执行完才可执行下一段代码时 借助promise来实现<br>
+                <br>
+            本博客大体实现过程如上，不足之处肯定会有，还需不断学习<br>
+
+
+            
+        </div>
+    </div>
+</body>
+</html>

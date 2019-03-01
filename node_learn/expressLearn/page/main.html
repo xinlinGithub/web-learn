@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>主页</title>
+</head>
+<body>
+    <h1>这是一个主页面！</h1>
+    <input type="button" value="跳转文件上传页面" onclick="turnFile()">
+    <input type="button" value="跳转学生页面" onclick="turnAllStudents()">
+    <script>
+        function turnFile() {
+            location.href = "/uploadFile.html";
+        }
+        function turnAllStudents() {
+            location.href = "/api/getAllStudents";
+        }
+    </script>
+</body>
+</html>

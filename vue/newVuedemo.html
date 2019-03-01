@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <mypp :name="name" @ret="changeVal"></mypp>
+        <h1>{{ name }}</h1>
+        <h2>{{ nameTwo }}</h2>
+    </div>
+    <script>
+        const mypp = {
+                    template: `
+                        <div>
+                            <input @input="show" :value="name"></input>                
+                        </div>
+                    `,
+                    props: {
+                        name: {
+                            type: String,
+                            default: "name"
+                        }
+                    },
+                    methods: {
+                        show(e){
+                            var target = e.target.value;
+                            this.$emit("ret",target);
+                        }
+                    },
+                }
+
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    name: "我是子组件",
+                    nameTwo: ""
+                }
+            },
+            computed: {
+                changeValTwo() {
+                    // 只有在这里面的数据发生变化时才执行 返回的不算
+                    // 一旦返回 就只使用返回的函数 此属性不再改变
+                    return function (val) {
+                        this.nameTwo = val;
+                    }
+                }
+            },
+            methods: {
+                // vue与react稍有不同 箭头函数慎用 因为可能会弄错this
+                changeVal (val) {
+                    this.name = val
+                    this.changeValTwo(val)
+                }
+            },
+            components: {
+               mypp
+            }
+        })
+    </script>
+</body>
+</html>

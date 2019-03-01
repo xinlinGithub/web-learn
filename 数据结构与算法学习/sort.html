@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 简单排序法 较慢；
+        function findQuan(arr,flag) {
+            var quanity = arr[0],
+                quanityIndex = 0,
+                len = arr.length;
+            for(var i = 1; i <len; i++){
+                //            从大到小          从小到大
+                if(flag ? arr[i] > quanity : arr[i] < quanity) {
+                    quanity = arr[i];
+                    quanityIndex = i;
+                } 
+            }
+            return [quanity,quanityIndex];
+        }
+        function sort(arr,flag) {
+            var curArr = [],
+                len = arr.length;
+            for(var i = 0; i < len ; i ++){
+                var sortArr = findQuan(arr,flag)
+                curArr.push(sortArr[0])
+                arr.splice(sortArr[1],1);
+            }
+            return curArr;
+        }
+        var arr = [3,5,1345,9,4,989,0,1]
+        console.log(sort(arr))
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <p v-once>{{ list }}</p>       
+        <input type="text" v-on:input = "changeValue">
+        <p><a v-bind:href="href">baidu.com</a></p> 
+        <p v-html="dirhref">{{ dirhref }}</p> 
+        <p>{{ sayHello() }}</p>     
+    </div>
+    <script>
+        new Vue({
+            el: ".wrap",
+            data: {
+                list: " world!",
+                href: "http://www.baidu.com",
+                dirhref: '<a href="http://www.baidu.com">baidu.com</a>'
+            },
+            methods: {
+                changeValue: function (e) {
+                    this.list = e.target.value;
+                },
+                sayHello () {
+                    console.log(this.list)
+                    return this.list;
+                }
+
+            }
+        })
+
+    </script>
+</body>
+
+</html>

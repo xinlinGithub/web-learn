@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="./jquery-2.0.3.js"></script>
+    <script>
+        // function DY() {
+        //     alert('hello');
+        // }
+        // DY();
+        // function DY() {
+        //     alert('world')
+        // }
+        // DY();
+        // 存在变量提升 最后执行 预编译 同名函数会覆盖；
+        // 编译函数 js是异步编写的模型 异步操作：
+        // ajax image tag script iframe setTimeout setInterval css3 transition
+        // animation html5 poostMassage web workers web sockets
+        // js是单线程 从头到尾一条线执行完 中间有任何的错误下面的都无法执行、
+        // 实现一些常见的异步编程模式 模型要有正确对应的场景
+
+        // var a = 1;
+        // setTimeout(function () {
+        //     a++;
+        // },1000)
+        // alert(a)
+
+        var a = 1;
+        var b = function(callback){
+            setTimeout(function(){
+                a++;
+                callback();
+            },1000);
+        } 
+        b(function(){
+            alert(a);
+        })
+    </script>
+</body>
+</html>

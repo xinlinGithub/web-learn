@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>节流</title>
+    <style>
+        .box{
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            line-height: 100px;
+            text-align: center;
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">0</div>
+    <script>
+         //    节流：在一定时间内 将多次触发事件的操作 限制为一次 就是防止连续触发事件带来的不利影响 
+        //   还可以防止恶意脚本进行攻击 一下子发送很多请求 容易造成服务器崩溃
+        // 触发每一次事件后 需要等待一段时间 才能再触发下一次事件
+        var box = document.getElementsByClassName("box")[0];
+        //节流函数   //    操作函数  等待时间
+        function throttle (handler, wait){
+            var lastTime = 0;
+            return function (e) {
+                var curTime = new Date().getTime();
+                if(curTime - lastTime > wait) {
+                    // 需要改变一下执行函数中的this 还需传入一个事件原对象
+                    handler.apply(this, arguments);
+                    lastTime = curTime;
+                }
+            }
+        }
+
+        function move(e) {
+            this.innerText = parseInt(this.innerText) + 1;
+        }
+        box.onmousemove = throttle(move, 1000);
+            // 第一次移入成功触发 一秒后才能再次触发 而且每次触发的都是节流函数返回的函数
+            // 也就是真正执行的函数 作为闭包返回的函数
+            
+
+
+   
+    </script>
+</body>
+</html>

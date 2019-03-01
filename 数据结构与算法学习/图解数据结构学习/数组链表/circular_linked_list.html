@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>circular_linked_list</title>
+</head>
+<body>
+    <script>
+        class Node {
+            constructor (val) {
+                this.val = val;
+                this.next = null;
+            }
+        }
+        // 创建环形链表
+        function createCircularList(start, end = start) {
+            var head = new Node(start++);
+            var ptr = head;
+            for (var i = start; i <= end; i++) {
+                var node = new Node(i);
+                ptr.next = node;
+                ptr = node;
+            }
+            ptr.next = head;
+            return head;
+        }
+        var head = createCircularList(0,3);
+        console.log(head);
+
+        // 遍历环形链表
+        function traverseList(head) {
+            var ptr = head;
+            while (ptr.next != head) {
+                console.log(ptr.val);
+                ptr = ptr.next;
+            }
+            console.log(ptr.val);            
+        }
+        traverseList(head);
+
+        // 寻找节点
+        function findNode(head, val) {
+            var ptr = head;
+            while (ptr.next != head || ptr.val === val) {
+                if (ptr.val === val) {
+                    return ptr;
+                }
+                ptr = ptr.next;
+            }
+            return null;
+        }
+
+        // 插入节点 插到节点的后面
+        function insertNode(head, nowNode, curVal) {
+            var ptr = head;
+            var curNode = new Node(curVal);
+            if (!head) {//没有head就只有一个节点
+                head = curNode;
+                curNode.next = head;
+                return head;
+            }
+            if (!nowNode) {//找不到nowNode就把他默认插入最后一个节点；
+                while (ptr.next != head) {
+                    ptr = ptr.next;
+                }
+                ptr.next = curNode;
+                curNode.next = head;
+                return head;
+            }
+            while (ptr.next != head) {
+                if (nowNode === ptr) {
+                    curNode.next = ptr.next;                    
+                    ptr.next = curNode;
+                    return head;
+                }
+                ptr = ptr.next;
+            }
+            if (nowNode === ptr) {
+                ptr.next = curNode;
+                curNode.next = head;  
+                head = curNode; //此时 全局的head并不会跟着改变 而是参数的变化 这相当于原始值之间的更改             
+                return head;
+            }
+        }
+        console.log(head = insertNode(head, findNode(head, 4), 4));
+
+        // 删除节点 
+        function deleteNode(head, delNode) {
+            var ptr = head;
+            while (ptr.next != head) {//删除的不是头
+                if (ptr.next === delNode) {
+                    ptr.next = delNode.next;
+                    return head;
+                }
+                ptr = ptr.next;
+            }
+            if (ptr.next === delNode) {//删除的是头
+                ptr.next = head.next;
+                head = ptr.next;
+                return head;
+            }
+        }
+        console.log(deleteNode(head, findNode(head,4)))
+
+        // 合并多个环形列表
+        function concatCircularList() {
+            var arg = arguments;
+            var len = arg.length;
+            var head = arg[0];
+            for (var i = 1; i < len; i++) {
+                var ptr = head.next;//利用环形链表的无序性
+                head.next = arg[i].next;
+                arg[i].next = ptr;
+                // 分头和尾；
+                // while (ptr.next != head) {
+                //     ptr = ptr.next;
+                // }
+                // ptr.next = arg[i];
+                // ptr = arg[i];
+                // while (ptr.next != arg[i]) {
+                //     ptr = ptr.next;
+                // }
+                // ptr.next = head;
+            }
+            return head;
+        }
+        var head1 = createCircularList(4,5);
+        var head2 = createCircularList(6);
+        console.log(concatCircularList(head));
+    </script>
+</body>
+</html>

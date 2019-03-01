@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>查找算法</title>
+</head>
+<body>
+    
+    <script>
+        // 顺序查找
+        // 随机产生一个乱序 或有序的数组
+        function randerArr(len,flag = false) {
+            var tempArr = [];
+            var temp;
+            for(var i = 0; i < len; i++) {
+                if(flag) {
+                    temp = i;
+                }else{
+                    temp = Math.floor(Math.random() * (len));
+                    while(tempArr.includes(temp)){
+                        temp = Math.floor(Math.random() * (len));
+                    }
+                }
+                tempArr.push(temp);
+            }
+            console.log(tempArr);
+            return tempArr;
+        }
+        // 再在上面那个数组中查找指定数据
+        function searchNum(targetA, num) {
+            var len = targetA.length;
+            // var tNum = targetA.find(item => item == num);
+            // var tInd = targetA.indexOf(num);
+            // if(tInd != -1){
+            //     console.log(`找到了目标数${tNum},位于第${tInd + 1}个数;`);
+            // }else{
+            //     console.log("不好意思，没找到！")
+            // }
+            for(var i = 0; i < len; i++) {
+                if(num == targetA[i]){
+                    console.log(`找到了目标数${num},位于第${i + 1}个数;`);
+                    return;
+                }
+            }
+            console.log("不好意思，没找到！")
+        }
+        searchNum(randerArr(10), 3);
+
+        // 二分法查找 分而治之 必须先排好顺序
+        // 递归实现；
+        function bin_Search(targetA,num,start, end) {
+            if(start > end) {
+                return;
+            }
+            var midInd = parseInt((start + end) / 2);
+            var midNum = targetA[midInd];
+            if(num == midNum) {
+                console.log(`找到了目标数${num},位于第${midInd + 1}个数;`);
+                return;
+            }else if(num < midNum){
+                bin_Search(targetA, num,start, midInd - 1);
+            }else {
+                bin_Search(targetA, num, midInd + 1, end);
+            }
+        }
+        // 非递归实现
+        function bin_Search1(targetA, num) {
+            var len = targetA.length;
+            var low = 0;
+            var high = len;
+            while(low <= high) {
+                var mid = parseInt((low + high) / 2);
+                if(targetA[mid] == num) {
+                    console.log(`找到了目标数${num},位于第${mid + 1}个数;`);
+                    return;
+                }
+                if(num < targetA[mid]) {
+                    high = mid - 1;
+                }else {
+                    low = mid + 1;
+                }
+            }
+        }
+        bin_Search1(randerArr(20,true), 0);
+    </script>
+</body>
+</html>

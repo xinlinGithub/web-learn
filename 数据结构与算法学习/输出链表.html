@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Node(val,next) {
+            this.val = val;
+            this.next = next;
+        }
+        function createNodes(n){
+            var node = new Node(1,null);
+            var midNode = node;
+            for(var i = 2; i <= n; i++) {
+                var newNode = new Node(i,null);
+                midNode.next = newNode;
+                midNode = newNode;
+            }
+            return node;
+        }
+        var curNode = createNodes(5)
+        console.log(curNode)
+        // 把链表的内容逆序输出；
+        function reverse(curNode) {
+            var arr = [];
+            if(!curNode){
+                return arr;
+            }
+            // if(!node.next){
+            //     arr.push(curNode.val);
+            // }
+            arr = reverse(curNode.next);
+            // 递归调用 每次调用后等待返回值 然后接着执行 在返回给上次调用的函数一个值 往复循环；
+            arr.push(curNode);
+            return arr;
+        }
+        console.log(reverse(curNode))
+
+    </script>
+</body>
+</html>

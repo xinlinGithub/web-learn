@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>quick_sort</title>
+</head>
+<body>
+    <script>
+        // divide and conquer
+        // random product a Array that its length can selector;
+        function randomArray(len) {
+            var randomArr = [];
+            for (var i = 0; i < len; i++) {
+                randomArr.push(Math.floor(Math.random() * 99) + 1)
+            }
+            return randomArr;
+        }
+        function quick_sort(sort_arr, left, right) {
+            if (left > right) {
+                return false;
+            }
+            var base = sort_arr[left];
+            var i = left, j = right;
+            while (i != j) {//先从右往左找 
+                while (sort_arr[j] >= base && i < j) {
+                    j--;
+                }
+                while (sort_arr[i] <= base && i < j) {
+                    i++;
+                }
+                if (i != j) {
+                    [sort_arr[i], sort_arr[j]] = [sort_arr[j], sort_arr[i]]
+                }
+            }
+            sort_arr[left] = sort_arr[i];
+            sort_arr[i] = base;
+            quick_sort(sort_arr, left, i-1);
+            quick_sort(sort_arr, i + 1, right);            
+            return sort_arr;
+        }
+        
+        function inc_quick_sort(sort_arr,flag = false) {
+            if (sort_arr.length <= 1) {
+                return sort_arr;
+            }
+            var leftArr = [];
+            var rightArr = [];
+            var temp = sort_arr[0];
+            sort_arr.shift();
+            sort_arr.forEach(item => {
+                if (!flag) {
+                    item > temp ? rightArr.push(item) : leftArr.push(item);
+                } else {
+                    item > temp ? leftArr.push(item) : rightArr.push(item);
+                }
+            })
+            return [].concat(inc_quick_sort(leftArr, flag), temp, inc_quick_sort(rightArr, flag));
+        }
+        console.log(inc_quick_sort(randomArray(10),true))
+         //true: 代表降序 , false: 代表升序,默认为升序
+    </script>
+</body>
+</html>

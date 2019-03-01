@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>linked_list_struct</title>
+</head>
+<body>
+    <script>
+        // 单向链表 表头：head
+        // 创建链表：
+        class Node {
+            constructor (val = 0) {
+                this.val = val;
+                this.next = null;
+            }
+        }
+        
+        function createLinkedList(start, end = start) {
+            var head = new Node(start);
+            var ptr = head;//ptr表示新节点的尾部
+            for (let i = start + 1; i <= end; i++) {
+                ptr.next = new Node(i);
+                ptr = ptr.next;
+            }
+            return head;
+        }
+        var head = createLinkedList(0,3);
+
+        // 遍历单向链表
+        function traverseList(head) {
+            var ptr = head;
+            while (ptr) {
+                console.log(ptr.val);
+                ptr = ptr.next;
+            }
+        }
+        traverseList(head);
+        console.log(head)
+
+        // 寻找节点
+        function findNode(head,val) {
+            var ptr = head;
+            while (ptr) {
+                if (ptr.val === val) {
+                    return ptr;
+                }
+                ptr = ptr.next;
+            }
+            return null;
+        }
+        // console.log(findNode(head, 4))
+
+        // 插入节点 插到所传节点的前面 插到首位则传null;
+        function insertNode(head, ptr, val) {
+            var insertNode = new Node(val);
+            if (ptr === null) {
+                insertNode.next = head;
+                head = insertNode;
+            } else {
+                if (ptr.next != null) {
+                    insertNode.next = ptr.next;
+                }
+                ptr.next = insertNode;
+            }
+            return head;            
+        }
+        console.log(head = insertNode(head, findNode(head, 8), 4));
+
+        // 删除节点
+        function deleteNode(head, node) {
+            if (node === head) {
+                head = head.next;
+            } else {
+                var ptr = head;
+                while (ptr) {
+                    if (ptr.next === node) {
+                        ptr.next = node.next;
+                        return head;
+                    }
+                    ptr = ptr.next;
+                }
+            }
+            return head;
+        }
+        
+        // 链表反转
+        function invertLinkedList(head) {
+            var ptr = head;
+            while (ptr.next) {
+                if (ptr.next.next === null) {
+                    var temp = ptr.next;
+                    ptr.next.next = ptr;
+                    ptr.next = null;
+                    invertLinkedList(head)
+                    return temp;
+                } else {
+                    ptr = ptr.next;                    
+                }
+            }
+        }
+
+        // 多个链表相连接 将后面的实参都合并到第一个参数上
+        function concatList() {
+            var arg = arguments;
+            var len = arg.length;
+            var head = arg[0]
+            var ptr = head;
+            for (var i = 1; i < len; i++) {
+                while (ptr.next) {
+                    ptr = ptr.next;
+                }
+                ptr.next = arg[i];
+                ptr = arg[i];
+            }
+            return head;
+        }
+        // var head1 = createLinkedList(4, 5);
+        // var head2 = new Node('head2');
+        // console.log(concatList(head2, head, head1));
+    </script>
+</body>
+</html>

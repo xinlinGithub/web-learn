@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>proxy-reflect小应用</title>
+</head>
+<body>
+    <script>
+
+        // 利用proxy reflect实现多链继承
+        var obj1 = {
+            name: 'obj1',
+            bar() {
+                console.log(this.name + "bar");
+            }
+        }
+        var obj2 = {
+            name: "obj2",
+            sex: "man",
+            foo() {
+                console.log(this.name + "foo")
+            }
+        }
+        var obj3 = {
+            name: "obj3"
+        }
+        var handler = {
+            get (target, key, proxyContext) {
+                if(Reflect.has(target, key)) {
+                    return Reflect.get(target, key);
+                }else {
+                    for(let p of target[Symbol.for("[[Prototype]]")]){
+                        if(Reflect.has(p,key)){
+                            return Reflect.get(p, key);
+                        }
+                    }
+                }
+            }
+        }
+        var proxyObj = new Proxy(obj3, handler);
+        // Symbol.for("[[Prototype]]")自己添加的一个唯一标识
+        obj3[Symbol.for("[[Prototype]]")] = [obj1, obj2];
+        
+        console.log(proxyObj.name);
+        proxyObj.foo();
+        proxyObj.bar();
+        console.log(proxyObj.sex);
+    </script>
+</body>
+</html>

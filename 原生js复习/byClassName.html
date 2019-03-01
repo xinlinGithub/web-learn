@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>byClassName</title>
+</head>
+<body>
+    <div class="box" style="border: 1px solid black">
+        1
+        <div class=" box  box1 " style="background: red">2</div>
+        <div class="  wrap wrap  " style="background: blue">3</div>
+        <div class="wrapwrap" style="background: yellow">4</div>
+        <div class="wrap wrap wrap"></div>
+    </div>
+    <script>
+        var oDiv = document.getElementsByClassName("box")[0]
+        var oWrap = document.getElementsByClassName("wrap")
+        // 手动封装选择器 可多选
+        Element.prototype.byClassName = Document.prototype.byClassName = function (name) {
+            if (name === undefined) {
+                throw TypeError(`Failed to execute 'getElementsByClassName' on 'Document': 1 argument required, but only 0 present.`)
+            }
+            var newName = name.trim().split(/\s+/g);
+            var all = this.getElementsByTagName("*");
+            var all_len = all.length;
+            var target = [];
+            for (var i = 0; i < all_len; i++) {
+                var domClass = all[i].className.trim().split(/\s+/g);
+                var tempName = newName.map(item => {
+                    return item;
+                })
+                if (domClass.length === 0) {
+                    continue;
+                }
+                domClass.forEach((item, index) => {
+                    for (var i = 0; i < tempName.length; i++) {
+                        if (tempName[i] === item) {
+                            tempName[i] = null;
+                            break;
+                        }
+                    }
+                })
+                if (tempName.every(item => item === null)) {
+                    target.push(all[i])
+                }
+            }
+            if(target.length > 0) {
+                return target;
+            }else {
+                return null;
+            }
+        }
+        document.byClassName("box")[0]
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>惰性函数</title>
+    <style>
+        #outer{
+            /* 触发bfc可以解决margin塌陷 */
+            float: left;
+            width: 200px;
+            height: 200px;
+            background-color: red;
+        }
+        #inner{
+            width: 100px;
+            height: 100px;
+            margin-top: 100px;
+            margin-left: 100px;
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="inner"></div>
+    </div>
+    <script>
+        // 什么是惰性函数：就是在一个函数中，当经过一次判断后就可以知道以后的结果 那么以后再执行时就没有
+        // 必要再进行这种无用的判断 这就是惰性函数 可以适当提高性能
+        var showTime = (function () {
+            var timer = null;
+            return function () {
+                // 这样只有第一次执行时需要判断 判断一次就知道 timer有值了 以后就没有必要再判断了
+                // 所以需要用惰性函数处理一下
+                if(timer !== null) {
+                    return timer;
+                }
+                timer = new Date().getTime().toLocaleString();
+                return timer;
+            }
+        })();
+        // 改写后的惰性函数
+        function showTime1() {
+            var timer = null;
+            console.log("outer")
+            // 就第一次执行的时候会在这个域执行 因为第一次需要判断 拿到结果
+            // 拿到结果后直接将函数改写 以后再执行时就会执行改写过的函数
+            // 相当于以闭包的形式返回了；
+            showTime1 = function () {
+                console.log("inner")
+                return timer;
+            }
+            timer = new Date().getTime();
+            return showTime1();
+        }
+        // 一个简单的应用
+        // 绑定事件
+        function addEvent(type, dom, handler, flag) {
+            // 在一个浏览器中进行一次判断后就知道浏览器支不支持某种事件绑定方式了
+            // 以后就没有必要再判断了 所以可以用惰性函数的思想将原函数改写 优化性能
+            if(document.addEventListener) {
+                // flag 默认为false 允许事件冒泡 true时是事件捕获
+                dom.addEventListener(type, handler, flag);
+                console.log("outer")
+                addEvent = function (type, dom, handler, flag) {
+                    console.log("inner")
+                    dom.addEventListener(type, handler, flag);
+                }
+            }else {
+                dom.attachEvent("on" + type, handler);
+                addEvent = function (type, dom, handler, flag) {
+                    dom.attachEvent(type, handler, flag);
+                }
+            }
+        }
+
+        addEvent("click", outer, function (e) {
+            console.log(e.target);
+        },true);
+        addEvent("click", outer, function (e) {
+            console.log(e.target);
+        },false);
+        addEvent("click", outer, function (e) {
+            console.log(e.target);
+        },false);
+        
+
+    </script>
+</body>
+</html>

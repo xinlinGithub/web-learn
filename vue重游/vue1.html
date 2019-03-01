@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{ total }}</p>
+        <my-component v-model="total"></my-component>
+        <button @click="addTotal">+1</button>
+    </div>
+    <script src="../vue.js"></script>
+    <script>
+        Vue.component('my-component',{
+            template: '\
+                <input type="text" :value="value" @input="updateValue">\
+            ',
+            props: ['value'],//v-model来获取父级组件中的值时 规定通过props: ['value']来接受
+            // data(){
+            //     return {
+            //         value: this.value
+            //     }
+            // },
+            methods: {
+                updateValue(event){
+                    var val = event.target.value ? event.target.value : 0;
+                    // 要想达到双向子父级组件双向数据绑定的问题 还得触发自定义的input事件
+                    // 然后传参 参数会自动与v-model里面的值同步
+                    this.$emit('input',val );
+                }
+            }
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                total: 0
+            },
+            methods: {
+                addTotal(){
+                    this.total++;
+                    console.log(this.total)
+                }
+            }
+        });
+    </script>
+</body>
+</html>

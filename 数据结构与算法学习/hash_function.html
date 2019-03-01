@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div img{
+            display: inline-block;
+        }
+        div .img2{
+            display: inline-block;
+            width: 400px;
+            height: 250px;
+        }
+        div .img1{
+            width: 700px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img src="../img/liuchengtu1.png" class = "img1" alt="">        
+        <img src="../img/liuchengtu.png" class = "img2" alt="">
+        <img src="../img/liuchengtu2.png" class = "img2" alt="">
+        <img src="../img/liuchengtu3.png" class = "img2" alt="">        
+    </div>
+    <script>
+        // function Vote() {}
+        // Vote.prototype.getName = function (name) {
+        //     if(this[name] === undefined) {
+        //         console.log('this can join vote.')
+        //         this[name] = true;
+        //     }else{
+        //         console.log('this cannot join vote, get out!!!')
+        //     }
+        // }
+        // var vote = new Vote();
+        // vote.getName('xiulin')
+        // vote.getName('xiulin')
+        // 散列表：对象
+        var vote = {
+            getName(name){
+                if(this[name] === undefined) {
+                    console.log('this can join vote.')
+                    this[name] = true;
+                }else{
+                    console.log('this cannot join vote, get out!!!')
+                }
+            }
+        }
+
+
+
+        
+        // 利用散列表实现广度优先原则 找芒果商家
+        var friends = {
+            // 必须保证每一个成员都有对应的亲戚 没有则为空
+            'you': ['guowen','lichao','nianwen','anshuai'],
+            'guowen': ['guojing','guojingming'],
+            'lichao': ['lishimin','lijing',],
+            'nianwen': ['gonglina','guowen'],
+            'anshuai': [],
+            'guojing': [],
+            'guojingming': [],
+            'lishimin': [],
+            'gonglina': ['liushuhui'],
+            'lijing': ['mmm'],
+            'liushuhui': [],
+            'mmm': [],
+            findParent(grap){
+                // 找关系网
+                var parent = [grap],
+                    _this = this,
+                    key = Object.keys(this),
+                    len;
+                key.pop();
+                // var ind = 0;
+                len = key.length;
+                while(grap != 'you'){
+                    for(var i = 0; i < len; i++){
+                        // ind++;
+                        var value = key[i];
+                        if(_this[value].indexOf(grap) != -1){
+                            parent.unshift(value);
+                            grap = value;
+                            break;
+                        }
+                    }
+                    // 两种实现方式  上面的更好；
+                    // key.forEach(function (value, index) {
+                    //     ind++
+                    //     if(_this[value].indexOf(grap) != -1) {
+                    //         parent.unshift(value);
+                    //         grap = value;
+                    //     }
+                    // })
+                }
+                // console.log(ind)
+                return parent;
+            }
+        }
+        // 先检查最近亲戚 添加到graps 再检查亲戚的亲戚 添加到graps后面  检查完一个就删掉 并标记 防止重复检查 
+        // 最后直到检查到有m结尾的人 则成功 否则失败 此为广度优先原则 可用此法找最短路段问题；
+        function findMG(Mgs) {
+            var graps = [],
+                processed = [],
+                newGraps;
+            newGraps = graps.concat(Mgs['you']);
+            while(newGraps.length > 0){
+                var grap = newGraps.shift();
+                if(processed.indexOf(grap) == -1){
+                    processed.push(grap);
+                    if(grap.split('').slice(-1)[0] === 'm'){
+                        // 找到对应的关系网；
+                        var parents = Mgs.findParent(grap).join('-');                        
+                        console.log('find mangguo sail! yes! he is ' + grap );
+                        console.log('and his families are ' + parents)
+                        console.log(processed)
+                        return true;
+                    }else{
+                        newGraps = newGraps.concat(Mgs[grap]);
+                    }
+                }
+            }
+            console.log('this is very sorry! the mangguo sail is not find!凉凉!')
+            return false; 
+        }
+        findMG(friends)
+
+
+        // 利用散列表实现狄克斯特拉算法
+        // 准备工作
+        var dkstl = {
+            graph: {
+                start: {
+                    a: 6,
+                    b: 2
+                },
+                a: {
+                    fin: 2
+                },
+                b: {
+                    a: 3,
+                    fin: 5
+                },
+                fin: {
+
+                }
+            },
+            costs: {
+                a: 6,
+                b: 2,
+                fin: Infinity
+            },
+            parents: {
+                a: 'start',
+                b: 'start',
+                fin: 'none'
+            },
+            processed: []
+        }
+        var dkstl1 = {
+            graph: {
+                start: {
+                    a: 5,
+                    b: 2
+                },
+                a: {
+                    d: 2,
+                    c: 4
+                },
+                b: {
+                    a: 8,
+                    d: 7
+                },
+                c: {
+                    fin: 3,
+                    d: 6
+                },
+                d: {
+                    fin: 1
+                },
+                fin: {
+
+                }
+            },
+            costs: {
+                a: 5,
+                b: 2,
+                c: Infinity,
+                d: Infinity,
+                fin: Infinity
+            },
+            parents: {
+                a: 'start',
+                b: 'start',
+                c: 'none',
+                d: 'none',
+                fin: 'none'
+            },
+            processed: []
+        }
+        var dkstl2 = {
+            graph: {
+                start: {
+                    a: 10
+                },
+                a: {
+                    b: 20
+                },
+                b: {
+                    c: 1,
+                    fin: 30
+                },
+                c: {
+                    a: 1
+                },
+                fin: {
+
+                }
+            },
+            costs: {
+                a: 10,
+                b: Infinity,
+                c: Infinity,
+                fin: Infinity
+            },
+            parents: {
+                a: 'start',
+                b: 'none',
+                c: 'none',
+                fin: 'none'
+            },
+            processed: []
+        }
+        // 找最便宜的节点
+        function find_lowest_cost_node (common) {
+            var lowest_node = 'none',
+                lowest_cost_node = Infinity,
+                coats = common.costs,
+                processed = common.processed;
+            for(var i in coats){
+                if(coats[i] < lowest_cost_node && processed.indexOf(i) == -1){
+                    lowest_cost_node = coats[i];
+                    lowest_node = i
+                }
+            }
+            return lowest_node;
+        }
+        function dkstl_hash(dkstl) {
+            var node = find_lowest_cost_node(dkstl),
+                costs = dkstl.costs,
+                parents = dkstl.parents,
+                processed = dkstl.processed,
+                graph = dkstl.graph;
+            while(node != 'none'){
+                processed.push(node)                
+                cost = costs[node];
+                neighbor = graph[node];
+                for(var i in neighbor){
+                    cost += neighbor[i];
+                    if(costs[i] > cost){
+                        costs[i] = cost;
+                        parents[i] = node;
+                    }
+                }
+                node = find_lowest_cost_node(dkstl);
+            }
+            console.log(parents, '最近路程为： ' + costs['fin'])
+            return parents;
+        }
+        dkstl_hash(dkstl1)
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<html long = "en">
+<head>
+	<title>document</title>
+	<meta charset = "utf-8">
+	<style type="text/css">
+      .wrapper{
+         position: relative;
+         left: 200px;
+         top:100px;
+         width: 400px;
+         height: 400px;
+         margin-top: 100px;
+         margin-left: 100px;
+         transform-style: preserve-3d;
+         transform-origin: left top;
+         animation: turn 3s linear 1s alternate infinite;
+         
+
+      }
+      .wrapper div{
+         position: absolute;
+         top:100px;
+         left: 100px;
+         margin-top: -75px;
+         margin-left: -75px;
+         width: 150px;
+         height: 150px;
+         opacity: 0.9;
+         
+      }
+      .wrapper .item1{
+         background: rgba(255,128,0,0.8);
+         transform: translate3d(0,0,75px);
+         
+      }
+      .wrapper .item2{
+         background: rgba(255,140,203,0.8);
+         transform: translate3d(0,0,-75px);
+      }
+      .wrapper .item3{
+         background: rgba(0,51,102,0.8);
+         transform: rotate3d(1,0,0,90deg) translate3d(0,0,-75px);
+      }
+      .wrapper .item4{
+         background: rgba(128,0,10,0.8);
+         transform: rotate3d(1,0,0,90deg) translate3d(0,0,75px);
+      }
+      .wrapper .item5{
+         background: rgba(219,112,147,0.8);
+         transform: rotate3d(0,1,0,90deg) translate3d(0,0,-75px);
+      }
+      .wrapper .item6{
+         background: rgba(75,0,130,0.8);
+         transform: rotate3d(0,1,0,-90deg) translate3d(0,0,75px);
+      }
+      @keyframes turn {
+         0%{
+            transform: rotateX(0deg)  rotateZ(0deg);
+         }
+         100%{
+            transform: rotateX(360deg) rotateZ(360deg);
+         }
+      }
+   </style>
+</head>
+<body>
+	
+   	<div class = "wrapper">
+   		<div class = "item1"></div>
+         <div class = "item2"></div>
+         <div class = "item3"></div>
+         <div class = "item4"></div>
+         <div class = "item5"></div>
+         <div class = "item6">"></div>
+      </div>
+      <script type="text/javascript">
+         var oDiv = document.getElementsByTagName('div')[0];
+         oDiv.onmouseout = function () {
+               oDiv.style.animationPlayState = 'paused';
+           }
+         oDiv.onmouseleave = function () {
+            oDiv.style.animationPlayState = 'running';
+         }
+      </script>
+   	
+</body>
+</html>

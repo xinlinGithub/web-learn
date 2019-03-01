@@ -1,0 +1,85 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  color: #657180;
+  font-size: 16px;
+}
+html .daily .daily-menu,
+body .daily .daily-menu {
+  width: 150px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #f5f7f9;
+  overflow: auto;
+}
+html .daily .daily-menu .daily-menu-item,
+body .daily .daily-menu .daily-menu-item {
+  font-size: 18px;
+  text-align: center;
+  margin: 5px 0;
+  padding: 10px 0;
+  cursor: pointer;
+  border-right: 2px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+html .daily .daily-menu .daily-menu-item:hover,
+body .daily .daily-menu .daily-menu-item:hover {
+  background: #e3e8ee;
+}
+html .daily .daily-menu .daily-menu-item.on,
+body .daily .daily-menu .daily-menu-item.on {
+  border-right: 2px solid #3399ff;
+}
+html .daily .daily-menu .list,
+body .daily .daily-menu .list {
+  list-style: none;
+}
+html .daily .daily-menu .list li a,
+body .daily .daily-menu .list li a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+html .daily .daily-menu .list li a:hover,
+body .daily .daily-menu .list li a:hover,
+html .daily .daily-menu .list li a.on,
+body .daily .daily-menu .list li a.on {
+  color: #3399ff;
+}
+html .daily .daily-list,
+body .daily .daily-list {
+  width: 300px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 150px;
+  overflow: auto;
+  border-right: 1px solid #d7dde4;
+}
+html .daily .daily-list .preTime,
+body .daily .daily-list .preTime {
+  margin: 10px 0 10px 10px;
+  color: blue;
+  font-size: 20px;
+  font-weight: bold;
+}
+html .daily .daily-content a,
+body .daily .daily-content a {
+  display: block;
+  background: #f5f7f9;
+  text-align: center;
+  color: blueviolet;
+  text-decoration: none;
+  padding: 4px 0;
+  border-radius: 3px;
+}
+html .daily .daily-content img,
+body .daily .daily-content img {
+  display: none;
+}

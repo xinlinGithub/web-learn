@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图的最短路径</title>
+</head>
+<body>
+    <script>
+        const SIZE = 7;
+        const NUMBER = 6;
+        const Path_Cost = [[1,2,29],[2,3,30],[2,4,35],[3,5,28],[3,6,87],[4,5,42],[4,6,75],[5,7,97]];
+        // 初始化一开始两点的距离 没有直接相连则为无穷大
+        function initGraph_matrix() {
+            var graph_matrix = [];
+            for(var i = 1; i < SIZE; i++) {
+                graph_matrix[i] = [];
+                for(var j = 1; j < SIZE; j++) {
+                    if(i == j) {
+                        graph_matrix[i][j] = 0;
+                    }else {
+                        graph_matrix[i][j] = Infinity;
+                    }
+                }
+            }
+            var i = 0;
+            while(i <= SIZE) {
+                graph_matrix[Path_Cost[i][0]][Path_Cost[i][1]] = Path_Cost[i][2];
+                i++;
+            }
+            console.log(graph_matrix);
+            return graph_matrix;
+        }
+        var graph_matrix = initGraph_matrix();
+        //计算指定点到各个点的最短距离
+        function shortestPath(ver1, ver_total) {
+            var shortest_vertex = ver1;
+            var goal = ["goal"];
+            var distance = ["distanse"];
+            // 初始化指定点到各个点的距离distance保存
+            for(var i = 1; i <= ver_total; i++){
+                goal[i] = 0;
+                distance[i] = graph_matrix[ver1][i];
+            }
+            goal[ver1] = 1;//自己到自己本身的距离为零
+            distance[ver1] = 0;//下面不会再检测这个点
+
+            for(var i = 1; i < ver_total; i++){// 有几个目的点就要循环几次 防止遗漏
+                var shortest_distance = Infinity;
+                // 在所有点中 找到距离指定点最近的那个点 每循环一次都要重新更新一次；
+                for(var j = 1; j <= ver_total; j++) {
+                    if(goal[j] == 0 && shortest_distance > distance[j]){
+                        shortest_distance = distance[j];
+                        shortest_vertex = j;
+                    }
+                }
+                goal[shortest_vertex] = 1;//标记此点
+                //计算开始顶点到各个顶点的最短距离 
+                // 有上一步求出一个最近点 在自这个最近点开始 一次往下找最近的
+                // 距此点最近的点到下一点的最短距离 然后更新distance 依次次类推
+                for(var j = 1; j <= ver_total; j++){
+                    if(goal[j] == 0 && distance[shortest_vertex] + graph_matrix[shortest_vertex][j] < distance[j]){
+                        distance[j] = distance[shortest_vertex] + graph_matrix[shortest_vertex][j];
+                    }
+                }
+            }
+            console.log(distance);
+        }
+        shortestPath(4, NUMBER);
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仿写class功能</title>
+</head>
+<body>
+    <script>
+        // class Plane {
+        //     static alive () {
+        //         return true;
+        //     }
+
+        //     constructor (name, attack) {
+        //         this.name = name,
+        //         this.attach = attack
+        //     }
+
+        //     fly() {
+        //         console.log('biubiubiu')
+        //     }
+        // }
+        // let p = new Plane("plane", false);
+
+        // // 主要继承公有和静态 且继承后constructor指向本身
+        // class AttackPlane extends Plane{
+        //     constructor (name, attack){
+        //         // 继承私有
+        //         super(name, attack);
+        //         this.blood = 100;
+        //     }
+        //     attack() {
+        //         this.blood += 10;
+        //     }
+        // }
+        // let attackP = new AttackPlane("attackPlane", true);
+        // 使用继承的静态方法和属性
+        // console.log(AttackPlane.alive());
+
+        // 仿写babel方以后的es5实现；
+        // babel会先扫描一下代码 然后生成代码树再编译成es5 下面用es5来实现上面代码的功能
+
+        // 检验是不是通过new操作构造出的实例
+        function _classCallCheck(instance, constructor) {
+            if(!(instance instanceof constructor)){
+                throw  "Uncaught TypeError: Class constructor Plane1 cannot be invoked without 'new'";
+            }
+        }
+        // 添加函数的静态属性和原型上的属性
+        let _createClass = (function () {
+            // 为静态属性或动态属性设置上值
+            function definePrototies(target, props) {
+                props.forEach(ele => {
+                    Object.defineProperty(target, ele.key,{
+                        value: ele.value,
+                        writable: true,
+                        enumerable: false,
+                        configurable: true
+                    })
+                })
+            }
+            return function (Constructor, protoProps, staticProps) {
+                if(protoProps) definePrototies(Constructor.prototype, protoProps);
+                if(staticProps) definePrototies(Constructor, staticProps);
+                return Constructor;
+            }
+        })();
+
+        // 用立即执行函数防止污染全局变量；
+        var Plane = (function () {
+            // 添加静态属性
+            _createClass(Plane, null, [{
+                key: "alive",
+                value: function () {
+                    return true;
+                }
+            }])
+            function Plane(name, attack) {
+                // 首先检测一下是不是new操作 看this指向
+                _classCallCheck(this, Plane);
+                this.name = name;
+                this.attack = attack;
+            }
+            // 添加原型上的属性
+            _createClass(Plane, [{
+                key: "fly",
+                value: function () {
+                    console.log("biubiubiu")
+                }
+            }])
+            return Plane;
+        })()
+
+        var p = new Plane("plane",false);
+        // 继承公有属性和静态属性
+        function _inherit(subClass, superClass) {
+            // 共享原型
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    writable: true,
+                    enumerable: false,
+                    configurable: true
+                }
+            })
+            // 共享静态属性
+            Object.setPrototypeOf ? 
+                Object.setPrototypeOf(subClass, superClass) :
+                subClass.__proto__ = superClass; 
+        }
+        // 继承私有属性
+        function _passibleContructorReturn(self, call) {
+            // 可以在这做一步校验 必须有self 这里忽略
+
+            if(typeof call === "object" || typeof call === "function"){
+                return call;
+            }else {
+                return self;
+            }
+
+        }
+        var AttackPlane = (function (_Plane) {
+            // 继承静态属性和原型属性
+            _inherit(AttackPlane, _Plane);
+            
+            function AttackPlane(name, attack) {
+                _classCallCheck(this, AttackPlane);
+                // 到这步在继承静态属性的时候已经改变了AttackPlane.__proto__ = Plane了
+                // 这与改变attackP.__proto__不是一个性质 一个是对象 一个是函数
+                // 所以可以用来继承静态属性
+                var _this = _passibleContructorReturn(this, 
+                (AttackPlane.__proto__ || Object.getPrototypeOf(AttackPlane)).call(
+                    this, name, attack
+                )
+                )
+                _this.blood = 100
+            }
+
+            _createClass(AttackPlane, [{
+                key: "attack",
+                value: function () {
+                    this.blood += 10
+                }
+            }])
+            return AttackPlane;
+        })(Plane)
+
+        var attackP = new AttackPlane("attackPlane", true);
+    </script>
+    
+</body>
+</html>

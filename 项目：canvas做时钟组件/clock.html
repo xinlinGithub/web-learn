@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./clock.css">
+</head>
+<body>
+    <!-- h5新增的标签canvas 属性：width height-->
+    <!-- 一般用来画画  还有一些小功能 刮刮乐什么的 -->
+    <canvas width="500" height="500" id="myCanvas"></canvas>
+
+    <script>
+        var myCanvas = document.getElementById('myCanvas');
+        // 取到上下文对象 画笔
+        var ctx = myCanvas.getContext('2d');
+        // 规定画笔的颜色 宽度
+        ctx.strokeStyle = "#00ffff";
+        ctx.lineWidth = 17;
+        // 阴影的偏移量及颜色；
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#00ffff';
+        // 获取当前时间
+        function randerTime() {
+            var date = new Date();
+            var today = date.toDateString();
+            var h = date.getHours();
+            var m = date.getMinutes();
+            var s = date.getSeconds();
+            var ms = date.getMilliseconds();
+            var rs = s + ms / 1000;//使圆的变化更顺畅；
+            //  背景 加圆弧  文字 时间日期
+            var gradient = ctx.createRadialGradient(250,250,5,250,250,300);// 起始圆中心点 半径 结束圆中心点 半径 
+            // 从起始圆半径向结束圆半径渐变；
+
+            // 规定渐变颜色 0~1
+            gradient.addColorStop(0,'#03303a');//起始颜色
+            gradient.addColorStop(1,'#000')//终止颜色
+            ctx.fillStyle = gradient;//填充渐变颜色
+            ctx.fillRect(0,0,500,500)//左上角 右下角 两个点 填充颜色
+
+            ctx.beginPath()//开始画 没用一次都重启一个画程；
+            ctx.arc(250,250,200,deg(270),deg((h * 30)-90));//画圆：圆心 半径 起始弧度数 结束弧度数 x轴方向为0度
+            ctx.stroke();
+
+            ctx.beginPath()//开始画
+            ctx.arc(250,250,170,deg(270),deg((m * 6)-90));//画圆：圆心 半径 起始弧度数 结束弧度数 x轴方向为0度
+            ctx.stroke();
+
+            ctx.beginPath()//开始画
+            ctx.arc(250,250,140,deg(270),deg((rs * 6)-90));//画圆：圆心 半径 起始弧度数 结束弧度数 x轴方向为0度
+            // 用rs会更顺畅
+            ctx.stroke();
+
+            ctx.font = '25px Helvetica';// 字体类型
+            ctx.fillStyle = 'rgba(0,255,255,1)'; //字体颜色
+            ctx.fillText(today, 175,250); // 填充的内容 左上起始点位置
+
+            ctx.font = '25px Helvetica';
+            ctx.fillStyle = 'rgba(0,255,255,1)';
+            var h = ('0' + h).slice(-2);// 当时间为单数时补0；
+            var m = ('0' + m).slice(-2);
+            var s = ('0' + s).slice(-2);            
+            ctx.fillText(`${h}:${m}:${s}:${ms}`, 175,280);
+        }
+        setInterval(randerTime,40);// 定时器 
+        //将角度转化成弧度
+        function deg(deg) {
+            var f = Math.PI / 180;
+            return deg*f;
+        }
+
+    </script>
+</body>
+</html>
