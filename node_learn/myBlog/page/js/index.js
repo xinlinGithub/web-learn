@@ -39,6 +39,7 @@ var article = new Vue({
         tags: ""
     },
     methods: {
+        // 切换条目的一个小算法 展示第一页 第二页等等
         changePage(pages) {
             if(pages.text == "<<") {
                 if(pages.page > 1) {

@@ -14,6 +14,7 @@
             var len = arr.length;
             var flag = false;
             for(var i = 0; i < len - 1; i++){
+                // 一旦循环完一次无变化 就证明顺序已经确定了 就没有必要再循环了
                 for(var j = 1; j < len - i; j++){
                     if(arr[j - 1] > arr[j]) {
                         [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]];
@@ -32,15 +33,21 @@
         function select_sort(arr) {
             var len = arr.length;
             var min;
+            var tempArr = [];
+            // 改变原数组
             for(var i = 0; i < len - 1; i++) {
                 for(var  j = i + 1; j < len;j++) {
+                    // 每次都找到最小值放到前面
                     if(arr[i] > arr[j]) {
                         [arr[i],arr[j]] = [arr[j],arr[i]];
                     }
                 }
                 // min = Math.min(...arr.slice(i + 1));
+                // tempArr.push(min);
+                // 或者
                 // var ind = arr.indexOf(min);
                 // [arr[i], arr[ind]] = [arr[ind],arr[i]];
+
             }
             console.log(arr);
         }
@@ -83,9 +90,11 @@
                 return;
             }
             while(i != j) {
+                // 先从右往左找
                 while(j > i && arr[j] > temp) {
                     j--;
                 }
+                // 在从左往右找
                 while(i < j && arr[i] <= temp) {
                     i++
                 } 
@@ -100,7 +109,7 @@
         }
         // quick_sort(arr1, 0, arr1.length - 1);
         // console.log(arr1);
-
+        // 还有一种 就是分成左右两部分 大的放在右边 小的放在左边 再递归排列
         
     </script>
 </body>

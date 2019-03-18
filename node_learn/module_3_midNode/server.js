@@ -40,6 +40,7 @@ http.createServer(function(request, response) {
         if(loader.has(pathName)) {
             try{//操作与请求动态数据相对应的方法 将他从web层加载出来
                 console.log(loader.get(pathName));
+                // 接口处理数据
                 loader.get(pathName)(request,response);
             }catch(e){
                 response.writeHead(500);//服务器端错误

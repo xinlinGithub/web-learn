@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>装饰者模式</title>
+</head>
+<body>
+    <script>
+        // 在不改变原有对象的基础上 对一个对象的方法或属性进行装饰 获得一个功能增强的新对象
+        // 一是通过继承实现 二是通过表格实现
+        
+        // 继承实现
+        // 一个出售对象
+        function Sale(price) {
+            this.price = price || 100;
+        }
+        // 出售对象的原型 不同的地区获取价格不同 对getPrice这个方法进行装饰
+        Sale.prototype.getPrice = function () {
+            return this.price;
+        }
+        // 装饰器 写在原型上
+        Sale.prototype.decorate = function (type) {
+            var Fn = function () {}, 
+                newObj, 
+                p, 
+                decorators_list = Sale.decorators[type],
+                hasOwnProprerty = Object.prototype.hasOwnProperty;
+            Fn.prototype = this;
+            newObj = new Fn();//生成一个对象 此对象继承调用此方法的对象的所有属性和方法
+            newObj.uber = Fn.prototype;//提供一个访问调用者的属性 方便调用父级的方法 但又不对父级产生更改
+            for(p in decorators_list){
+                if(hasOwnProprerty.call(decorators_list, p)){
+                    newObj[p] = decorators_list[p];
+                }
+            }
+            return newObj;//返回一个增强的对象 每次执行时调用他的父级先
+        }
+        // 一系列静态装饰对象 相当于层层调用
+        Sale.decorators = {};
+        Sale.decorators.fedral = {
+            getPrice() {
+                return this.uber.getPrice() + 50;
+            }
+        }
+        Sale.decorators.province = {
+            getPrice() {
+                return this.uber.getPrice() + 80;
+            }
+        }
+        Sale.decorators.money = {
+            getPrice() {
+                return "$" + this.uber.getPrice();
+            }
+        }
+        var sale = new Sale();
+        sale = sale.decorate("fedral");//联邦税
+        sale = sale.decorate("province");//省级税
+        sale = sale.decorate("money");//格式化成标准货币形式
+        console.log(sale.getPrice());
+        // 上面实现的一个简单原理
+        // function Sale(price) {
+        //     this.price = price || 100;
+        // }
+        // function Fedral(cost) {
+        //     this.price = cost.price + 50;
+        // }
+        // function Province(cost) {
+        //     this.price = cost.price + 80;
+        // }
+        // function Money(cost) {
+        //     this.price = "$" + cost.price;
+        // }
+
+        // var sale = new Money(new Province(new Fedral(new Sale))); //对new Sale实例化出的对象一层层装饰
+        // console.log(sale.price);
+
+        // 通过表格的方式去实现 每次并不返回一个新的对象 而是把每个装饰者都存起来 最后叠加到一起
+        function Sale(price) {
+            this.decorators_list = [];//存储每个装饰者
+            this.price = price || 100;
+        }
+        Sale.prototype.decorate = function (type) {
+            this.decorators_list.push(Sale.decorators[type]);
+        }
+        // 获取装饰后的价格 而且对原对象还没有一点影响
+        Sale.prototype.getPrice = function () {
+            var price = this.price,
+                len = this.decorators_list.length,
+                i;
+            for(i = 0; i < len; i++) {
+                price = this.decorators_list[i](price);
+            }
+            return price;
+        }
+        Sale.decorators = {
+            fedral(price){
+                return price + 50;
+            },
+            province(price) {
+                return price + 80;
+            },
+            money(price){
+                return "$" + price;
+            }
+        }
+        var sale = new Sale();
+        // 可以任意指定去装饰
+        sale.decorate("fedral");
+        // sale.decorate("province");
+        sale.decorate("money");
+        console.log(sale.getPrice());
+
+
+        
+    </script>
+</body>
+</html>

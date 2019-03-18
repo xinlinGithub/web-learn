@@ -1,4 +1,4 @@
-//服务层 专门调用服务器
+//服务层 专门调用服务器 没有别的功能
 var studentDao = require("../dao/studentDao.js");
 
 function queryAllStudents(success) {

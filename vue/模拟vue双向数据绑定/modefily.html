@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>模拟实现vue功能</title>
+    <script src="./MVue.js"></script>
+</head>
+<body>
+    <!-- 
+        实现思路：
+            1.实现数据监听器observer，用Object.defineProperty()去重写vue实例属性中的get
+                和set方法 当数据发生变化时， 在set中通知订阅者 触发更新事件(重点是如何触发)
+            2.实现模板编译compile，去深度遍历挂载的dom元素 解析里面元素使用的模板和指令
+                替换成vue中写的数据 并且订阅数据 订阅后 当数据发生变化时 可以及时告诉订阅者及时更新
+            3.实现watcher(订阅者)能够订阅属性变动后触发的事件并收到每个属性变动的通知 
+                然后执行指令绑定的回调函数 从而更新渲染视图
+                即 observer +++> watcher +++> compile +++>渲染视图
+            4.mvvm入口函数 整合以上三者 实现功能
+            核心：数据劫持 观察者模式
+     -->
+
+    <div id="app">
+        <input v-model="name" type="text">
+        <h1>{{ name }}</h1>
+        <a v-bind:href="url" id="aaa"><span>{{ url }}</span></a>
+    </div>
+    <script>
+        // var vm = new MVue({
+        //     el: "#app",
+        //     data: {
+        //         name: "myvue",
+        //         url: "http://www.baidu.com"
+        //     }
+        // })
+        var fragment = document.createDocumentFragment(), child;
+        var el = document.getElementById("app");
+        // 将原生节点拷贝到fragment
+        // while (el.firstChild) {
+        //     console.log(el.childNodes)
+        //     console.log(el.firstChild)
+        //     fragment.appendChild(el.firstChild);
+        // }
+        console.log(fragment);
+    </script>
+</body>
+</html>

@@ -22,6 +22,7 @@ function login() {
 
 function success(text) {
     if(text.indexOf("id") != -1) {
+        // 在前端设置cookie 并跳转页面
         document.cookie = text;
         location.href = "/main.html";
     }else if(text == "fail"){

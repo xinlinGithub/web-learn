@@ -18,6 +18,7 @@
             return randomArr;
         }
         function quick_sort(sort_arr, left, right) {
+            // 改变原数组的操作 直接在原数组的基础上进行排序
             if (left > right) {
                 return false;
             }
@@ -28,6 +29,7 @@
                     j--;
                 }
                 while (sort_arr[i] <= base && i < j) {
+                    // 一开始肯定会向前移动一个的
                     i++;
                 }
                 if (i != j) {
@@ -60,6 +62,14 @@
         }
         console.log(inc_quick_sort(randomArray(10),true))
          //true: 代表降序 , false: 代表升序,默认为升序
+
+
+        //  一行代码实现快速排序
+        var marr = [1,2,1,4,2,5];
+        // function oneQuick(arr) {
+        //     return arr.length <= 1 ? arr : oneQuick(arr.slice(1).filter(item => item <= arr[0])).concat(arr[0],oneQuick(arr.slice(1).filter(item => item > arr[0])));
+        // }
+        let oneQuick = arr => arr.length <= 1 ? arr : oneQuick(arr.slice(1).filter(item => item <= arr[0])).concat(arr[0],oneQuick(arr.slice(1).filter(item => item > arr[0])));
     </script>
 </body>
 </html>

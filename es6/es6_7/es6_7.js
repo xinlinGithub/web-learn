@@ -60,5 +60,21 @@ myfs.readFileAsync("./data/num2.txt", "utf-8").then((data) => {
 // 都好使 但是异步操作会发生一些问题
 // 1.出现回调地域
 // 2.try catch无法捕获错误
-// 3.同步并发异步的结果
+// 3.同步并发异步的结果 就是多个异步同时运行时有一个出错 其他的都不能执行
+
+// function promisefiy(ways) {
+//     return (...args) => {
+//         return new Promise((resolve, reject) => {
+//             ways(...args, function (data, err) {
+//                 if(data) {
+//                     resolve(data);
+//                 }else{
+//                     reject(err);
+//                 }
+//             })
+//         })
+//     }
+// }
+// var fs = promisefiy(fs.readFileSync);
+// fs("/num2.txt", "utf-8").then();
 

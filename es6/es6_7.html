@@ -40,6 +40,13 @@
         console.log(Object.getPrototypeOf(text))
         // 为某个对象设置原型
         // 与Object.create()功能类似
+        // function create(constructor) {
+        //     var fn = function () {};
+        //     fn.prototype = constructor;
+        //     返回一个集成原型的新对象 但要想恶意改变原来对象上的值也是可以的 
+        //     通过访问__proto__来改变；
+        //     return new fn();
+        // }
         // 继承完以后得手动改变constructor属性指向本身
         proto.constructor = Text;
         Object.setPrototypeOf(text, proto);
@@ -56,7 +63,7 @@
 
         // Object.assign() 传递的参数是若干对象 会把后面的参数合并到第一个参数上 覆盖第一个参数的值
         // 再返回第一个参数 所以返回的对象就是第一个参数
-        // 这样会返回一个新的对象 可以用于对象的克隆
+        // 这样会返回一个新的对象 可以用于对象的克隆 且是浅层的克隆
         var newObj = Object.assign({}, obj1, obj2);
         // newObj1 === obj1
         var newObj1 = Object.assign(obj1, obj2);
@@ -104,6 +111,16 @@
         Object.setPrototypeOf(dd, fff);
         console.log(dd.getName())
         console.log(dd.myName())
+
+        function unique(arr) {
+            var newArr = [];
+            arr.forEach(ele => {
+                if(newArr.indexOf(ele) === -1) {
+                    newArr.push(ele);
+                }
+            })
+            return newArr;
+        }
         
     </script>
 

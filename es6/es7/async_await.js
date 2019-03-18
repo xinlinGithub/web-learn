@@ -1,4 +1,5 @@
-// async 异步 await 等待 他是个es7的语法糖 是通过generate+co(primise化)实现的 在es6_5.html上
+// async 异步 await 等待 他是个es7的语法糖 
+// 是通过generate+co(primise化)实现的 在es6_5.html上
 
 // async是用来声明一个方法是异步执行
 // await是用来等待一个异步函数执行完成
@@ -7,6 +8,7 @@
 // async会将后面的函数变成异步 并将返回值封装成一个promise对象返回 可以通过.then操作
 // await是等待 后面的返回值 若是同步返回值 则直接拿到就行 若是异步promise则会阻塞后面的代码 
 // 一直等到promise中resolve之后才行 并返回resolve中传的值 虽说是阻塞 但它本身就用在异步函数中
+// 把异步代码当成同步的写 贼爽
 // 所以不会阻塞函数外部的执行
 // 能更优雅的处理异步 还可以被try catch 捕获错误
 
@@ -14,7 +16,7 @@ var fs = require("fs");
 
 function readFile(url) {
     return new Promise((resolve,reject) => {
-        console.log(url)
+        // console.log(url)
         fs.readFile(url, "utf-8", (err, data) => {
             if(data !== null && data !== "" && data !== undefined){
                 resolve(data);
@@ -30,29 +32,31 @@ function readFile(url) {
 //         resolve(url);
 //     });
 // }
-// async function read(url) {
-//     try{
-//         let url2 = await readFile(url);//相当于把result之后传的值给了url2 下一步用
-//         //await后面的必须是一个promise对象 这样才可以.then操作 拿到他执行后的值
-//         let url3 = await readFile(url2);
-//         let result = await readFile(url3);
-//         return result;
-//     }catch (e) {
-//         console.log("catch", e)
-//     }
+async function read(url) {
+    try{
+        let url2 = await readFile(url);//相当于把result之后传的值给了url2 下一步用
+        //await后面的必须是一个promise对象 这样才可以.then操作 拿到他执行后的值
+        let url3 = await readFile(url2);
+        let result = await readFile(url3);
+        console.log(result.toString())
+        // 返回的数据会自动用promise包装一下 就是直接将await等待之后的值返回 会返回一个promise对象
+        return result;
+    }catch (e) {
+        console.log("catch", e)
+    }
     
-// }
+}
 
 //  read("./data/1.txt").then((data) => {
-//      console.log(data);
+//      console.log(data.toString());
 //  })
 
 //  解决同步并发异步的结果问题
 // 下面当传入的所有promise对象都resolve后才会执行 但有一个报错就不执行
-// Promise.all([readFile("./data/1.txt"),readFile("./data/2.txt"),readFile("./data/3.txt")])
+// Promise.all([readFile("./data/1.txt"),readFile("./dat/2.txt"),readFile("./data/3.txt")])
 //         .then((data) => {
 //             console.log(data);
-//         })
+//         }, err => console.log(err));
 
 // 可以用 async+await来解决上述问题 当有一个报错时其余的还可以执行
 
@@ -81,7 +85,7 @@ function readAll(arg) {
     return Promise.all(arg);
 }
 // 当读取到错误后 会继续执行完下面的事件 最后Promise.All()仍好使；
-// readAll([readUrl1("./data/5.txt"),readUrl1("./data/2.txt"),readUrl1("./data/3.txt")]).then(data => {
+// readAll([readUrl1("./data/1.txt"),readUrl1("./data/5.txt"),readUrl1("./data/3.txt")]).then(data => {
 //     console.log(data);
 // })
 
@@ -96,13 +100,14 @@ var readFile = function (fileName){
   });
 };
 
-// var gen = function* (){
-//   var f1 = yield readFile('./data/1.txt');
-//   var f2 = yield readFile('./data/2.txt');
-//   console.log(f1);
-//   console.log(f2);
-// }
-// var g = gen();这样直接执行yield不会对后面的promise进行等待 必须借助一个co库才行 
+var gen = function* (){
+  var f1 = yield readFile('./data/1.txt');
+  var f2 = yield readFile('./data/2.txt');
+  console.log(f1);
+  console.log(f2);
+}
+var g = gen();
+// 这样直接执行yield不会对后面的promise进行等待 必须借助一个co库才行 
 // 这也是async+await优越于他的原因
 // console.log(g.next("d"));
 // console.log(g.next("fdg"));

@@ -17,19 +17,34 @@
     <div class="view">
         <h2>文件显示区域</h2>
         <img src="" alt="#" id="myImg">
+        <a href="" id="download"></a>
     </div>
     <script>
         function submitFile() {
             var file = document.getElementById("file").files[0];//获取上传的文件
+            if(!file){
+                alert("文件为空！");
+                return;
+            }
             console.log(file);
-            var form = new FormData();
+            var form = new FormData();//储存文件流的容器
             form.append("file", file);//证明上传的是文件
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if(xhr.readyState == 4 && xhr.status == 200) {
-                    var myImg = document.getElementById("myImg");
-                    myImg.src = "/getPic?path=" + xhr.responseText;
-                    console.log(xhr.responseText);
+                    var file = JSON.parse(xhr.responseText);
+                    console.log(file);
+                    if(file.mimetype.indexOf("image/") != -1){
+                        var myImg = document.getElementById("myImg");
+                        myImg.src = "/getPic?path=" + file.path;
+                    }else if(file.mimetype.indexOf("application/") != -1){
+                        var myA = document.getElementById("download");
+                        myA.href = "/getPic?path=" + file.path;
+                        myA.download = file.path.slice(5) + file.originalname.slice(file.originalname.indexOf("."));
+                        myA.innerText = file.originalname;
+                    }
+                    
+                    // console.log(xhr.responseText);
                 }
             }
             xhr.open("post", "/upload", true);

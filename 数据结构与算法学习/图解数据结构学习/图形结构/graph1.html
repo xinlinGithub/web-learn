@@ -78,6 +78,7 @@
             var ptr = nodeLArr[current].next;
             while(ptr) {
                 if(run[ptr.val] == 0) {//保证不重复遍历
+                // 把这一层都遍历完再遍历下面的
                     dfs(ptr.val);
                 }
                 ptr = ptr.next;
@@ -113,6 +114,13 @@
         bfs(1);
         console.log(bfsArr);
 
+
+        (function foo() {
+            // 立即执行函数的函数名是不可更改的
+            foo = 10;
+            console.log(foo);
+        })();
+        console.log(foo);
         
     </script>
 </body>

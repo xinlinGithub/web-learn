@@ -61,8 +61,11 @@
                     })
                 })
             }
+            //              目标函数   为目标函数添加原型属性  添加静态属性
             return function (Constructor, protoProps, staticProps) {
+                // 添加到原型对象上
                 if(protoProps) definePrototies(Constructor.prototype, protoProps);
+                // 添加到静态方法上
                 if(staticProps) definePrototies(Constructor, staticProps);
                 return Constructor;
             }
@@ -98,6 +101,7 @@
         function _inherit(subClass, superClass) {
             // 共享原型
             subClass.prototype = Object.create(superClass && superClass.prototype, {
+                // 第个参数是设置继承完原型后 返回的对象的constructor的 设置成他自己
                 constructor: {
                     value: subClass,
                     writable: true,
@@ -107,6 +111,7 @@
             })
             // 共享静态属性
             Object.setPrototypeOf ? 
+            // 让subclass的原型指向superClass 这样就可以通过subClass[]去访问superClass上的静态方法了
                 Object.setPrototypeOf(subClass, superClass) :
                 subClass.__proto__ = superClass; 
         }
@@ -136,8 +141,9 @@
                 )
                 )
                 _this.blood = 100
+                return _this;//其实不写也会默认返回this;
             }
-
+            // 他自己的原型上的方法
             _createClass(AttackPlane, [{
                 key: "attack",
                 value: function () {

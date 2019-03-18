@@ -19,25 +19,37 @@
     <script>
         var oInp = document.getElementsByTagName("input")[0];
         function ajax(e) {
-            if(e.target.value !== ""){
-                console.log(e.target.value)
-            }
+            // if(e.target.value !== ""){
+                console.log("input")
+            // }
         }
-        function debounce(handler, wait) {
+        function debounce(handler, wait, immediate) {
+            // immediate是不是立即执行 即第一次触发先执行一次 隔一段时间再触发再先执行
+            // 如果不是则触发完一段时间后不再触发就执行
             var timer = null;
             // 返回一个中间函数
              return function (e) {
-                var _this = this;
-                var args = arguments;
+                var _this = this ,args = arguments;
                 // 每次触发时都清除一下定时器 只有清楚后1s不在清除 才会触发
                 // 也就是说在等待时间内 连续触发事件 不会有效果
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    handler.apply(_this, args);
-                }, wait)
+                clearTimeout(timer);//即使清了计时器 只是把他绑定的事件清理了 timer还是有值的 是连续数字
+                if(immediate) {
+                    var isNow = !timer;
+                    // 第一次过后 以后只要一直触发就不执行 隔一段时间等timer为null以后再触发就可以执行了
+                    timer = setTimeout(() => {
+                        timer = null;
+                    }, wait);
+                    if(isNow) {
+                        return handler.apply(_this, args);
+                    }
+                }else{
+                    timer = setTimeout(() => {
+                        return handler.apply(_this, args);
+                    }, wait)
+                }
             }
         }
-        oInp.oninput = debounce(ajax, 1000);
+        oInp.oninput = debounce(ajax, 1000, false);
     </script>
 </body>
 </html>

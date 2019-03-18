@@ -185,19 +185,26 @@
         // })
 
 
-        // var p3 = Promise.resolve();
-        // var p4 = Promise.reject('p4');
-        // var p5 = new Promise((resolve, reject) => {
-        //     setTimeout(() => {
-        //         resolve('p5')
-        //     },5000)
-        // })
+        var p3 = Promise.resolve();
+        var p4 = Promise.reject('p4');
+        // console.log(1)
+        var p5 = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('p5')
+            },0)
+            console.log(3);
+        }).then(data => {
+            console.log("p5then")
+            console.log(data);
+            return data;
+        });
         // var p6 = new Promise((resolve, reject) => {
         //     setTimeout(() => {
         //         reject('p6');
         //     },7000)
         // })
-        // var pAll = Promise.all([p3,p5,p4]);
+        console.log(2);
+        var pAll = Promise.all([p3,p5,p4]);
         // 参数为一个数组 里面是promise对象 若都为resolved 则返回状态为promise的对象 且数据为数组中
         // promise对象的数据组成的数组 顺序不变 若存在rejected状态的 则返回第一个为rejected状态的promise对象 此时二者不是同一个 只是返回他的值
         // 若存在pending状态的则返回 一个状态为pending的promise对象；
@@ -289,6 +296,7 @@
             constructor (fn) {
                 this.status = 'pending';//定义状态
                 this.data = undefined;//定义数据
+                // 相当于事件队列先进去的先执行 
                 this.rejectArr = [];
                 //当then 时状态为pending时 存储reject回调函数 当状态改变时在resolve函数中执行；
                 this.resolveArr = [];
@@ -301,10 +309,13 @@
                 // 在内部定义resolve 和 reject 函数 当做参数传到传过来的函数中；
                 // 去改变内部的状态
                 let resolve = (data) => {
+                    // 必须是异步执行
                     setTimeout(() => {
                         if (this.status === 'pending') {
                             this.data = data;                        
                             this.status = 'resolved';
+                            // 如果resolve了那么也得把rejected对应的回调函数删掉
+                            // 使用箭头函数 this指向最外层
                             this.resolveArr.length > 0 && this.resolveArr.shift()(data);
                             this.rejectArr.length > 0 && this.rejectArr.shift();
                         }
@@ -327,8 +338,8 @@
             then(resolved, rejected){
                 // 当上一个promise对象状态为resolved时执行第一个回调函数
                 // 若回调返回promise对象 则在then中返回状态为此promise对象；
-                // 若回调没有返回promise对象 则在then中默认返回状态为resolved的promise对象；
-                if(this.status !== "pending"){
+                // 若回调没有返回promise对象 则在then中默认返回状态为resolved的promise对象 且resolve的值为return后的值；
+                if(this.status !== "pending"){//让对应状态的函数执行
                     let pro = this.status === "resolved" ? resolved(this.data) : rejected(this.data);
                     if (pro instanceof myPromise) {
                         return pro;                        
@@ -351,7 +362,7 @@
                                 if (pro instanceof myPromise) {
                                     pro.then(resolve, reject);
                                     // 若返回值是promise对象，则通过.then的形式去改变此函数返回的promise对象的状态；
-                                    // 若pro也存在异步，则同样的方法去分析
+                                    // 若pro也存在异步，则同样的方法去分析 相当于一次递归
                                 }else {
                                     // 若返回的不是promise对象，则自动反回一个状态为resolved的promise对象；数据为返回值
                                     resolve(pro);
@@ -368,6 +379,7 @@
                                 }
                             }
                         })(rejected)
+                        // this指调用他的promise对象
                         this.resolveArr.push(nowResolve);
                         this.rejectArr.push(nowReject);                        
                     }) 

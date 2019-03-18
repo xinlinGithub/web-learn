@@ -12,7 +12,7 @@ function getData(request,response) {
     // response.writeHead(200);
     // response.write("visiting getData!");
     // response.end();//数据并不是直接写到页面上 而是写到控制台 response中
-
+    // 利用数据库接口操作数据库 并传入一个回调函数 操作成功后 执行回调函数 将数据返回
     studentService.queryAllStudents(function (result) {
         var resArr = [];
         for (var i = 0; i < result.length; i++) {
@@ -27,6 +27,7 @@ path.set("/getData",getData);
 
 function login(request, response) {//转门用于回复ajax请求的 所以 跳转页面有别于其他页面
     // var params = url.parse(request.url, true).query;
+    // 处理post请求
     request.on("data", function(data) {
         var params = data.toString().split("&");
         var myData = {};
@@ -44,15 +45,18 @@ function login(request, response) {//转门用于回复ajax请求的 所以 跳�
             }else {
                 if(myData.password == result[0].psd) {
                     ret = "ok";
+                    // 这是处理的ajax请求
                     response.write("id=" + result[0].id.toString());
                     response.end();
                     //这是form表单专用的 在ajax访问时不能直接跳转 但别的页面可以
+                    // 通过response.writeHead将cookie写入 当再次请求时
+                    //  request会自动带上cookie字段可以通过request.headers.cookie去看有没有缓存
                     // response.writeHead(302, {"location": "/main.html","Set-Cookie": "id=" + result[0].id});
                     // response.end();                                  // 写cookie key-value
                     //当没有ajax请求时 用这种方法跳转页面 也就是form表单形式
                 }else{
                     ret = "errorPsd";
-                    response.write(ret + " !请重新输入密码！")
+                    response.write(ret + " !请重新输入密码！");
                     response.end();
                 }
             }
@@ -80,6 +84,7 @@ function regist(request, response) {
                     }
                 });
             }else {
+                // 处理ajax请求
                 response.write("fail");
                 response.end();
             }

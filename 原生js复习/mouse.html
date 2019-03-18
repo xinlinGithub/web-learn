@@ -18,6 +18,14 @@
             background-color: orange;
             margin: 100px auto;
         }
+        #move{
+            width: 100px; 
+            height: 100px;
+            background-color: orange;
+            position: absolute;
+            left: 0px;
+            top: 300px;
+        }
     </style>
 </head>
 <body>
@@ -26,7 +34,7 @@
 
         </div>
     </div>
-
+    <div id="move"></div>
     <script>
         var inner = document.getElementsByClassName("inner")[0];
         var outer = document.getElementsByClassName('outer')[0];
@@ -46,15 +54,64 @@
         //     console.log("out",e.target)
         // } 
 
-        outer.onclick = function (e) {
-            if(e && e.stopPropagation){
-                e.stopPropagation();
-            }
-            e.cancelBubble = true;
-            console.log("over",e)
-        }
+        // outer.onclick = function (e) {
+        //     if(e && e.stopPropagation){
+        //         e.stopPropagation();
+        //     }
+        //     e.cancelBubble = true;
+        //     // 1,2: 获得真正触发事件的元素 3:事件触发后 获得真正绑定事件的元素
+        //     console.log(e.target,e.srcElement, e.currentTarget)
+        // }
+        inner.addEventListener("click", function () {
+            console.log("click")
+        }, true)
+        outer.addEventListener("click", function () {
+            // 自底向上 先执行父级再执行自己 先捕获 后冒泡
+            console.log("clickouter");
+        },true)
+        inner.addEventListener("click", function () {
+            console.log("click")
+        }, false)
+        outer.addEventListener("click", function () {
+            // 自底向上 先执行父级再执行自己 先捕获 后冒泡 就是先自底向上 再自顶向下
+            console.log("clickouter");
+        }, false)
+        move.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            
+            var l = e.pageX - this.offsetLeft;
+            var t = e.pageY - this.offsetTop;
+            console.log(l, t);
+            console.log(e.button);
+            var swift = function(e) {
+                e.preventDefault();
+                move.style.left = e.pageX - l + "px";
+                move.style.top = e.pageY - t + "px";
+            };
+            document.addEventListener("mousemove", swift);
+            document.addEventListener("mouseup", function (e) {
+                this.removeEventListener("mousemove", swift);
+            })
+            return false;
+        })
         
-    
+        document.addEventListener("scroll", (function (e){
+            var top = move.offsetTop;
+            return function() {
+                console.log(top);
+                move.style.top = window.pageYOffset + top + "px";
+                console.log(move.style.top);
+            }
+        }()))
+        console.log(document.readyState)
+        document.onreadystatechange = function () {
+            console.log(document.readyState)
+        }
+
+        document.oncontextmenu = function () {
+            // 取消默认事件
+            return false;
+        }
     </script>
 </body>
 </html>

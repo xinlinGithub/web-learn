@@ -1,4 +1,4 @@
-封装cookie获取方法一
+// 封装cookie获取方法一
 function getCookie(key) {
         var key = encodeURIComponent(key);
  
@@ -23,7 +23,7 @@ function getCookie(key) {
  
         return result;
 }
-封装cookie获取方法二
+// 封装cookie获取方法二
 function getCookie(key){
        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
     if(arr=document.cookie.match(reg)){
@@ -32,7 +32,7 @@ function getCookie(key){
         return null;
          }
 };
-封装cookie设置方法
+// 封装cookie设置方法
 function setCookie(name, value, day){
    if(day !== 0){     //当设置的时间等于0时，不设置expires属性，cookie在浏览器关闭     后删除
          var expires = day * 24 * 60 * 60 * 1000;

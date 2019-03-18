@@ -1,4 +1,5 @@
 var net = require("net");
+// 客户端连接服务器地址
 var socket = net.connect(12306, "127.0.0.1");
 socket.setTimeout(1);
 socket.on("connect", function () {

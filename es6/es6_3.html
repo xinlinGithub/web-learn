@@ -26,7 +26,7 @@
 
 
         // es6新的数据结构能解决吗？
-        // Map Set 结构
+        // Map Set 结构 他们是散列表 是key-value结构 可以快速获取值
         // Map 是字典 加强的对象 只能这样理解 不能这样说
         let map = new Map();
         let obj = {};
@@ -161,9 +161,24 @@
         }
         var myMap = new myMap();
         var weakMap = new WeakMap()
-        // 弱引用map 当在js执行环境中不存在引用时  就会自动释放
+        // weakMap不可被迭代 里面方法也少了一些 有get set has delete
+        // 且他的key值只能是object 原始数据不行 他持有的是对每个键或值的弱引用 可以被垃圾回收机制回收
+        // 弱引用map 当key引用的对象在js执行环境中不存在引用时 就会自动释放 被垃圾回收机制回收
+        // 他特别适合做数据缓存
+        // 对于持续运行的系统 内存占有量会越来越高 必须要及时的释放内存 防止程序崩溃
+        // 不在使用的内容 没有及时被释放 就叫做内存泄漏
+        // 想不影响垃圾回收机制的对象可以用weakMap引用 让外界不存在对此对象的引用时 
+        // 就会被垃圾回收机制回收 键值对也会消失 
+        // 语言引擎中有专门记录引用次数的 引用计数算法 当引用计数为零时 就可以被垃圾回收机制回收了
+        // 例如：
+        // var W = new WeakMap();
+        // var o = {name:"name"};
+        // W.set(o, "person");
+        // o = null;
+        // W.get(o); --> undefined
+        // W.has(o); --> false o一旦取消引用 就拿不到里面的值了
         var map1 = new Map([['name','ddd'],[2,33]])
-        // map 相当于是个映射 而set就是一个集合 值不可以相同
+        // map 相当于是个映射 而set就是一个集合 值不可以相同 可以去重
         var set = new Set([1,2,1,'1',function(){},null,false,true,{},[1,2],[1,2]])
     </script>
 </body>

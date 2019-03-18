@@ -267,7 +267,7 @@
 
 
         // String() 只是底层的一个规范 看原始值怎么变成字符串(几乎直接变) 
-        // 若是对象那： 会调用自身的toString()方法 转换成字符串  
+        // 若是对象那： 会调用自身的toString()方法 转换成字符串 如果没有默认调用原型上的方法  
         // []与理想不同 因为他重写了toString方法 把里面的内容变成字符串 [null,undefined] => ','
 
         //    "" 0 +0 -0 null NaN false undefined Boolean时都会转换成false 
@@ -295,7 +295,7 @@
 
         var obj = {
             valueOf () {
-                return '435';
+                return undefined;
             },
             toString () {
                 return Object.prototype.toString.call(this);

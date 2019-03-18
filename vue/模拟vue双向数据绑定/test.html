@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实例</title>
+    <script src="../../vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input v-model="name" type="text">
+        <h2>{{ name }}</h2>
+        <a v-bind:href="url" id="mya">{{ url }}</a>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                name: "vue",
+                url: "http://www.baidu.com"
+            }
+        })
+    </script>
+</body>
+</html>

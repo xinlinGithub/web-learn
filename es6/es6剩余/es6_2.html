@@ -71,7 +71,7 @@
         let proxyArr = new Proxy(arr, {
             set (target, key, value, receiver){
                 Reflect.set(target, key, value);
-                update();
+                update(value);
             },
             get (target, key, receiver) {
                 Reflect.get(target, key);

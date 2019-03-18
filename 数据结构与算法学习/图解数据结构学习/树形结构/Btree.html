@@ -26,13 +26,14 @@
             for(var i = 0; i < len; i++) {
                 level = 1;//每次都从第一个根节点开始遍历 最后再检索到末尾时附上值；
                 while (bTree[level] != undefined) {
+                    // 偶数相当于左子树 奇数相当于右子树
                     bTree[level] > data[i] ? level = level * 2 : level = level * 2 + 1;
                 }
                 bTree[level] = data[i];
             }
             return bTree;
         }
-
+        console.log(create_Btree(data));
         // 用链表实现二叉查找树
         // 创建每个链表节点
         function Tree(val) {
@@ -49,14 +50,11 @@
             var ptrTree;//常用操作 先用一个备用的指向链表头 避免直接操作链表头
             var tempTree;//指向倒数第二个节点 当这个节点 左右值为空时 方便赋值
             for(var i = 1; i < data.length; i++) {
-                ptrTree = tree;
+                ptrTree = tree;//每次都从头开始遍历
                 while(ptrTree) {
+                    // 保存上一步的结果
                     tempTree = ptrTree;
-                    if(ptrTree.val > data[i]) {
-                        ptrTree = ptrTree.left;
-                    }else {
-                        ptrTree = ptrTree.right;
-                    }
+                    ptrTree = ptrTree.val > data[i] ? ptrTree.left : ptrTree.right;
                 }
                 if(tempTree.val > data[i]) {
                     tempTree.left = new Tree(data[i]);
@@ -77,11 +75,7 @@
                 var backTree;// 后备树
                 while(temp) {
                     backTree = temp;
-                    if(temp.val > val) {
-                        temp = temp.left;
-                    }else {
-                        temp = temp.right;
-                    }
+                    temp = temp.val > val ? temp.left : temp.right;
                 }
                 if(backTree.val > val) {
                     backTree.left = new Tree(val);
@@ -89,7 +83,7 @@
                     backTree.right = new Tree(val);
                 }
             }
-            return ptrTree;
+            return ptrTree;//以用来下一次的添加
         }
         var ptr = null;
         for(var i = 0; i < data.length; i++){
@@ -130,7 +124,7 @@
         console.log(data1);
         var btree_1 = create_Btree1(data1);
         // console.log(btree_1);
-        // inorder(btree_1);
+        inorder(btree_1);
         // console.log("+++++++++++++")
         // preorder(btree_1);
         // console.log("+++++++++++++")

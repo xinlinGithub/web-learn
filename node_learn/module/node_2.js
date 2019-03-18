@@ -2,11 +2,22 @@ console.log("node node node")
 var a = 123;
 var b = "bbb";
 var c = 'cccc';
+var d = {
+    name: "name"
+}
 // exports = b;
 // module.exports = a;
 // exports.a = a;
 // module.exports.b = b;
-module.exports = { a, b }
+setTimeout(function() {
+    a = 111111;
+    d.name = "dddd"
+}, 2000);
+setTimeout(() => {
+    console.log(b);
+    console.log(d);
+}, 4000);
+module.exports = { a, b ,d}
 // exports.c = c
 // console.log(exports == module.exports)
 // module.exports 与 exports 指向同一个对象 但最终返回的始终是module.exports

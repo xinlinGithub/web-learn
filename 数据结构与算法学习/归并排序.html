@@ -17,6 +17,7 @@
             var left = arr.slice(0, mid);
             var right = arr.slice(mid);
             // 最后返回过来的两个数组肯定是有序的 最后归归到一起
+            // 先自顶向下不断分割 再自底向上不断合并 最后合成两个有序数组 最后再将两个有序数组合并
             return merge(mergeSort(left), mergeSort(right));
         }
         function merge(left, right) {

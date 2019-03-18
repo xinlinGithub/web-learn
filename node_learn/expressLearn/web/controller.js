@@ -36,6 +36,7 @@ function login(request, response) {
     var pathname = url.parse(request.url).pathname;
     var params = url.parse(request.url, true).query;
     serverClass.quaryStudentByStu_num(parseInt(params.stu_num),function(result) {
+        console.log(result);
         if(result && result.length > 0) {
             if(result[0].psd == params.psd) {
                 response.cookie("id", result[0].id);
@@ -62,12 +63,17 @@ map.set("/login", login);
 function upload(request, response) {
     console.log(request.file);
     var file = request.file;
+    // 里面会有初始文件名 文件类型 文件路径 文件大小等 方便以后获取此文件
     var params = [file.originalname, file.mimetype, file.filename,file.path,file.size, request.cookies.id];
     serverClass.insertIntoFiles(...params, function (result) {
         console.log(result);
         if( result != null) {
+            // 在header中还可以写Set-Cookie等字段 
+            // 只要浏览器network中requestHeader中显示出来的都能写
             response.writeHead(200, {"Content-Type": "application/json; charset=utf8"});
-            response.write(file.path);
+            // 可以在前端将此返回的数据转化成对象 
+            // 读取文件的路径 赋给前端的a标签 可以动态请求此路径 点击下载
+            response.write(JSON.stringify(file));
             response.end();
         }else {
             response.end("write fail!");

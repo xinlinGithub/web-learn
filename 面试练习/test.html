@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>两列布局</title>
+    <style>
+        body{
+            position: relative;
+        }
+        .wrap{
+            width: 100%;
+            height: 200px;
+            border: 1px solid black;
+            display: flex;
+        }
+        .left{
+            /* float: right; */
+            width: 200px;
+            height: 100%;
+            background-color: orange;
+        }
+        .right{
+            height: 100%;
+            background-color: blue;
+            /* overflow: hidden; */
+            flex: 1;
+        }
+        .outer{
+            border: 10px solid yellow;
+        }
+        .bottom{
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            margin-right: -100px;
+        }
+        #move{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 300px;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="wrap">
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+    <div class="outer">
+        <div class="bottom"></div><span>sdfsags</span>
+    </div>
+    <div id="move"></div>
+    <script>
+        var g = "gggg";
+        function test() {
+            g = "ttttt";
+            console.log(g);
+            // eval即把局部的给改变了 也把全局的给改变了
+            eval("g = 'eval'");
+            console.log(g);
+        }
+        test();
+        console.log(g)
+
+        function moveto() {
+            var timer;
+            var left;
+            var speed = 20;
+            move.style.left = 0;
+            timer = setInterval(() => {
+                left = parseInt(move.style.left);
+                left += speed;
+                speed = speed / 1.1;
+                move.style.left = left + "px";
+                if(speed <= 0.01) {
+                    console.log('clear');
+                    clearInterval(timer);
+                }
+            },20)
+        }
+        moveto();
+    </script>
+</body>
+</html>
